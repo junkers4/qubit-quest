@@ -1,6 +1,6 @@
-"""Level 41, NOISE: decoherence shrinks the Bloch arrow.
+"""Level 48, NOISE: decoherence shrinks the Bloch arrow.
 
-Run: python examples/41_noise.py
+Run: python examples/48_noise.py
 """
 import numpy as np
 from qiskit.quantum_info import (DensityMatrix, Kraus,

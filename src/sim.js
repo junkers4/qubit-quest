@@ -136,8 +136,10 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
     };
 
     // Does `state` reach `goal`: the whole state up to a global phase, or (goalQubits)
-    // only those qubits, compared by their reduced density matrices.
-    QQ.matches = function (state, goal, n, goalQubits, eps = 1e-6) {
+    // only those qubits, compared by their reduced density matrices, or only the chances.
+    QQ.matches = function (state, goal, n, goalQubits, eps = 1e-6, probsOnly = false) {
+        if (probsOnly) // only the chances count, not the phases
+            return state.every((z, i) => Math.abs(QQ.prob(z) - QQ.prob(goal[i])) < eps);
         if (!goalQubits)
             return QQ.same(state, goal, eps);
         const a = QQ.reduced(state, n, goalQubits), b = QQ.reduced(goal, n, goalQubits);
@@ -228,10 +230,10 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
     };
 
     // The fewest gates that take `start` to the goal (breadth first), or -1 within maxDepth.
-    // p: {gates, n, limits, allow, boxes, after, goalQubits}
+    // p: {gates, n, limits, allow, boxes, after, goalQubits, probsOnly}
     QQ.shortest = function (start, goal, p, maxDepth) {
         const {n, limits = {}, after = []} = p;
-        const done = s => QQ.matches(QQ.run(after, n, s, p.boxes), goal, n, p.goalQubits);
+        const done = s => QQ.matches(QQ.run(after, n, s, p.boxes), goal, n, p.goalQubits, 1e-6, p.probsOnly);
         if (done(start))
             return 0;
         const moves = QQ.moves(p.gates, n, p.allow, p.boxes);

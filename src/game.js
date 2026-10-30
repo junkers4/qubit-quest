@@ -247,7 +247,7 @@
 
     // The state: per basic state a probability bar, the size of the amplitude and a dial for
     // its phase (colour too); the goal's next to it. Tap it for the exact complex numbers.
-    function drawState(x, y, n, state, goal) {
+    function drawState(x, y, n, state, goal, probsOnly) {
         const bx = x + 6 * (n + 2) + 2, mx = bx + 34, dx = mx + 26, gx = dx + 15;
         text('STATE', x, y, P.dim, 1, null);
         if (goal)
@@ -262,10 +262,11 @@
                 R(k < lit ? c : P.darkgreen, bx + k * 3, yy + 3, 2, 5);
             text(mag(z), mx, yy, c, 1, null);
             dial(dx, yy + 2, z, c);
-            if (cg) {
-                const gc = PHASE[QQ.phaseName(cg[i])];
+            if (cg) { // a chances-only goal shows no phase
+                const gc = probsOnly ? P.gold : PHASE[QQ.phaseName(cg[i])];
                 text(mag(cg[i]), gx, yy, gc, 1, null);
-                dial(gx + 26, yy + 2, cg[i], gc);
+                if (!probsOnly)
+                    dial(gx + 26, yy + 2, cg[i], gc);
             }
         });
         return 12 + state.length * 11;
@@ -368,7 +369,7 @@
     }
 
     function drawPanel(S, x, y, now, goal, L) {
-        drawState(x, y, S.qubits, now, S.goalQubits ? null : goal);
+        drawState(x, y, S.qubits, now, S.goalQubits ? null : goal, S.probsOnly);
         hit(x, y, L.list.w, L.list.h, () => openAmplitudes(S, now, goal));
         if (!L.g)
             return;
@@ -481,9 +482,16 @@
                         push();
                         continue;
                     }
-                    line.push([rest.slice(0, room), c]);
-                    len += Math.min(room, rest.length);
-                    rest = rest.slice(room);
+                    // cut after a space when there is one late enough in the line
+                    let cut = Math.min(room, rest.length);
+                    if (cut < rest.length) {
+                        const sp = rest.lastIndexOf(' ', cut);
+                        if (sp > room / 2)
+                            cut = sp + 1;
+                    }
+                    line.push([rest.slice(0, cut), c]);
+                    len += cut;
+                    rest = rest.slice(cut);
                 }
             }
             if (line.length)
@@ -810,36 +818,49 @@
         frame();
     }
 
+    // A small circuit with its state (and Bloch sphere for one qubit) under a lesson page.
+    function demoLayout(S, w) {
+        const n = S.demo.qubits, ops = S.demo.ops;
+        const cw = Math.min(w - 6, 22 + COL * (ops.length + 1));
+        const sw = 6 * n + 124 + (n === 1 ? 80 : 0), sh = 12 + (1 << n) * 11;
+        const side = cw + 20 + sw <= w;
+        return {n, ops, cw, side, h: side ? Math.max(n * WIRE, sh, n === 1 ? 62 : 0) : n * WIRE + 4 + Math.max(sh, n === 1 ? 62 : 0)};
+    }
+
+    function drawDemo(S, x, y, D) {
+        drawCircuit(x + 6, y, D.cw, D.n, [], D.ops, -1, null, {boxes: S.demo.boxes});
+        const st = QQ.run(D.ops, D.n, undefined, S.demo.boxes);
+        const sx = D.side ? x + D.cw + 20 : x, sy = D.side ? y : y + D.n * WIRE + 4;
+        drawState(sx, sy, D.n, st);
+        if (D.n === 1)
+            drawBloch(sx + 6 * D.n + 124 + 40, sy + 42, 17, QQ.bloch(st));
+    }
+
     function renderText(S, x, y, w, h) {
         const cols = Math.floor((w + 1) / 6);
         text(S.title, x, y, P.gold);
         y += 14;
         h -= 14;
-        const n = S.demo ? S.demo.qubits : 0;
-        const demoH = S.demo ? n * WIRE + 16 + (w >= 300 ? 0 : 12 + (1 << n) * 11) + (n === 1 ? 20 : 0) : 0;
+        // a demo circuit or a hardware drawing goes under the text, or on a page of its own
+        const D = S.demo ? demoLayout(S, w) : null;
+        const pic = S.pic ? QQ.PICS[S.pic] : null;
+        const extraH = D ? D.h + 6 : pic ? pic.h + 6 : 0;
         const {pages, lastUsed} = paginate(layout(S.body, cols), h);
-        let withDemo = pages.length - 1;
-        if (S.demo && lastUsed + demoH > h) {
+        let withExtra = pages.length - 1;
+        if (extraH && lastUsed + extraH > h) {
             pages.push([]);
-            withDemo++;
+            withExtra++;
         }
         G.pages = pages.length;
         G.page = Math.min(G.page, G.pages - 1);
         let yy = drawLines(pages[G.page], x, y, w);
-        if (S.demo && G.page === withDemo) {
+        if (extraH && G.page === withExtra) {
             yy += 6;
-            const ops = S.demo.ops;
-            const cw = Math.min(w - 6, 22 + COL * (ops.length + 1));
-            drawCircuit(x + 6, yy, cw, n, [], ops, -1, null, {boxes: S.demo.boxes});
-            const st = QQ.run(ops, n, undefined, S.demo.boxes);
-            if (w >= 300) {
-                const sx = x + Math.min(w - 140, cw + 20);
-                drawState(sx, yy, n, st);
-                if (n === 1)
-                    drawBloch(Math.min(x + w - 30, sx + 160), yy + 30, 20, QQ.bloch(st));
-            } else {
-                yy += n * WIRE + 4 + drawState(x, yy + n * WIRE + 4, n, st);
-            }
+            if (D)
+                drawDemo(S, x, yy, D);
+            else
+                pic.draw({R, text, line, circle}, x + Math.max(0, Math.floor((w - 230) / 2)), yy, w);
+            yy += extraH - 6;
         }
         fits(yy, 'text page');
         if (G.pages > 1)
@@ -982,7 +1003,7 @@
 
     function check(S, st) {
         const now = QQ.run([...st.ops, ...(S.after || [])], S.qubits, st.start, S.boxes);
-        if (QQ.matches(now, st.goal, S.qubits, S.goalQubits)) {
+        if (QQ.matches(now, st.goal, S.qubits, S.goalQubits, 1e-6, S.probsOnly)) {
             st.solved = true;
             if (st.ops.length > S.par)
                 G.pen++;

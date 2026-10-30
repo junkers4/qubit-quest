@@ -1,10 +1,10 @@
-// World 7: real quantum computers: noise, error correction, variational algorithms,
+// World 8: real quantum computers: noise, error correction, variational algorithms,
 // Qiskit in practice, where to go next.
 var QQ = globalThis.QQ || (globalThis.QQ = {});
 
 QQ.LEVELS.push(
     {
-        id: 'noise', world: 7, title: 'NOISE', code: '41_noise',
+        id: 'noise', world: 8, title: 'NOISE', code: '48_noise',
         refs: ['zurek2003', 'nc2010 ch. 8', 'preskill2018'],
         steps: [
             {type: 'text', title: 'DECOHERENCE', body:
@@ -25,7 +25,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'qec', world: 7, title: 'ERROR CORRECTION', code: '42_qec', origin: 'shor1995',
+        id: 'qec', world: 8, title: 'ERROR CORRECTION', code: '49_qec', origin: 'shor1995',
         refs: ['shor1995', 'steane1996', 'nc2010 §10.1', 'google2025'],
         steps: [
             {type: 'text', title: 'COPYING WITHOUT CLONING', body:
@@ -54,7 +54,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'variational', world: 7, title: 'VARIATIONAL ALGORITHMS', code: '43_variational',
+        id: 'variational', world: 8, title: 'VARIATIONAL ALGORITHMS', code: '50_variational',
         refs: ['peruzzo2014', 'farhi2014', 'preskill2018'],
         steps: [
             {type: 'text', title: 'QUANTUM PLUS CLASSICAL', body:
@@ -77,7 +77,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'qiskit', world: 7, title: 'QISKIT IN PRACTICE', code: '44_qiskit',
+        id: 'qiskit', world: 8, title: 'QISKIT IN PRACTICE', code: '51_qiskit',
         refs: ['qiskit2024', 'qiskitdocs'],
         steps: [
             {type: 'text', title: 'YOUR FIRST REAL CODE', body:
@@ -99,7 +99,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'beyond', world: 7, title: 'WHAT NEXT', code: '45_beyond',
+        id: 'beyond', world: 8, title: 'WHAT NEXT', code: '52_beyond',
         refs: ['nc2010', 'mermin2007', 'ibmbasics', 'watrous2025', 'preskill2018'],
         steps: [
             {type: 'text', title: 'YOU MADE IT', body:

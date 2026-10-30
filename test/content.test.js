@@ -7,10 +7,12 @@ const QQ = require('./load.js');
 
 const NARROW_COLS = 38; // the narrowest screen (256 px wide) fits 38 characters of text
 
-test('REQ-001 seven worlds from classical bits to real machines, 45+ levels', () => {
+test('REQ-001 eight worlds from classical bits to hardware and real machines, 50+ levels', () => {
     assert.deepStrictEqual(QQ.WORLDS.map(w => w.title), ['CLASSICAL WARM-UP', 'MATH TOOLKIT', 'ONE QUBIT',
-        'MANY QUBITS', 'QUANTUM PROTOCOLS', 'ALGORITHMS', 'REAL QUANTUM COMPUTERS']);
-    assert.ok(QQ.LEVELS.length >= 45);
+        'MANY QUBITS', 'QUANTUM PROTOCOLS', 'ALGORITHMS', 'QUANTUM HARDWARE', 'REAL QUANTUM COMPUTERS']);
+    assert.ok(QQ.LEVELS.length >= 52);
+    for (const pic of QQ.LEVELS.flatMap(l => l.steps).filter(s => s.pic).map(s => s.pic))
+        assert.ok(QQ.PICS[pic], 'drawing ' + pic);
     for (const w of QQ.WORLDS)
         assert.ok(QQ.LEVELS.filter(l => l.world === w.id).length >= 3, w.title);
     // worlds come in order, and every level teaches before it tests
@@ -89,8 +91,8 @@ test('REQ-009 every puzzle is solvable with its own gates and par is the true mi
                 assert.ok(QQ.GATES[g] || (S.boxes && S.boxes[g]), `${name}: gate ${g}`);
             const {start, goal} = QQ.puzzleStates(S);
             const p = {gates: S.gates, n: S.qubits, limits: S.limits, allow: S.allow, boxes: S.boxes,
-                after: S.after, goalQubits: S.goalQubits};
-            assert.ok(!QQ.matches(QQ.run(S.after || [], S.qubits, start, S.boxes), goal, S.qubits, S.goalQubits),
+                after: S.after, goalQubits: S.goalQubits, probsOnly: S.probsOnly};
+            assert.ok(!QQ.matches(QQ.run(S.after || [], S.qubits, start, S.boxes), goal, S.qubits, S.goalQubits, 1e-6, S.probsOnly),
                 name + ': not solved before you start');
             assert.strictEqual(QQ.shortest(start, goal, p, S.par), S.par, name + ': par is the minimum');
             assert.ok(S.solution.length >= S.par, name);
