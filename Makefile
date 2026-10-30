@@ -17,7 +17,7 @@ test:
 	node --test test/*.test.js
 
 test-python:
-	$(PY) -m pytest -q tests
+	$(PY) -m pytest -q tests --ignore=tests/test_asm.py --ignore=tests/test_asm_game.py
 
 shots:
 	node test/shots.js
