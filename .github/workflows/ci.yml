@@ -1,11 +1,17 @@
-# Every push: all checks (make test-all). A tag v1.2.3: also build the desktop app and attach
-# it to a GitHub release (Linux tar.gz and .deb, Windows .zip, macOS .zip, SHA256SUMS).
+# Every push: all checks (make test-all). A release: push a tag v1.2.3, or on GitHub open
+# Actions > ci > Run workflow and type the version; either builds the desktop app and attaches
+# it to the GitHub release v1.2.3 (Linux tar.gz and .deb, Windows .zip, macOS .zip, SHA256SUMS).
 name: ci
 on:
   push:
     branches: [main]
     tags: ['v*']
   pull_request:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, e.g. 0.1.0 (makes the tag v0.1.0)'
+        required: true
 
 jobs:
   test:
@@ -28,7 +34,7 @@ jobs:
 
   release:
     needs: test
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -37,9 +43,22 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-      - run: VERSION="${GITHUB_REF_NAME#v}" sh tools/package.sh
+      - name: version
+        id: v
+        env:
+          INPUT: ${{ github.event.inputs.version }}
+        run: |
+          v="${INPUT:-${GITHUB_REF_NAME#v}}"
+          v="${v#v}"
+          echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "bad version: $v"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+      - run: VERSION="${{ steps.v.outputs.version }}" sh tools/package.sh
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.v.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: Qubit Quest ${{ steps.v.outputs.version }}
+          generate_release_notes: true
           files: |
             dist/*.tar.gz
             dist/*.zip

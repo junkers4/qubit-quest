@@ -90,8 +90,9 @@ make test-all
   from a linked .exe), then the game played from the built app in headless Chromium.
 - `make check-refs`: every DOI, arXiv id and URL resolved online.
 
-CI (`.github/workflows/ci.yml`) runs `make test-all` on every push; a tag `v1.2.3` also builds
-the app for every system and attaches it to a GitHub release.
+CI (`.github/workflows/ci.yml`) runs `make test-all` on every push. To release, push a tag
+`v1.2.3`, or open Actions > ci > Run workflow and type the version: it builds the app for every
+system and attaches it to the GitHub release.
 
 ## Files
 
