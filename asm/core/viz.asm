@@ -22,6 +22,7 @@ HALF:       dq 0.5
 ONE:        dq 1.0
 SMALL:      dq 0.05
 STEP:       dq 0.13089969389957471      ; 2 pi / 48
+TWO_PI:     dq 6.28318530717958647692
 RAD2DEG:    dq 57.295779513082320876
 POW10:      dq 1.0, 10.0, 100.0, 1000.0
 IPOW10:     dd 1, 10, 100, 1000
@@ -42,7 +43,7 @@ FN draw_pic
     push r14
     push r15
     sub rsp, 8
-    shl edi, 4                  ; PIC_SIZE
+    imul edi, edi, PIC_SIZE
     lea rbx, [PICS]
     add rbx, rdi
     mov r12, [rbx + PIC_DATA]
@@ -470,4 +471,207 @@ FN fmt_deg
     mov edx, 1
     call fmt_num
     add rsp, 24
+    ret
+
+; draw_motion(n edi, x esi, y edx, frame ecx): the moving parts of drawing n at this frame
+FN draw_motion
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 56                 ; [rsp] point x, y (doubles); [rsp+16] scratch
+    imul edi, edi, PIC_SIZE
+    lea rax, [PICS]
+    mov rbx, [rax + rdi + PIC_MOTION]
+    test rbx, rbx
+    jz .out
+    mov r12d, esi
+    mov r13d, edx
+    mov r14d, ecx
+    mov ebp, [rbx]              ; parts
+    add rbx, 4
+.part:
+    test ebp, ebp
+    jz .out
+    ; f = ((t + phase) mod period) / period
+    mov eax, r14d
+    add eax, [rbx + MO_PHASE]
+    xor edx, edx
+    div dword [rbx + MO_PERIOD]
+    cvtsi2sd xmm0, edx
+    cvtsi2sd xmm1, dword [rbx + MO_PERIOD]
+    divsd xmm0, xmm1
+    movsd [rsp + 16], xmm0      ; f
+    mov eax, [rbx + MO_KIND]
+    cmp eax, MK_PATH
+    je .path
+    ; the others turn: w = 2 pi f; cos and sin
+    movsd xmm0, [rsp + 16]
+    mulsd xmm0, [TWO_PI]
+    movsd [rsp + 24], xmm0
+    fld qword [rsp + 24]
+    fsincos
+    fstp qword [rsp + 32]       ; cos
+    fstp qword [rsp + 40]       ; sin
+    cvtsi2sd xmm2, dword [rbx + MO_POINTS]      ; centre x
+    cvtsi2sd xmm3, dword [rbx + MO_POINTS + 4]  ; centre y
+    cvtsi2sd xmm4, dword [rbx + MO_POINTS + 8]  ; d x
+    cvtsi2sd xmm5, dword [rbx + MO_POINTS + 12] ; d y
+    cmp eax, MK_SWING
+    je .swing
+    cmp eax, MK_SPIN
+    je .spin
+    ; wobble: c + d sin w
+    mulsd xmm4, [rsp + 40]
+    mulsd xmm5, [rsp + 40]
+    addsd xmm2, xmm4
+    addsd xmm3, xmm5
+    movsd [rsp], xmm2
+    movsd [rsp + 8], xmm3
+    jmp .dot
+.swing:                         ; a line from c - d cos w to c + d cos w
+    mulsd xmm4, [rsp + 32]
+    mulsd xmm5, [rsp + 32]
+    movsd xmm0, xmm2
+    addsd xmm0, xmm4
+    movsd xmm1, xmm3
+    addsd xmm1, xmm5
+    subsd xmm2, xmm4
+    subsd xmm3, xmm5
+    cvtsd2si edi, xmm2
+    cvtsd2si esi, xmm3
+    cvtsd2si edx, xmm0
+    cvtsd2si ecx, xmm1
+    add edi, r12d
+    add esi, r13d
+    add edx, r12d
+    add ecx, r13d
+    mov r8d, [rbx + MO_COLOR]
+    call gfx_line
+    jmp .next
+.spin:                          ; a line from c to c + r (cos w, -sin w), and its tip
+    movsd xmm0, xmm4
+    mulsd xmm0, [rsp + 32]
+    addsd xmm0, xmm2
+    movsd xmm1, xmm4
+    mulsd xmm1, [rsp + 40]
+    movsd xmm6, xmm3
+    subsd xmm6, xmm1
+    cvtsd2si r15d, xmm0
+    add r15d, r12d
+    cvtsd2si eax, xmm6
+    add eax, r13d
+    mov [rsp + 48], eax
+    cvtsd2si edi, xmm2
+    cvtsd2si esi, xmm3
+    add edi, r12d
+    add esi, r13d
+    mov edx, r15d
+    mov ecx, eax
+    mov r8d, [rbx + MO_COLOR]
+    call gfx_line
+    lea edi, [r15 - 1]
+    mov esi, [rsp + 48]
+    dec esi
+    mov edx, 2
+    mov ecx, 2
+    mov r8d, [rbx + MO_COLOR]
+    call gfx_rect
+    jmp .next
+.path:
+    ; the total length, then the point that far along
+    xorpd xmm7, xmm7
+    mov ecx, [rbx + MO_N]
+    dec ecx
+    lea rsi, [rbx + MO_POINTS]
+.len:
+    test ecx, ecx
+    jz .lend
+    call seg_len
+    addsd xmm7, xmm0
+    add rsi, 8
+    dec ecx
+    jmp .len
+.lend:
+    mulsd xmm7, [rsp + 16]      ; how far along
+    mov ecx, [rbx + MO_N]
+    dec ecx
+    lea rsi, [rbx + MO_POINTS]
+.walk:
+    call seg_len
+    cmp ecx, 1
+    je .here                    ; the last segment
+    comisd xmm7, xmm0
+    jbe .here
+    subsd xmm7, xmm0
+    add rsi, 8
+    dec ecx
+    jmp .walk
+.here:                          ; a + (b - a) min(1, rest / length)
+    xorpd xmm1, xmm1
+    comisd xmm0, xmm1
+    je .u0
+    divsd xmm7, xmm0
+    movsd xmm1, [ONE]
+    minsd xmm7, xmm1
+    jmp .u
+.u0:
+    xorpd xmm7, xmm7
+.u:
+    cvtsi2sd xmm2, dword [rsi]
+    cvtsi2sd xmm3, dword [rsi + 4]
+    cvtsi2sd xmm4, dword [rsi + 8]
+    cvtsi2sd xmm5, dword [rsi + 12]
+    subsd xmm4, xmm2
+    subsd xmm5, xmm3
+    mulsd xmm4, xmm7
+    mulsd xmm5, xmm7
+    addsd xmm2, xmm4
+    addsd xmm3, xmm5
+    movsd [rsp], xmm2
+    movsd [rsp + 8], xmm3
+.dot:                           ; a square of the part's size, centred
+    movsd xmm0, [rsp]
+    cvtsd2si edi, xmm0
+    movsd xmm0, [rsp + 8]
+    cvtsd2si esi, xmm0
+    mov eax, [rbx + MO_SIZE]
+    shr eax, 1
+    sub edi, eax
+    sub esi, eax
+    add edi, r12d
+    add esi, r13d
+    mov edx, [rbx + MO_SIZE]
+    mov ecx, edx
+    mov r8d, [rbx + MO_COLOR]
+    call gfx_rect
+.next:
+    mov eax, [rbx + MO_N]
+    lea rbx, [rbx + MO_POINTS + rax*8]
+    dec ebp
+    jmp .part
+.out:
+    add rsp, 56
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+; xmm0 = the length of the segment from the point at rsi to the next one (keeps rsi, ecx, xmm7)
+seg_len:
+    cvtsi2sd xmm0, dword [rsi + 8]
+    cvtsi2sd xmm1, dword [rsi]
+    subsd xmm0, xmm1
+    mulsd xmm0, xmm0
+    cvtsi2sd xmm1, dword [rsi + 12]
+    cvtsi2sd xmm2, dword [rsi + 4]
+    subsd xmm1, xmm2
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    sqrtsd xmm0, xmm0
     ret

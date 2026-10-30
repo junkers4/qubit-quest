@@ -51,7 +51,21 @@ ST_SIZE     equ 224
 PIC_DATA    equ 0
 PIC_W       equ 8
 PIC_H       equ 12
-PIC_SIZE    equ 16
+PIC_MOTION  equ 16          ; its moving parts, or 0
+PIC_SIZE    equ 24
+
+; moving parts (PIC_MOTION): a count, then per part 6 dwords and its points (2 dwords each)
+MO_KIND     equ 0           ; MK_* below
+MO_COLOR    equ 4
+MO_SIZE     equ 8
+MO_PERIOD   equ 12          ; frames for one round
+MO_PHASE    equ 16
+MO_N        equ 20          ; points
+MO_POINTS   equ 24
+MK_PATH     equ 1           ; a dot along the points
+MK_SWING    equ 2           ; a line through point 0, swinging along point 1 (a direction)
+MK_SPIN     equ 3           ; a line from point 0 turning, radius = point 1's x
+MK_WOBBLE   equ 4           ; a dot about point 0, along point 1
 
 T_TEXT      equ 0
 T_QUIZ      equ 1

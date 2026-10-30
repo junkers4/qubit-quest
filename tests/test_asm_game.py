@@ -1,4 +1,4 @@
-"""REQ-071, REQ-072: the assembler game plays like the web game.
+"""REQ-071, REQ-072, REQ-077: the assembler game plays like the web game.
 
 Runs the core headless (build/libqqgame.so, `make -C asm test`): every
 level of the web game played to the end by keys, stars and saved
@@ -340,3 +340,54 @@ def test_hardware_drawings_match_the_web_game(fresh):
                     got[p] = got.get(p, 0) + 1
         want = {int(ref["colors"][int(k) - 1][1:], 16): v for k, v in pic["counts"].items()}
         assert got == want, pic["name"]
+
+
+def test_moving_parts_move_as_in_the_web_game(fresh):
+    """REQ-077: the moving parts of the drawings (photons, fields, ions) are where
+    the web game draws them at the same frame, and they do move."""
+    import json
+    import subprocess
+    frames = [0, 5, 13, 29, 47]
+    out = subprocess.run(
+        ["node", "-e", """
+const QQ = require('./test/load.js');
+const res = {};
+Object.keys(QQ.PICS).forEach((name, n) => {
+    const P = QQ.PICS[name];
+    if (!P.motion) return;
+    res[n] = [FRAMES].map(t => {
+        const px = new Set();
+        const R = (c, x, y, w, h) => {
+            for (let yy = Math.round(y); yy < Math.round(y) + h; yy++)
+                for (let xx = Math.round(x); xx < Math.round(x) + w; xx++) px.add(xx + ',' + yy);
+        };
+        const line = (x0, y0, x1, y1) => {
+            x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+            const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+            let e = dx + dy;
+            for (;;) { R(0, x0, y0, 1, 1); if (x0 === x1 && y0 === y1) break;
+                const e2 = 2 * e; if (e2 >= dy) { e += dy; x0 += sx; } if (e2 <= dx) { e += dx; y0 += sy; } }
+        };
+        QQ.drawMotion({R, line}, P, 45, 0, t);
+        return [...px];
+    });
+});
+process.stdout.write(JSON.stringify(res));
+""".replace("FRAMES", ",".join(map(str, frames)))],
+        cwd=ROOT_DIR, capture_output=True, text=True, check=True)
+    web = json.loads(out.stdout)
+    assert len(web) >= 9
+    game = fresh()
+    lib = game.lib
+    fb = (ctypes.c_uint32 * (320 * 200)).in_dll(lib, "fb")
+    for n, per_frame in web.items():
+        seen = []
+        for t, want in zip(frames, per_frame):
+            lib.gfx_fill(0xff00ff)
+            lib.draw_motion(int(n), 45, 0, t)
+            got = {f"{k % 320},{k // 320}" for k in range(320 * 200) if fb[k] != 0xff00ff}
+            want = set(want)
+            # rounding (x87 and SSE against JavaScript) may move a pixel at a .5 edge
+            assert len(got ^ want) <= max(4, len(got | want) // 5), (n, t)
+            seen.append(frozenset(got))
+        assert len(set(seen)) > 1, f"drawing {n} does not move"

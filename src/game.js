@@ -882,8 +882,11 @@
             yy += 6;
             if (D)
                 drawDemo(S, x, yy, D);
-            else
-                pic.draw({R, text, line, circle}, x + Math.max(0, Math.floor((w - 230) / 2)), yy, w);
+            else {
+                const px = x + Math.max(0, Math.floor((w - 230) / 2));
+                pic.draw({R, text, line, circle}, px, yy, w);
+                QQ.drawMotion({R, line}, pic, px, yy, Math.floor(performance.now() / 33));
+            }
             yy += extraH - 6;
         }
         fits(yy, 'text page');
@@ -1338,11 +1341,13 @@
 
     window.addEventListener('resize', resize);
     resize();
-    // only the screens with a sky move; the rest are drawn on input
+    // only the screens with a sky or a moving drawing are redrawn by themselves; the rest on input
     setInterval(() => {
-        if (G.screen !== 'level' && !G.overlay)
+        const S = G.screen === 'level' && QQ.LEVELS[G.level].steps[G.step];
+        const moving = S && S.pic && QQ.PICS[S.pic].motion; // a drawing with moving parts
+        if ((G.screen !== 'level' || moving) && !G.overlay)
             draw();
-    }, 66);
+    }, 33);
 
     // the qubit icon as the tab icon
     const ic = document.createElement('canvas');

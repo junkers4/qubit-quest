@@ -201,10 +201,18 @@ function build() {
         runs.push(0, 0);
         const label = 'PIC_' + name;
         out.push(`${label}: db ${runs.join(',')}`);
+        let motion = '0';
+        if (P.motion) {
+            const kinds = {path: 1, swing: 2, spin: 3, wobble: 4};
+            const parts = P.motion.map(m => [kinds[m.kind], '0x' + m.color.slice(1), m.size, m.period, m.phase,
+                m.points.length, ...m.points.flat().map(Math.round)].join(','));
+            motion = 'MOV_' + name;
+            out.push(`${motion}: dd ${P.motion.length}`, ...parts.map(p => `    dd ${p}`));
+        }
         const counts = {};
         px.forEach(k => { if (k) counts[k] = (counts[k] || 0) + 1; });
         picStats.push({name, w, h, counts});
-        return {label, w, h};
+        return {label, w, h, motion};
     });
     if (picColors.length > 15)
         throw new Error('too many drawing colours');
@@ -321,7 +329,7 @@ function build() {
             f.limits, f.allow, f.boxnames, f.pic, f.demo, f.ndemo, f.demoq].join(', ')}`),
         `PIC_COUNT: dq ${pics.length}`,
         'PICS:',
-        ...pics.map(p => `    dq ${p.label}\n    dd ${p.w}, ${p.h}`),
+        ...pics.map(p => `    dq ${p.label}\n    dd ${p.w}, ${p.h}\n    dq ${p.motion}`),
         `PIC_COLORS: dd 0, ${picColors.map(c => '0x' + c.slice(1)).join(', ')}`,
         `G_DEG: db ${g_deg}`,
         `G_PCT: db ${g_pct}`,

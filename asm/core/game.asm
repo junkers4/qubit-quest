@@ -24,7 +24,7 @@ extern fb, text_px
 extern gfx_fill, gfx_rect, gfx_text, gfx_line, gfx_pixel, text_width, str_len
 extern wrap_count, draw_wrapped, ascii_to, num_to, str_copy
 extern qs_zero, qs_run, qs_matches, qs_prob, qs_bloch
-extern sphere, vec_rotate, fmt_num, fmt_deg, draw_pic, PICS, G_DEG, G_I
+extern sphere, vec_rotate, fmt_num, fmt_deg, draw_pic, draw_motion, PICS, G_DEG, G_I
 extern plat_save, plat_load
 extern U_TITLE, U_TAGLINE, U_START, U_SELECT, U_QUIT, U_SPINOFF, U_CORE, U_WORLD, U_DONE
 extern U_RIGHT, U_WRONG, U_SOLVED, U_STATE, U_PICK2, U_PICKT, U_PICKC2, U_NOTALLOWED
@@ -1787,7 +1787,7 @@ draw_text_step:
     test rax, rax
     jz .demo
     dec eax
-    shl eax, 4
+    imul eax, eax, PIC_SIZE
     lea rcx, [PICS]
     mov r13d, [rcx + rax + PIC_H]
     add r13d, 6
@@ -1850,6 +1850,12 @@ draw_text_step:
     mov esi, (FB_W - 230) / 2
     mov edx, r15d
     call draw_pic
+    mov rax, [rbx + ST_PIC]     ; and its moving parts
+    lea edi, [rax - 1]
+    mov esi, (FB_W - 230) / 2
+    mov edx, r15d
+    mov ecx, [frame]
+    call draw_motion
     jmp .nopic
 .d:
     mov rdi, rbx

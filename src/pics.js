@@ -9,7 +9,11 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
 
     QQ.PICS = {
         // a dilution refrigerator: plates getting colder downwards, the chip at the bottom
-        fridge: {h: 116, draw(g, x, y) {
+        fridge: {h: 116, motion: [ // control pulses running down the coax lines to the chip
+            ...[40, 47, 54].map((cx, i) => ({kind: 'path', color: P.white, size: 2, period: 40, phase: i * 13,
+                points: [[cx, 9], [cx, 94]]})),
+        ],
+            draw(g, x, y) {
             const stages = [['300 K', 'ROOM'], ['50 K', ''], ['4 K', ''], ['~1 K', 'STILL'],
                 ['~0.1 K', 'COLD PLATE'], ['~0.01 K', 'MIXING']];
             const top = y + 6;
@@ -57,7 +61,12 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // a transmon: two capacitor pads, a Josephson junction between them, a readout resonator
-        transmon: {h: 70, draw(g, x, y) {
+        transmon: {h: 70, motion: [ // microwave drive pulses arriving, the readout signal leaving
+            {kind: 'path', color: RED, size: 2, period: 20, phase: 0, points: [[120, 54], [92, 40]]},
+            {kind: 'path', color: RED, size: 2, period: 20, phase: 10, points: [[120, 54], [92, 40]]},
+            {kind: 'path', color: P.white, size: 2, period: 16, phase: 0, points: [[150, 28], [176, 28]]},
+        ],
+            draw(g, x, y) {
             g.text('CAPACITOR PADS', x + 4, y + 2, P.dim, 1, null);
             g.R(P.blue, x + 6, y + 16, 34, 26);
             g.R(P.blue, x + 58, y + 16, 34, 26);
@@ -84,7 +93,13 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // a trapped-ion chain between RF electrodes, with laser beams on two ions
-        iontrap: {h: 88, draw(g, x, y) {
+        iontrap: {h: 88, motion: [ // the ions move together (their shared motion is the bus), laser pulses come in
+            ...[0, 1, 2, 3, 4, 5].map(i => ({kind: 'wobble', color: P.white, size: 3, period: 16, phase: 0,
+                points: [[30 + i * 34, 38], [2, 0]]})),
+            ...[1, 4].map(i => ({kind: 'path', color: P.white, size: 2, period: 20, phase: i * 5,
+                points: [[30 + i * 34 - 14, 84], [30 + i * 34, 40]]})),
+        ],
+            draw(g, x, y) {
             g.text('RF ELECTRODES (PAUL TRAP)', x + 4, y + 2, P.dim, 1, null);
             g.R(P.gold, x + 6, y + 16, 218, 5);
             g.R(P.gold, x + 6, y + 56, 218, 5);
@@ -93,7 +108,7 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
                 const bright = i % 3 !== 1; // bright ions scatter light: one result; dark: the other
                 if (bright)
                     g.circle(ix, y + 38, 4, P.blue);
-                g.R(P.white, ix - 1, y + 37, 3, 3);
+                // the ion itself moves (motion below)
             });
             for (const i of [1, 4]) // two laser beams, coming in from below at an angle
                 g.line(ions[i] - 14, y + 84, ions[i], y + 39, RED);
@@ -102,7 +117,13 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // a Mach-Zehnder interferometer: beam splitters, mirrors, a phase shifter, two detectors
-        mzi: {h: 86, draw(g, x, y) {
+        mzi: {h: 86, motion: [ // one photon takes both arms at once and leaves only towards D0
+            {kind: 'path', color: P.white, size: 3, period: 60, phase: 0,
+                points: [[14, 66], [40, 66], [40, 28], [140, 28], [176, 28]]},
+            {kind: 'path', color: P.white, size: 3, period: 60, phase: 0,
+                points: [[14, 66], [40, 66], [140, 66], [140, 28], [176, 28]]},
+        ],
+            draw(g, x, y) {
             const bs1 = [x + 40, y + 66], m1 = [x + 40, y + 28], m2 = [x + 140, y + 66], bs2 = [x + 140, y + 28];
             const beam = (a, b) => g.line(a[0], a[1], b[0], b[1], RED);
             beam([x + 14, y + 66], bs1);
@@ -301,7 +322,12 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // down-conversion: one pump photon becomes two in a nonlinear crystal
-        spdc: {h: 60, draw(g, x, y) {
+        spdc: {h: 60, motion: [ // pump photons split in the crystal into pairs
+            {kind: 'path', color: '#a050e0', size: 2, period: 40, phase: 0, points: [[4, 28], [82, 28]]},
+            {kind: 'path', color: RED, size: 2, period: 40, phase: 0, points: [[93, 28], [180, 7]]},
+            {kind: 'path', color: RED, size: 2, period: 40, phase: 0, points: [[93, 30], [180, 51]]},
+        ],
+            draw(g, x, y) {
             g.R('#a050e0', x + 4, y + 28, 70, 1);
             g.text('PUMP LASER', x + 4, y + 18, '#a050e0', 1, null);
             g.R(P.gold, x + 74, y + 20, 18, 18);
@@ -333,7 +359,11 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // a magneto-optical trap: six laser beams and two coils around a cold cloud
-        mot: {h: 84, draw(g, x, y) {
+        mot: {h: 84, motion: [ // atoms drift into the cold cloud
+            ...[[40, 20], [120, 64], [60, 72], [112, 14], [24, 50]].map(([px, py], i) => ({kind: 'path',
+                color: P.white, size: 1, period: 30, phase: i * 6, points: [[px, py], [80, 42]]})),
+        ],
+            draw(g, x, y) {
             const cx = x + 80, cy = y + 42;
             g.R(RED, x + 10, cy, 140, 1);
             g.R(RED, cx, y + 4, 1, 76);
@@ -348,7 +378,15 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // a laser: a gain medium pumped by a lamp between a full and a partial mirror
-        laser: {h: 78, draw(g, x, y) {
+        laser: {h: 78, motion: [ // light running between the mirrors, the beam, the pump light
+            ...[31, 37, 43].map((ly, i) => ({kind: 'path', color: P.white, size: 2, period: 46, phase: i * 15,
+                points: [[34, ly], [149, ly], [34, ly]]})),
+            ...[0, 12].map(ph => ({kind: 'path', color: P.white, size: 2, period: 24, phase: ph,
+                points: [[158, 36], [224, 36]]})),
+            ...[60, 82, 104, 126].map((px, i) => ({kind: 'path', color: P.gold, size: 1, period: 12,
+                phase: i * 3, points: [[px, 13], [px - 4, 25]]})),
+        ],
+            draw(g, x, y) {
             g.R(P.gold, x + 46, y + 4, 92, 6); // the pump (a flash lamp)
             g.R('#c88018', x + 46, y + 10, 92, 1);
             g.text('PUMP', x + 150, y + 2, P.gold, 1, null);
@@ -371,7 +409,13 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // polarization through wave plates: horizontal, then diagonal, then circular
-        waveplates: {h: 74, draw(g, x, y) {
+        waveplates: {h: 74, motion: [ // the field: swinging flat, swinging diagonally, turning round
+            {kind: 'swing', color: P.gold, size: 1, period: 16, phase: 0, points: [[28, 30], [10, 0]]},
+            {kind: 'swing', color: P.gold, size: 1, period: 16, phase: 0, points: [[101, 30], [8, -8]]},
+            {kind: 'spin', color: P.gold, size: 1, period: 16, phase: 0, points: [[192, 30], [8, 0]]},
+            {kind: 'path', color: P.white, size: 2, period: 90, phase: 0, points: [[4, 30], [226, 30]]},
+        ],
+            draw(g, x, y) {
             const cy = y + 30;
             g.R(RED, x + 4, cy, 222, 1); // the beam
             const plate = (px, name) => {
@@ -396,7 +440,13 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         }},
 
         // Doppler cooling: red-detuned beams from both sides; the atom absorbs from the beam it runs into
-        cooling: {h: 82, draw(g, x, y) {
+        cooling: {h: 82, motion: [ // photons from the beam the atom runs into; photons given out in all directions
+            ...[0, 8, 16].map(ph => ({kind: 'path', color: P.white, size: 2, period: 24, phase: ph,
+                points: [[226, 30], [125, 30]]})),
+            ...[[115, 8], [96, 48], [136, 48]].map(([px, py], i) => ({kind: 'path', color: P.green, size: 1,
+                period: 24, phase: 4 + i * 8, points: [[115, 30], [px, py]]})),
+        ],
+            draw(g, x, y) {
             const cy = y + 30;
             g.R(RED, x + 4, cy - 1, 84, 3); // the left beam, pointing right
             g.line(x + 84, cy - 5, x + 90, cy, RED);
@@ -415,5 +465,46 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
             g.text('BOTH LASERS TUNED A LITTLE BELOW', x + 18, cy + 32, RED, 1, null);
             g.text('THE ATOM\'S RESONANCE', x + 54, cy + 41, RED, 1, null);
         }},
+    };
+    // The moving parts of a drawing, at frame t (30 frames a second): `motion` lists parts that
+    // move along a path (a photon), swing through a centre (a field oscillating along d),
+    // spin round a centre (a field turning), or wobble about a point. The assembler game draws
+    // the same data (asm/core/viz.asm).
+    QQ.motionPoint = function (m, t) {
+        const f = ((t + m.phase) % m.period) / m.period;
+        const [c, d] = m.points;
+        if (m.kind === 'path') {
+            const seg = m.points.slice(1).map((b, i) => Math.hypot(b[0] - m.points[i][0], b[1] - m.points[i][1]));
+            let rest = f * seg.reduce((a, b) => a + b, 0);
+            for (let i = 0; i < seg.length; i++) {
+                if (rest <= seg[i] || i === seg.length - 1) {
+                    const a = m.points[i], b = m.points[i + 1], u = seg[i] ? Math.min(1, rest / seg[i]) : 0;
+                    return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u];
+                }
+                rest -= seg[i];
+            }
+        }
+        const w = 2 * Math.PI * f;
+        if (m.kind === 'swing')
+            return [c[0] + d[0] * Math.cos(w), c[1] + d[1] * Math.cos(w)];
+        if (m.kind === 'spin')
+            return [c[0] + d[0] * Math.cos(w), c[1] - d[0] * Math.sin(w)];
+        return [c[0] + d[0] * Math.sin(w), c[1] + d[1] * Math.sin(w)]; // wobble
+    };
+
+    QQ.drawMotion = function (g, pic, x, y, t) {
+        for (const m of pic.motion || []) {
+            const [px, py] = QQ.motionPoint(m, t);
+            const [cx, cy] = m.points[0];
+            if (m.kind === 'swing') {
+                g.line(x + 2 * cx - px, y + 2 * cy - py, x + px, y + py, m.color);
+            } else if (m.kind === 'spin') {
+                g.line(x + cx, y + cy, x + px, y + py, m.color);
+                g.R(m.color, Math.round(x + px) - 1, Math.round(y + py) - 1, 2, 2);
+            } else {
+                const h = Math.floor(m.size / 2);
+                g.R(m.color, Math.round(x + px) - h, Math.round(y + py) - h, m.size, m.size);
+            }
+        }
     };
 })();
