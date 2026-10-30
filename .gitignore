@@ -4,3 +4,4 @@ node_modules/
 dist/
 desktop/*.syso
 !desktop/icon.png
+build/
