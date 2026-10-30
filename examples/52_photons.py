@@ -1,8 +1,8 @@
-"""Level 50, OPTICS AND PHOTONS: Mach-Zehnder and HOM.
+"""Level 52, OPTICS AND PHOTONS: Mach-Zehnder and HOM.
 
 Path qubit: |0> = upper path, |1> = lower path.
 A 50/50 beam splitter is B = [[1, i], [i, 1]] / sqrt 2.
-Run: python examples/50_photons.py
+Run: python examples/52_photons.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

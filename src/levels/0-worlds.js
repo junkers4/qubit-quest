@@ -11,7 +11,8 @@ QQ.WORLDS = [
     {id: 5, title: 'QUANTUM PROTOCOLS'},
     {id: 6, title: 'ALGORITHMS'},
     {id: 7, title: 'QUANTUM HARDWARE'},
-    {id: 8, title: 'REAL QUANTUM COMPUTERS'},
+    {id: 8, title: 'LASERS AND OPTICS'},
+    {id: 9, title: 'REAL QUANTUM COMPUTERS'},
 ];
 
 QQ.LEVELS = [];

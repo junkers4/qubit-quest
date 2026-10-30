@@ -18,7 +18,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 
 | REQ | requirement | test |
 |---|---|---|
-| REQ-001 | Learning starts from zero and goes in order through eight worlds: classical warm-up, math toolkit, one qubit, many qubits, protocols, algorithms, quantum hardware (the qubit chip and its materials, the dilution refrigerator part by part, helium dilution, wiring, filters and shields, control and readout electronics, trapped ions and their lasers and traps, photon sources, optics and detectors, neutral-atom arrays, spin qubit devices), real quantum computers; at least 60 levels, each starting with a lesson and containing a quiz or a puzzle; every hardware drawing exists. | N content |
+| REQ-001 | Learning starts from zero and goes in order through nine worlds: classical warm-up, math toolkit, one qubit, many qubits, protocols, algorithms, quantum hardware (DiVincenzo's checklist, the qubit chip and its materials, the dilution refrigerator part by part, helium dilution, wiring, filters and shields, control and readout electronics, spin qubit devices), lasers and optics (how a laser works, polarization qubits and wave plates, interferometers, photon sources and detectors, laser cooling, trapped ions and their lasers and traps, neutral-atom arrays), real quantum computers; at least 60 levels, each starting with a lesson and containing a quiz or a puzzle; every hardware drawing exists. | N content |
 | REQ-002 | All teaching text is English, checked for correctness by a person. | **manual** |
 | REQ-003 | Every lesson page and every puzzle has an "explain like I'm five" text; the ELI5 button works on every step. | N content; B |
 | REQ-013 | Every level has at least two deep-dive pages (the MORE button) with the details, derivations and numbers behind it, each citing sources. | N content; B |
@@ -75,7 +75,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ | requirement | test |
 |---|---|---|
 | REQ-070 | The assembler core (`asm/core/sim.asm`, x86-64, NASM) gives the reference simulator's amplitudes (and so Qiskit's) for every puzzle solution and random circuit, and checks every puzzle goal (whole state up to global phase, chosen qubits, chances only) the way the web game does. | A |
-| REQ-071 | Every one of the 60 levels can be played to the end in the assembler game, by keys and by clicks; ELI5 opens on every step and the hint on every puzzle. | A |
+| REQ-071 | Every one of the 63 levels can be played to the end in the assembler game, by keys and by clicks; ELI5 opens on every step and the hint on every puzzle. | A |
 | REQ-072 | The assembler game keeps the web game's rules: a level opens after the one before has a star, a wrong first answer or a puzzle over par costs a star, stars are saved and come back. | A |
 | REQ-073 | `make -C asm` builds a Linux program (X11) and a Windows program (Win32, `qubit-quest.exe`, with the game's icon) from the same core; both play a level in a real window, save progress and quit from the menu. | W |
 | REQ-074 | The assembler game's data (`asm/gen/data.asm`: font, levels, texts) is generated from the web game and up to date. | N generated |

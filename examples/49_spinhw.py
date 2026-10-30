@@ -1,8 +1,8 @@
-"""Level 55, SPIN QUBIT DEVICES: spin-to-charge readout.
+"""Level 49, SPIN QUBIT DEVICES: spin-to-charge readout.
 
 Spin up may tunnel out of the dot within the read window;
 spin down cannot. A charge sensor sees the tunnelling.
-Run: python examples/55_spinhw.py
+Run: python examples/49_spinhw.py
 """
 import numpy as np
 

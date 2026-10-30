@@ -248,3 +248,34 @@ QQ.addDeep({
             'Work through a textbook with its exercises, take the free course, and run and change code. New results appear daily in the quant-ph section of arXiv: every arXiv id in SOURCES points there.'},
     ],
 });
+
+// World 8, the new levels on light
+QQ.addDeep({
+    laser: [
+        {title: 'EINSTEIN\'S THREE RATES', refs: ['einstein1917'], body:
+            'Einstein described light and atoms with three processes: absorption and stimulated emission, both in proportion to the energy density of the light, and spontaneous emission, which needs no light at all. Asking that they give Planck\'s law in equilibrium fixes how they are related: for levels of equal degeneracy the coefficients of absorption and stimulated emission are equal, and the spontaneous rate is larger in proportion to ν^3:\n' +
+            '  A / B = 8πhν^3 / c^3\n' +
+            '>That ν^3 is why lasers get harder to build at short wavelengths: spontaneous emission drains the inversion faster.'},
+        {title: 'THREE AND FOUR LEVELS', refs: ['maiman1960', 'schawlow1958'], body:
+            'Light alone cannot invert two levels: pumped as hard as you like, they end up half and half. Ruby is a THREE-LEVEL laser: the flash lamp lifts chromium ions into a broad band, they fall quickly to a long-lived level, and the laser runs from there down to the ground level, so more than half of all the ions must be pumped up first.\n' +
+            'In a FOUR-LEVEL laser the lower laser level empties quickly by itself, so even a weak pump gives an inversion.'},
+    ],
+    polarization: [
+        {title: 'JONES MATRICES', refs: ['jones1941'], body:
+            'A half-wave plate with its fast axis at an angle θ to the horizontal has, up to a global phase, the Jones matrix\n' +
+            '  [cos 2θ   sin 2θ]\n' +
+            '  [sin 2θ  -cos 2θ]\n' +
+            'so θ = 0 gives Z, θ = 45° gives X and θ = 22.5° gives H. A quarter-wave plate with a horizontal fast axis is diag(1, i), which is S. Light through a polarizer at an angle θ to its polarization keeps cos^2 θ of its intensity (Malus\'s law); for a single photon that is the chance to pass.'},
+        {title: 'FROM CRYSTALS TO CHIPS', refs: ['kok2007', 'carolan2015'], body:
+            'Wave plates and beam splitters on an optical table are hard to keep stable. Photonic chips build the same elements as waveguides: two waveguides brought close together act as a beam splitter, a small heater on one sets a phase, and a mesh of them makes any linear-optics circuit (Carolan et al. 2015 programmed one on six modes).'},
+    ],
+    cooling: [
+        {title: 'THE DOPPLER LIMIT, WORKED OUT', refs: ['wineland1979', 'steck87'], body:
+            'Each scattered photon kicks the atom twice: once when it is absorbed, along the beam, and once when it is given out again, in a random direction. The cooling force is strongest at a detuning of half the linewidth; there, balancing it against the heating from the random kicks gives\n' +
+            '  kB T = ħγ / 2\n' +
+            '  γ = 2π × 6.07 MHz: T = 146 µK\n' +
+            'for rubidium-87. The Doppler limit does not depend on the atom\'s mass; the recoil temperature does.'},
+        {title: 'TRAPPED IONS: SIDEBANDS', refs: ['wineland1979', 'wineland1978'], body:
+            'An ion held in a trap moves in quantized steps of the trap frequency. Below the Doppler limit, light tuned to the RED SIDEBAND (the transition frequency minus one step of motion) removes one step of motion with every photon it scatters, and so cools the ion close to the ground state of its motion.'},
+    ],
+});

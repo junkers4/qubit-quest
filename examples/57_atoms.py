@@ -1,6 +1,6 @@
-"""Level 52, NEUTRAL ATOMS: loading, sorting, Rydberg CZ.
+"""Level 57, NEUTRAL ATOMS: loading, sorting, Rydberg CZ.
 
-Run: python examples/52_atoms.py
+Run: python examples/57_atoms.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

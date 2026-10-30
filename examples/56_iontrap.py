@@ -1,6 +1,6 @@
-"""Level 49, ION TRAP HARDWARE: Yb+ numbers, the MS gate.
+"""Level 56, ION TRAP HARDWARE: Yb+ numbers, the MS gate.
 
-Run: python examples/49_iontrap.py
+Run: python examples/56_iontrap.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

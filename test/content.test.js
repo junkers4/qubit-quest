@@ -7,9 +7,10 @@ const QQ = require('./load.js');
 
 const NARROW_COLS = 38; // the narrowest screen (256 px wide) fits 38 characters of text
 
-test('REQ-001 eight worlds from classical bits to hardware and real machines, 60+ levels', () => {
+test('REQ-001 nine worlds from classical bits to hardware, light and real machines, 60+ levels', () => {
     assert.deepStrictEqual(QQ.WORLDS.map(w => w.title), ['CLASSICAL WARM-UP', 'MATH TOOLKIT', 'ONE QUBIT',
-        'MANY QUBITS', 'QUANTUM PROTOCOLS', 'ALGORITHMS', 'QUANTUM HARDWARE', 'REAL QUANTUM COMPUTERS']);
+        'MANY QUBITS', 'QUANTUM PROTOCOLS', 'ALGORITHMS', 'QUANTUM HARDWARE', 'LASERS AND OPTICS',
+        'REAL QUANTUM COMPUTERS']);
     assert.ok(QQ.LEVELS.length >= 60);
     for (const pic of QQ.LEVELS.flatMap(l => l.steps).filter(s => s.pic).map(s => s.pic))
         assert.ok(QQ.PICS[pic], 'drawing ' + pic);

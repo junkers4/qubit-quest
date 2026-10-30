@@ -1,8 +1,8 @@
-"""Level 53, ATOM ARRAY HARDWARE: the Rydberg blockade.
+"""Level 58, ATOM ARRAY HARDWARE: the Rydberg blockade.
 
 Two atoms, each |g> or |r>, both driven with Rabi frequency
 W; a strong interaction V on |rr> blocks double excitation.
-Run: python examples/53_atomhw.py
+Run: python examples/58_atomhw.py
 """
 import numpy as np
 from scipy.linalg import expm

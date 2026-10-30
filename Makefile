@@ -2,7 +2,7 @@
 # make test-python  the Qiskit examples and the simulator cross-check (pip install -r requirements.txt)
 # make shots        every level in headless Chromium at four sizes; screenshots in /tmp/qq
 # make test-desktop the desktop app: Go tests, then the game played from the built app
-# make test-asm     the assembler game headless: its simulator against the reference, all 60 levels
+# make test-asm     the assembler game headless: its simulator against the reference, all 63 levels
 # make test-all     all of these
 # make asm          the assembler game: build/qubit-quest (Linux) and build/qubit-quest.exe (Windows)
 # make desktop      the app for Linux, Windows and macOS in dist/ (needs Go; VERSION=0.1.0)

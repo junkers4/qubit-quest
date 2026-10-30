@@ -1,6 +1,6 @@
-"""Level 54, SPINS IN SILICON: Zeeman, precession, exchange.
+"""Level 48, SPINS IN SILICON: Zeeman, precession, exchange.
 
-Run: python examples/54_spins.py
+Run: python examples/48_spins.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

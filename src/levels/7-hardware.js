@@ -1,6 +1,5 @@
-// World 7: how qubits are built: DiVincenzo's checklist, superconducting circuits and the
-// dilution refrigerator, trapped ions and lasers, optics and photons, neutral atoms in
-// optical tweezers, spins in silicon.
+// World 7: how qubits are built in solid state: DiVincenzo's checklist, superconducting
+// circuits, the qubit chip, the dilution refrigerator, wiring and readout, spins in silicon.
 var QQ = globalThis.QQ || (globalThis.QQ = {});
 
 QQ.LEVELS.push(
@@ -215,165 +214,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'ions', world: 7, title: 'TRAPPED IONS AND LASERS', code: '48_ions',
-        refs: ['bruzewicz2019', 'cirac1995', 'paul1990', 'wineland1978'],
-        steps: [
-            {type: 'text', title: 'ATOMS ON A STRING', body:
-                'An ion is an atom with an electron missing, so electric fields can hold it. A PAUL TRAP (Paul\'s Nobel lecture, 1990) uses fast-oscillating fields to hold a line of ions in an ultra-high vacuum.\n' +
-                'Two internal energy levels of each ion are its |0> and |1>. Nature makes every ion of a kind identical.',
-                pic: 'iontrap',
-                eli5: 'Single atoms floating in empty space, held in a line by wiggling electric fields, like beads on an invisible string.'},
-            {type: 'text', title: 'LASERS DO EVERYTHING', body:
-                'Lasers COOL the ions until they barely move (laser cooling of trapped ions: Wineland, Drullinger and Walls, 1978).\n' +
-                'Laser (or microwave) pulses rotate each qubit: a "π pulse" flips |0> to |1>, a "π/2 pulse" makes an even superposition.\n' +
-                'Two-qubit gates use the ions\' shared motion (Cirac and Zoller, 1995).\n' +
-                'Readout: one state glows under a laser, the other stays dark, and a camera sees which.',
-            eli5: 'Lasers slow the atoms down, flip their qubits, tie them together through their wobble, and make the "1" atoms light up so a camera can read them.'},
-            {type: 'circuit', goal: 'FLIP THE ION FROM |0> TO |1> WITH LASER PULSES. P IS A π/2 PULSE.', qubits: 1,
-                boxes: {P: [['H', 0], ['S', 0], ['H', 0]]}, gates: ['P'], par: 2,
-                solution: [['P'], ['P']], hint: 'Two half flips make a whole flip.',
-                eli5: 'One pulse tips the arrow half way down, to the side. A second pulse tips it the rest of the way.'},
-            {type: 'quiz', q: 'In fluorescence readout, the camera tells the states apart by...',
-                options: ['THE ION\'S COLOUR', 'WHETHER THE ION GLOWS', 'THE ION\'S WEIGHT'], answer: 1,
-                why: 'One qubit state scatters the readout laser light (bright), the other does not (dark).'},
-            {type: 'quiz', q: 'How are two ions in a chain entangled?',
-                options: ['THROUGH THEIR SHARED MOTION', 'BY TOUCHING', 'THROUGH THE VACUUM PUMP'], answer: 0,
-                why: 'The ions repel each other, so they move together; laser pulses use that common motion as a bus.'},
-        ],
-    },
-    {
-        id: 'iontrap', world: 7, title: 'ION TRAP HARDWARE', code: '49_iontrap',
-        refs: ['olmschenk2007', 'haffner2008', 'sorensen1999', 'kielpinski2002', 'bruzewicz2019'],
-        steps: [
-            {type: 'text', title: 'CHOOSING AN ION', body:
-                'YTTERBIUM-171 stores its qubit in two hyperfine levels of its ground state, 12.6 GHz apart. Laser light at 369.5 nm cools the ion and reads it out: |1> scatters the light and glows, |0> stays dark. Olmschenk et al. (2007) measured a coherence time of 2.5 s for this qubit.\n' +
-                'CALCIUM-40 is used with an "optical" qubit: the ground level and a long-lived excited level, driven by a 729 nm laser (Häffner, Roos, Blatt 2008).',
-                pic: 'ionlevels',
-                eli5: 'Each kind of atom has its own ladder of energy steps. Scientists pick an atom whose two steps hold a qubit for a long time and can be read with a laser.'},
-            {type: 'text', title: 'THE TRAP', body:
-                'Electrodes carry a radio-frequency voltage plus static voltages. The fast-changing saddle-shaped field cannot hold a charge still at any one instant, but on average it pushes the ion back to the centre.\n' +
-                'Modern traps are chips with the electrodes on their surface, inside an ultra-high vacuum chamber so that no stray gas atom knocks the ions (Bruzewicz et al., 2019).',
-            eli5: 'A saddle that keeps flipping its shape very fast: a marble on it would roll off a still saddle, but on the flipping one it stays in the middle.'},
-            {type: 'text', title: 'GATES AND SCALE', body:
-                'One-qubit gates use microwaves or pairs of laser beams. The two-qubit MØLMER-SØRENSEN gate (1999) uses two laser frequencies to push the ions\' shared motion around a closed loop: the ions end up entangled and the motion returns to where it was, so the gate works even while the ions still jiggle a little.\n' +
-                'Larger machines move ions between zones of a chip: the QCCD design (Kielpinski, Monroe, Wineland 2002).',
-            eli5: 'Lasers give the ion string a gentle push that goes round in a circle and comes back. On the way, the ions get tied together.'},
-            {type: 'quiz', q: 'In ytterbium-171, how are |0> and |1> told apart?',
-                options: ['BY THEIR WEIGHT', '|1> GLOWS UNDER 369.5 NM LIGHT, |0> STAYS DARK', 'BY THEIR CHARGE'], answer: 1,
-                why: 'State-dependent fluorescence: only one of the two hyperfine levels scatters the detection laser.'},
-            {type: 'quiz', q: 'Why does the Mølmer-Sørensen gate tolerate warm ions?',
-                options: ['THE MOTION RETURNS TO ITS START', 'IT NEEDS NO LASERS', 'IT COOLS THE IONS'], answer: 0,
-                why: 'The motion is only borrowed: it goes round a closed loop, so its starting state does not matter.'},
-        ],
-    },
-    {
-        id: 'photons', world: 7, title: 'OPTICS AND PHOTONS', code: '50_photons',
-        refs: ['kok2007', 'klm2001', 'reck1994', 'hom1987'],
-        steps: [
-            {type: 'text', title: 'QUBITS OF LIGHT', body:
-                'A single photon can carry a qubit in its POLARIZATION (horizontal |0>, vertical |1>) or in its PATH: which of two beams it travels in.\n' +
-                'Optics does one-qubit gates: wave plates turn polarization, BEAM SPLITTERS and PHASE SHIFTERS mix and twist paths. A mesh of beam splitters can make any unitary on many paths (Reck et al., 1994).',
-            eli5: 'A photon is a tiny packet of light. Which way it wiggles, or which road it takes, can be its 0 or 1. Glass pieces like half-mirrors are its gates.'},
-            {type: 'text', title: 'THE MACH-ZEHNDER', body:
-                'A 50/50 beam splitter acts on the two paths as\n' +
-                '  B = 1/√2 [1 I]\n' +
-                '           [I 1]\n' +
-                'Two of them with mirrors make an interferometer. With equal arms B·B = I·X: the photon ALWAYS leaves by the other port. A phase in one arm changes where it goes.',
-                pic: 'mzi',
-                eli5: 'Split a photon in two with a half-mirror, let both halves travel, and join them at a second half-mirror. Like the H H trick, the halves interfere and choose one exit.'},
-            {type: 'circuit', goal: 'THE TWO BEAM SPLITTERS (GREY) ARE FIXED. MAKE THE PHOTON REACH D0 EVERY TIME.', qubits: 1,
-                boxes: {B: [['H', 0], ['SDG', 0], ['H', 0]], P: [['Z', 0]], Q: [['S', 0]]},
-                setup: [['B']], after: [['B']], gates: ['P', 'Q'], par: 1,
-                solution: [['P']], hint: 'P adds a half-wave (π) phase in the lower arm. Q adds a quarter wave.',
-                eli5: 'Without anything in the arms, the photon always picks exit D1. Delay one arm by half a wave and the halves meet the other way round.'},
-            {type: 'circuit', goal: 'NOW MAKE BOTH DETECTORS CLICK HALF OF THE TIME.', qubits: 1,
-                boxes: {B: [['H', 0], ['SDG', 0], ['H', 0]], P: [['Z', 0]], Q: [['S', 0]]},
-                setup: [['B']], after: [['B']], gates: ['P', 'Q'], par: 1, probsOnly: true,
-                solution: [['Q']], hint: 'A quarter-wave phase sits half way between "always D1" and "always D0".',
-                eli5: 'Half way between the two extremes is a 50/50 split.'},
-            {type: 'text', title: 'THE HARD PART', body:
-                'Photons barely interact, which keeps them coherent over long distances at room temperature: ideal flying qubits. But two-qubit gates are hard. Knill, Laflamme and Milburn (2001) showed that single photons, beam splitters, phase shifters and detectors are enough, using measurement to make probabilistic gates.\n' +
-                'Two identical photons meeting at a beam splitter always leave TOGETHER (Hong, Ou and Mandel, 1987).',
-            eli5: 'Light beams pass through each other without noticing. That is great for sending qubits far away, but it makes "tying two qubits together" tricky.'},
-            {type: 'quiz', q: 'What is the main source of errors for photonic qubits?',
-                options: ['HEAT FLIPS', 'LOSING THE PHOTON', 'THE PHOTONS COLLIDING'], answer: 1,
-                why: 'A photon absorbed or scattered away is simply gone. Photons hardly ever interact, and do not need cooling to stay coherent.'},
-        ],
-    },
-    {
-        id: 'photonhw', world: 7, title: 'PHOTON SOURCES, DETECTORS', code: '51_photonhw',
-        refs: ['kwiat1995', 'senellart2017', 'goltsman2001', 'marsili2013', 'carolan2015'],
-        steps: [
-            {type: 'text', title: 'MAKING SINGLE PHOTONS', body:
-                'Shine a laser into a NONLINEAR CRYSTAL and once in a while one pump photon splits into two (spontaneous parametric down-conversion), keeping the energy:\n' +
-                '  1/λ PUMP = 1/λ1 + 1/λ2\n' +
-                'Kwiat et al. (1995) made polarization-entangled pairs this way. Detecting one photon of a pair HERALDS the other. Semiconductor QUANTUM DOTS can emit one photon at a time on demand (review: Senellart, Solomon, White 2017).',
-                pic: 'spdc',
-                eli5: 'A special crystal sometimes splits one light particle into two twins. Catch one twin and you know its sibling is on its way.'},
-            {type: 'text', title: 'COUNTING PHOTONS', body:
-                'A superconducting nanowire single-photon detector (SNSPD) is a wire a few nanometres thick, cooled below its superconducting temperature and carrying a current just below the critical one. An absorbed photon makes a small normal "hot spot" that blocks the current: a click.\n' +
-                'Gol\'tsman et al. (2001): a niobium nitride strip 0.2 µm wide at 4.2 K. Tungsten silicide detectors reached 93% system efficiency at 1550 nm (Marsili et al., 2013).',
-                pic: 'snspd',
-                eli5: 'A super-thin wire that is cold and carrying as much current as it can. One photon warms a tiny spot, the current stumbles, and that stumble is the click.'},
-            {type: 'text', title: 'PHOTONIC CHIPS', body:
-                'Instead of mirrors on a table, WAVEGUIDES etched into a chip guide the light. Meshes of Mach-Zehnder interferometers with heated phase shifters can be programmed into any linear-optics circuit: Carolan et al. (2015) put 15 interferometers and 30 thermo-optic phase shifters on one chip.',
-            eli5: 'All the mirrors and half-mirrors shrunk onto one chip, with tiny heaters to tune them.'},
-            {type: 'quiz', q: 'A 405 nm pump photon splits into two equal photons. Their wavelength is...',
-                options: ['202.5 NM', '405 NM', '810 NM'], answer: 2,
-                why: '1/405 = 1/λ + 1/λ gives λ = 810 nm: each daughter has half the energy, so twice the wavelength.'},
-            {type: 'quiz', q: 'A 10-photon experiment with detectors of efficiency 0.93: chance all 10 click?',
-                options: ['ABOUT 93%', 'ABOUT 48%', 'ABOUT 9%'], answer: 1,
-                why: '0.93^10 ≈ 0.48. With 20% detectors it would be 0.2^10 ≈ 1 in 10 million: efficiency is everything.'},
-        ],
-    },
-    {
-        id: 'atoms', world: 7, title: 'NEUTRAL ATOMS', code: '52_atoms',
-        refs: ['saffman2010', 'jaksch2000', 'endres2016', 'ashkin1986'],
-        steps: [
-            {type: 'text', title: 'ATOMS HELD BY LIGHT', body:
-                'A tightly focused laser beam traps a small particle at its focus: OPTICAL TWEEZERS (Ashkin et al., 1986). Many tweezers hold a grid of single cold atoms in vacuum.\n' +
-                'Each tweezer catches an atom only about half of the time, so a camera looks, and moving tweezers rearrange the atoms into a gap-free array (Endres et al., 2016).',
-                pic: 'tweezers',
-                eli5: 'Beams of light act like tiny tweezers that each hold one atom. Some tweezers come up empty, so other tweezers slide atoms over to fill the holes.'},
-            {type: 'text', title: 'RYDBERG GATES', body:
-                'For a two-qubit gate a laser lifts atoms into a RYDBERG state: an electron in a huge orbit. Two nearby Rydberg atoms push each other\'s energy away, so only one of them can be excited at a time (the RYDBERG BLOCKADE).\n' +
-                'That blockade gives a controlled phase gate, a CZ (Jaksch et al., 2000; review: Saffman, Walker, Mølmer, 2010).',
-            eli5: 'Puff an atom up into a giant balloon and its neighbour cannot puff up too. That "only one balloon" rule is used as a guarded gate.'},
-            {type: 'circuit', goal: 'THE ATOMS GIVE YOU CZ. BUILD A CNOT FROM Q0 TO Q1 OUT OF CZ AND H.', qubits: 2,
-                setup: [['H', 0], ['T', 0], ['H', 0], ['X', 0]], gates: ['H', 'CZ'], par: 3,
-                solution: [['H', 1], ['CZ', 0, 1], ['H', 1]], hint: 'H on the target turns a phase flip into a bit flip: H Z H = X.',
-                eli5: 'CZ flips a hidden sign. Wrap the target in two H gates and the hidden sign flip becomes a real flip.'},
-            {type: 'quiz', q: 'Why do neutral-atom machines rearrange atoms after loading?',
-                options: ['TO COOL THEM', 'EACH TWEEZER LOADS ONLY ABOUT HALF OF THE TIME', 'TO MEASURE THEM'], answer: 1,
-                why: 'Loading is random, so the empty spots are filled by moving atoms with extra tweezers.'},
-        ],
-    },
-    {
-        id: 'atomhw', world: 7, title: 'ATOM ARRAY HARDWARE', code: '53_atomhw',
-        refs: ['raab1987', 'endres2016', 'barredo2016', 'evered2023', 'saffman2010'],
-        steps: [
-            {type: 'text', title: 'FIRST, A COLD CLOUD', body:
-                'A MAGNETO-OPTICAL TRAP (Raab et al., 1987): three pairs of counter-propagating laser beams tuned just below an atomic resonance, plus a weak magnetic field gradient from two coils, slow atoms from a vapour and gather them in the middle. Their sodium cloud was below a millikelvin and under 0.5 mm across.',
-                pic: 'mot',
-                eli5: 'Six laser beams push atoms from all sides, like a crowd gently shoving towards the middle, and the atoms slow down until they are very cold.'},
-            {type: 'text', title: 'FILLING THE TWEEZERS', body:
-                'Tweezers focused into the cloud catch atoms. Light-assisted collisions throw out pairs, so each tweezer ends up with exactly 0 or 1 atom.\n' +
-                'Endres et al. (2016) made 100 tweezers with an ACOUSTO-OPTIC DEFLECTOR, imaged the atoms, then steered moving tweezers to fill the gaps: the occupation rose from about 0.6 to 0.988, over 50 atoms in under 0.4 s. Barredo et al. (2016) did it in two dimensions.',
-            eli5: 'Each light tweezer grabs either nothing or exactly one atom. A camera checks, and a moving tweezer slides atoms into the empty places.'},
-            {type: 'text', title: 'GOOD GATES', body:
-                'Rydberg CZ gates on neutral atoms now reach 99.5% fidelity, done in parallel on up to 60 atoms (Evered et al., 2023), better than the threshold of the surface code.\n' +
-                'Atoms can also be moved during a computation, which lets any atom meet any other.',
-            eli5: 'The two-atom "tie them together" move now works 995 times out of 1000, good enough for error correction.'},
-            {type: 'quiz', q: 'Which ingredients make a magneto-optical trap?',
-                options: ['ELECTRODES AND RF VOLTAGE', 'LASER BEAMS AND A MAGNETIC FIELD GRADIENT', 'A DILUTION FRIDGE'], answer: 1,
-                why: 'Three pairs of beams plus a weak quadrupole magnetic field, as in Raab et al. (1987).'},
-            {type: 'quiz', q: 'After loading, a tweezer holds...',
-                options: ['MANY ATOMS', 'EXACTLY 0 OR 1 ATOM', 'ALWAYS 1 ATOM'], answer: 1,
-                why: 'Collisions remove pairs, so it is 0 or 1, roughly at random: hence the rearranging.'},
-        ],
-    },
-    {
-        id: 'spins', world: 7, title: 'SPINS IN SILICON', code: '54_spins',
+        id: 'spins', world: 7, title: 'SPINS IN SILICON', code: '48_spins',
         refs: ['loss1998', 'burkard2023'],
         steps: [
             {type: 'text', title: 'ONE ELECTRON, ONE QUBIT', body:
@@ -394,7 +235,7 @@ QQ.LEVELS.push(
         ],
     },
     {
-        id: 'spinhw', world: 7, title: 'SPIN QUBIT DEVICES', code: '55_spinhw',
+        id: 'spinhw', world: 7, title: 'SPIN QUBIT DEVICES', code: '49_spinhw',
         refs: ['tyryshkin2012', 'elzerman2004', 'veldhorst2015', 'burkard2023'],
         steps: [
             {type: 'text', title: 'QUIET SILICON', body:

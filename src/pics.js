@@ -346,5 +346,74 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
             g.text('6 LASER BEAMS', x + 150, cy - 10, RED, 1, null);
             g.text('COLD CLOUD', x + 150, cy + 4, P.white, 1, null);
         }},
+
+        // a laser: a gain medium pumped by a lamp between a full and a partial mirror
+        laser: {h: 78, draw(g, x, y) {
+            g.R(P.gold, x + 46, y + 4, 92, 6); // the pump (a flash lamp)
+            g.R('#c88018', x + 46, y + 10, 92, 1);
+            g.text('PUMP', x + 150, y + 2, P.gold, 1, null);
+            for (const px of [x + 60, x + 82, x + 104, x + 126]) // its light going into the medium
+                g.line(px, y + 13, px - 4, y + 25, P.gold);
+            g.R('#4a1414', x + 40, y + 28, 104, 18); // the gain medium
+            g.R(RED, x + 40, y + 28, 104, 1);
+            g.R(RED, x + 40, y + 45, 104, 1);
+            g.text('GAIN MEDIUM', x + 58, y + 32, P.white, 1, null);
+            g.R(SILVER, x + 28, y + 24, 4, 26); // the full mirror
+            g.R(SILVER, x + 152, y + 24, 2, 26); // the partial mirror
+            g.R(GREY, x + 154, y + 24, 1, 26);
+            for (const ly of [y + 30, y + 37, y + 44]) // light running back and forth
+                g.R(RED, x + 33, ly, 6, 1);
+            g.R(RED, x + 156, y + 36, 70, 2); // the beam
+            g.text('BEAM', x + 196, y + 26, RED, 1, null);
+            g.text('MIRROR', x + 2, y + 56, P.dim, 1, null);
+            g.text('PARTIAL MIRROR', x + 120, y + 56, P.dim, 1, null);
+            g.text('1 PHOTON MAKES 2 IN STEP', x + 26, y + 66, P.green, 1, null);
+        }},
+
+        // polarization through wave plates: horizontal, then diagonal, then circular
+        waveplates: {h: 74, draw(g, x, y) {
+            const cy = y + 30;
+            g.R(RED, x + 4, cy, 222, 1); // the beam
+            const plate = (px, name) => {
+                g.R(P.navy, px, cy - 16, 6, 33);
+                g.R(P.blue, px, cy - 16, 1, 33);
+                g.R(P.blue, px + 5, cy - 16, 1, 33);
+                g.text(name, px - 9, cy + 22, P.blue, 1, null);
+            };
+            plate(x + 62, 'HWP');
+            plate(x + 142, 'QWP');
+            // the field's direction before, between and after
+            g.R(P.white, x + 18, cy - 1, 21, 3);
+            g.text('|H>', x + 20, cy - 16, P.gold, 1, null);
+            g.line(x + 92, cy + 9, x + 110, cy - 9, P.white);
+            g.line(x + 93, cy + 9, x + 111, cy - 9, P.white);
+            g.text('|D> = |+>', x + 78, cy - 22, P.gold, 1, null);
+            g.circle(x + 192, cy, 9, P.white);
+            g.R(P.white, x + 200, cy - 4, 3, 3); // the turning direction
+            g.text('CIRCULAR', x + 168, cy - 22, P.gold, 1, null);
+            g.text('22.5°: H', x + 48, cy + 32, P.dim, 1, null);
+            g.text('0°: S', x + 134, cy + 32, P.dim, 1, null);
+        }},
+
+        // Doppler cooling: red-detuned beams from both sides; the atom absorbs from the beam it runs into
+        cooling: {h: 82, draw(g, x, y) {
+            const cy = y + 30;
+            g.R(RED, x + 4, cy - 1, 84, 3); // the left beam, pointing right
+            g.line(x + 84, cy - 5, x + 90, cy, RED);
+            g.line(x + 84, cy + 5, x + 90, cy, RED);
+            g.R(RED, x + 142, cy - 1, 84, 3); // the right beam, pointing left
+            g.line(x + 146, cy - 5, x + 140, cy, RED);
+            g.line(x + 146, cy + 5, x + 140, cy, RED);
+            g.circle(x + 115, cy, 8, P.gold); // the atom
+            g.R(P.gold, x + 112, cy - 3, 7, 7);
+            g.R(P.white, x + 115, cy - 16, 22, 1); // it moves right...
+            g.line(x + 132, cy - 20, x + 137, cy - 16, P.white);
+            g.line(x + 132, cy - 12, x + 137, cy - 16, P.white);
+            g.text('V', x + 104, cy - 21, P.white, 1, null);
+            g.text('MEETS IT: ABSORBS', x + 128, cy + 8, P.green, 1, null);
+            g.text('RUNS AWAY: HARDLY', x + 4, cy + 8, P.dim, 1, null);
+            g.text('BOTH LASERS TUNED A LITTLE BELOW', x + 18, cy + 32, RED, 1, null);
+            g.text('THE ATOM\'S RESONANCE', x + 54, cy + 41, RED, 1, null);
+        }},
     };
 })();

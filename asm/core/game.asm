@@ -1,5 +1,5 @@
 ; Qubit Quest, the game: screens, rules and input, in x86-64 assembler. The same game as the
-; web version (src/game.js): a title, a map of the 60 levels in 8 worlds, and in each level
+; web version (src/game.js): a title, a map of the 63 levels in 9 worlds, and in each level
 ; lesson pages, quizzes and circuit puzzles, with an ELI5 window and hints. The content is
 ; data from asm/gen/data.asm; the qubits are simulated by core/sim.asm.
 ;

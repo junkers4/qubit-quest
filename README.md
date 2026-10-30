@@ -10,7 +10,7 @@ a gold and white 5x7 pixel font, Doom-blue menus, no smoothing.
 ![a Qiskit example in the game](docs/code.png)
 ![the desktop app on Linux](docs/desktop.png)
 
-60 levels in 8 worlds, all in English, from bits to real hardware:
+63 levels in 9 worlds, all in English, from bits to real hardware:
 
 | World | Levels |
 |---|---|
@@ -20,8 +20,9 @@ a gold and white 5x7 pixel font, Doom-blue menus, no smoothing.
 | 4. Many qubits | two qubits, CNOT, entanglement, the four Bell states, SWAP, no cloning, Toffoli and universality, the Bell (CHSH) test |
 | 5. Quantum protocols | superdense coding, teleportation, BB84 key distribution |
 | 6. Algorithms | phase kickback, Deutsch, Deutsch-Jozsa, Bernstein-Vazirani, Simon, Grover, the quantum Fourier transform, phase estimation, Shor |
-| 7. Quantum hardware | DiVincenzo's checklist, superconducting qubits, the qubit chip (silicon or sapphire, Al/AlOx/Al junctions, tantalum), the dilution refrigerator part by part (vacuum can, shields, pulse tube, gold-plated copper plates), helium dilution (6.6% helium-3, still, sintered-silver heat exchangers), wires, filters and shields (stainless and NbTi coax, attenuators, circulators, TWPA, HEMT, infrared), control and readout (DRAG pulses, dispersive readout), trapped ions (Yb-171 at 369.5 nm, Paul traps, Mølmer-Sørensen gates, QCCD), optics and photons (Mach-Zehnder, down-conversion, nanowire detectors, photonic chips), neutral atoms (MOT, tweezers, AOD rearrangement, Rydberg gates), spins in silicon (silicon-28, spin-to-charge readout) |
-| 8. Real quantum computers | noise, error correction, variational algorithms, Qiskit in practice, what next |
+| 7. Quantum hardware | DiVincenzo's checklist, superconducting qubits, the qubit chip (silicon or sapphire, Al/AlOx/Al junctions, tantalum), the dilution refrigerator part by part (vacuum can, shields, pulse tube, gold-plated copper plates), helium dilution (6.6% helium-3, still, sintered-silver heat exchangers), wires, filters and shields (stainless and NbTi coax, attenuators, circulators, TWPA, HEMT, infrared), control and readout (DRAG pulses, dispersive readout), spins in silicon (silicon-28, spin-to-charge readout) |
+| 8. Lasers and optics | how a laser works (stimulated emission, population inversion, the resonator, coherence length), polarization qubits (wave plates as gates, Jones matrices, polarizing beam splitters), optics and photons (Mach-Zehnder, down-conversion, nanowire detectors, photonic chips), laser cooling (Doppler cooling, the Doppler and recoil limits, sub-Doppler cooling), trapped ions (Yb-171 at 369.5 nm, Paul traps, Mølmer-Sørensen gates, QCCD), neutral atoms (MOT, tweezers, AOD rearrangement, Rydberg gates) |
+| 9. Real quantum computers | noise, error correction, variational algorithms, Qiskit in practice, what next |
 
 Every level has lessons, quizzes and circuit puzzles (1 to 3 qubits, black-box oracles, fixed
 gates, partial goals), and on every step four buttons:
@@ -71,7 +72,7 @@ make -C asm
 
 That builds `build/qubit-quest` (needs nasm, gcc, libx11-dev) and `build/qubit-quest.exe`
 (needs nasm and mingw-w64 binutils). `make -C asm test` checks the core's simulator against
-the reference (and so Qiskit) and plays all 60 levels headless; `make -C asm test-window`
+the reference (and so Qiskit) and plays all 63 levels headless; `make -C asm test-window`
 plays a level in both real programs (Xvfb, wine). Keys: Enter, arrows, 1-4 to answer, gate
 letters and 0-2 for wires, Backspace to undo, E for ELI5, ? for a hint, Esc for the map; the
 mouse works too. In puzzles O switches the picture of the state: chances with phase dials, a

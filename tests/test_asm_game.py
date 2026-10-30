@@ -54,10 +54,10 @@ def open_map(game):
 
 
 def test_every_level_plays_to_the_end(fresh, data):
-    """REQ-071: all 60 levels, every lesson, quiz and puzzle."""
+    """REQ-071: all 63 levels, every lesson, quiz and puzzle."""
     game = fresh(unlock=True)
     SHOTS.mkdir(parents=True, exist_ok=True)
-    assert len(data["levels"]) == 60
+    assert len(data["levels"]) == 63
     for i, level in enumerate(data["levels"]):
         game.key("esc")  # from the done screen (or the title) to the map
         if game.screen == "title":

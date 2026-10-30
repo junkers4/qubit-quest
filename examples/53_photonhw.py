@@ -1,7 +1,7 @@
-"""Level 51, PHOTON SOURCES, DETECTORS: energy and efficiency.
+"""Level 53, PHOTON SOURCES, DETECTORS: energy and efficiency.
 
 Down-conversion keeps energy: 1/lp = 1/l1 + 1/l2.
-Run: python examples/51_photonhw.py
+Run: python examples/53_photonhw.py
 """
 def partner(pump_nm, signal_nm):
     return 1 / (1 / pump_nm - 1 / signal_nm)
