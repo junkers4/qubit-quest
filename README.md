@@ -9,7 +9,7 @@ a gold and white 5x7 pixel font, Doom-blue menus, no smoothing.
 ![the dilution refrigerator](docs/fridge.png)
 ![a Qiskit example in the game](docs/code.png)
 
-52 levels in 8 worlds, all in English, from bits to real hardware:
+60 levels in 8 worlds, all in English, from bits to real hardware:
 
 | World | Levels |
 |---|---|
@@ -19,14 +19,16 @@ a gold and white 5x7 pixel font, Doom-blue menus, no smoothing.
 | 4. Many qubits | two qubits, CNOT, entanglement, the four Bell states, SWAP, no cloning, Toffoli and universality, the Bell (CHSH) test |
 | 5. Quantum protocols | superdense coding, teleportation, BB84 key distribution |
 | 6. Algorithms | phase kickback, Deutsch, Deutsch-Jozsa, Bernstein-Vazirani, Simon, Grover, the quantum Fourier transform, phase estimation, Shor |
-| 7. Quantum hardware | DiVincenzo's checklist, superconducting qubits, the dilution refrigerator (0.01 K), trapped ions and lasers, optics and photons (Mach-Zehnder, Hong-Ou-Mandel), neutral atoms in optical tweezers, spins in silicon |
+| 7. Quantum hardware | DiVincenzo's checklist, superconducting qubits, the qubit chip (silicon or sapphire, Al/AlOx/Al junctions, tantalum), the dilution refrigerator part by part (vacuum can, shields, pulse tube, gold-plated copper plates), helium dilution (6.6% helium-3, still, sintered-silver heat exchangers), wires, filters and shields (stainless and NbTi coax, attenuators, circulators, TWPA, HEMT, infrared), control and readout (DRAG pulses, dispersive readout), trapped ions (Yb-171 at 369.5 nm, Paul traps, Mølmer-Sørensen gates, QCCD), optics and photons (Mach-Zehnder, down-conversion, nanowire detectors, photonic chips), neutral atoms (MOT, tweezers, AOD rearrangement, Rydberg gates), spins in silicon (silicon-28, spin-to-charge readout) |
 | 8. Real quantum computers | noise, error correction, variational algorithms, Qiskit in practice, what next |
 
 Every level has lessons, quizzes and circuit puzzles (1 to 3 qubits, black-box oracles, fixed
-gates, partial goals), and on every step three buttons:
+gates, partial goals), and on every step four buttons:
 
 - **ELI5**: the idea explained like you are five.
 - **CODE**: a runnable Python / Qiskit (or NumPy) example for the level, with a COPY button.
+- **MORE**: the details behind the level: derivations, exact formulas, numbers, what things
+  are made of and why.
 - **SOURCES**: the papers and books behind it. Every source was checked against a
   bibliographic record; see [docs/REFERENCES.md](docs/REFERENCES.md).
 

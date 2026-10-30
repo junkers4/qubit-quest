@@ -1,6 +1,6 @@
-"""Level 52, WHAT NEXT: a playground. Change it and rerun!
+"""Level 60, WHAT NEXT: a playground. Change it and rerun!
 
-Run: python examples/52_beyond.py
+Run: python examples/60_beyond.py
 """
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler

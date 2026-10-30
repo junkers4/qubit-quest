@@ -1,6 +1,6 @@
-"""Level 49, ERROR CORRECTION: the 3-qubit bit-flip code.
+"""Level 57, ERROR CORRECTION: the 3-qubit bit-flip code.
 
-Run: python examples/49_qec.py
+Run: python examples/57_qec.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

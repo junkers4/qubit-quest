@@ -1,6 +1,6 @@
-"""Level 50, VARIATIONAL ALGORITHMS: a tiny VQE.
+"""Level 58, VARIATIONAL ALGORITHMS: a tiny VQE.
 
-Run: python examples/50_variational.py
+Run: python examples/58_variational.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

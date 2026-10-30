@@ -24,5 +24,15 @@ QQ.eli5For = function (L, i) {
     return L.eli5;
 };
 
+// Deep-dive pages (the MORE button) live in src/levels/deep-*.js and are attached by level id.
+QQ.addDeep = function (map) {
+    for (const [id, pages] of Object.entries(map)) {
+        const L = QQ.LEVELS.find(l => l.id === id);
+        if (!L)
+            throw new Error('deep pages for an unknown level: ' + id);
+        L.deep = pages;
+    }
+};
+
 if (typeof module !== 'undefined')
     module.exports = QQ;

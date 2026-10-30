@@ -1,8 +1,8 @@
-"""Level 44, TRAPPED IONS AND LASERS: Rabi and Ramsey.
+"""Level 48, TRAPPED IONS AND LASERS: Rabi and Ramsey.
 
 A laser pulse of area theta rotates the ion's qubit by
 RX(theta): P(1) = sin^2(theta / 2). A pi pulse flips it.
-Run: python examples/44_ions.py
+Run: python examples/48_ions.py
 """
 import numpy as np
 from qiskit import QuantumCircuit

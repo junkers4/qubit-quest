@@ -49,6 +49,17 @@ right file and fill it in, then run `make generate` and `make test-all`:
 },
 ```
 
+Deep-dive pages (the MORE button) go in `src/levels/deep-1.js` or `deep-2.js`, by level id:
+
+```js
+QQ.addDeep({
+    'my-level': [
+        {title: 'THE DETAIL', refs: ['nc2010 §4.2'], body: 'Text, formulas and numbers, as on a lesson page.'},
+        {title: 'ANOTHER ONE', refs: ['paper2001'], body: '...'},   // at least two pages, each with sources
+    ],
+});
+```
+
 Gates: `X Y Z H S SDG T TDG` take one wire (`['H', q]`); `CX` is `['CX', control, target]`;
 `CZ`, `CS`, `CSDG`, `SWAP` are symmetric (`['CZ', a, b]`, a < b); `CCX` is
 `['CCX', control1, control2, target]` with control1 < control2; a box is `['F']`.

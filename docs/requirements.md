@@ -14,9 +14,10 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 
 | REQ | requirement | test |
 |---|---|---|
-| REQ-001 | Learning starts from zero and goes in order through eight worlds: classical warm-up, math toolkit, one qubit, many qubits, protocols, algorithms, quantum hardware (superconducting circuits, the dilution refrigerator, trapped ions and lasers, optics and photons, neutral atoms, spins), real quantum computers; at least 52 levels, each starting with a lesson and containing a quiz or a puzzle; every hardware drawing exists. | N content |
+| REQ-001 | Learning starts from zero and goes in order through eight worlds: classical warm-up, math toolkit, one qubit, many qubits, protocols, algorithms, quantum hardware (the qubit chip and its materials, the dilution refrigerator part by part, helium dilution, wiring, filters and shields, control and readout electronics, trapped ions and their lasers and traps, photon sources, optics and detectors, neutral-atom arrays, spin qubit devices), real quantum computers; at least 60 levels, each starting with a lesson and containing a quiz or a puzzle; every hardware drawing exists. | N content |
 | REQ-002 | All teaching text is English, checked for correctness by a person. | **manual** |
 | REQ-003 | Every lesson page and every puzzle has an "explain like I'm five" text; the ELI5 button works on every step. | N content; B |
+| REQ-013 | Every level has at least two deep-dive pages (the MORE button) with the details, derivations and numbers behind it, each citing sources. | N content; B |
 | REQ-008 | Quizzes have 2-4 distinct options, one right answer and an explanation. | N content |
 | REQ-009 | Every puzzle can be solved with its own gates on its allowed wires, is not solved at the start, and its par is the true minimum (breadth-first search). | N content; P cross-check |
 | REQ-012 | The gate book covers every gate with its matrix, a description, its Qiskit call and sources; the glossary is alphabetical and cites sources. | N content |
@@ -47,7 +48,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ | requirement | test |
 |---|---|---|
 | REQ-040 | Every level can be played to the end in a browser at all four screen sizes without page errors; playing a puzzle's solution by taps solves it. | B |
-| REQ-041 | ELI5, CODE and SOURCES open on every step of every level, show content, and close. | B |
+| REQ-041 | ELI5, CODE, MORE and SOURCES open on every step of every level, show content, and close. | B |
 | REQ-042 | The title menu opens the gate book, the glossary and the full source list. | B |
 | REQ-043 | The pixel look: whole-number scaling, no smoothing, the red #B01818 frame. | B |
 | REQ-044 | The game runs from `file://` with no build and makes no network request. | B |

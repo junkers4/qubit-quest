@@ -598,8 +598,24 @@
         ]};
     }
 
+    // MORE: the level's deep-dive pages, one after another
+    function openDeep() {
+        const L = level();
+        openReader('MORE: ' + L.title, cols => {
+            const out = [];
+            for (const d of L.deep) {
+                out.push({t: d.title, c: P.gold});
+                for (const l of layout(d.body, cols))
+                    out.push({t: l.text, c: l.kind === 'key' ? P.gold : P.white, band: l.kind === 'formula'});
+                out.push({t: 'SEE: ' + d.refs.join(', '), c: P.dim});
+                out.push({t: ''});
+            }
+            return out;
+        });
+    }
+
     function openRefs() {
-        const cites = [...(step().refs || []), ...(level().refs || [])];
+        const cites = [...(step().refs || []), ...(level().refs || []), ...(level().deep || []).flatMap(d => d.refs)];
         openReader('SOURCES', cols => refLines(cites, cols));
     }
 
@@ -805,8 +821,14 @@
         const items = [['< BACK', back, {}], ['ELI5', openEli5, {color: P.gold}]];
         if (L.code)
             items.push(['CODE', openCode, {}]);
+        if (L.deep)
+            items.push(['MORE', openDeep, {}]);
         items.push(['SOURCES', openRefs, {}]);
         items.push([last ? 'FINISH' : 'NEXT >', next, {disabled: !canNext()}]);
+        // short labels when the screen is too narrow for the long ones
+        const SHORT = {'< BACK': '<', 'SOURCES': 'REFS', 'NEXT >': '>', 'FINISH': 'END'};
+        if (items.reduce((s, [l]) => s + bw(l) + 2, -2) > W - 20)
+            items.forEach(it => { it[0] = SHORT[it[0]] || it[0]; });
         const total = items.reduce((s, [l]) => s + bw(l), 0);
         const gap = Math.max(2, Math.floor((W - 20 - total) / (items.length - 1)));
         let fx = 10;
@@ -1285,6 +1307,8 @@
                 openCode();
             else if (k === 'r' || k === 'R')
                 openRefs();
+            else if ((k === 'm' || k === 'M') && level().deep)
+                openDeep();
             else if (S.type === 'quiz' && /^[1-4]$/.test(k) && +k <= S.options.length)
                 answer(+k - 1);
             else if (S.type === 'circuit') {
@@ -1327,6 +1351,6 @@
         link.href = ic.toDataURL();
 
     // for the screenshot test
-    QQ.game = {G, draw, startLevel, next, place, wire, answer, hint: () => hint(step()), openEli5, openCode, openRefs, openBook,
+    QQ.game = {G, draw, startLevel, next, place, wire, answer, hint: () => hint(step()), openEli5, openCode, openDeep, openRefs, openBook,
         openGlossary, openLibrary, progress: () => progress};
 })();

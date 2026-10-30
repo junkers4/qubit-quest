@@ -7,10 +7,10 @@ const QQ = require('./load.js');
 
 const NARROW_COLS = 38; // the narrowest screen (256 px wide) fits 38 characters of text
 
-test('REQ-001 eight worlds from classical bits to hardware and real machines, 50+ levels', () => {
+test('REQ-001 eight worlds from classical bits to hardware and real machines, 60+ levels', () => {
     assert.deepStrictEqual(QQ.WORLDS.map(w => w.title), ['CLASSICAL WARM-UP', 'MATH TOOLKIT', 'ONE QUBIT',
         'MANY QUBITS', 'QUANTUM PROTOCOLS', 'ALGORITHMS', 'QUANTUM HARDWARE', 'REAL QUANTUM COMPUTERS']);
-    assert.ok(QQ.LEVELS.length >= 52);
+    assert.ok(QQ.LEVELS.length >= 60);
     for (const pic of QQ.LEVELS.flatMap(l => l.steps).filter(s => s.pic).map(s => s.pic))
         assert.ok(QQ.PICS[pic], 'drawing ' + pic);
     for (const w of QQ.WORLDS)
@@ -50,6 +50,18 @@ test('REQ-004 every level cites sources that exist; algorithms and protocols cit
     for (const b of [...QQ.BOOK, ...QQ.GLOSSARY])
         for (const c of b.refs)
             assert.ok(QQ.refParts(c).ref, `${b.gate || b.term}: unknown source ${c}`);
+});
+
+test('REQ-013 every level has deep-dive pages (MORE), each with sources', () => {
+    for (const L of QQ.LEVELS) {
+        assert.ok(L.deep && L.deep.length >= 2, L.id + ' has at least two MORE pages');
+        for (const d of L.deep) {
+            assert.ok(d.title && d.body && d.body.length > 80, `${L.id}: ${d.title}`);
+            assert.ok(d.refs && d.refs.length, `${L.id}: ${d.title} cites a source`);
+            for (const c of d.refs)
+                assert.ok(QQ.refParts(c).ref, `${L.id}: unknown source ${c}`);
+        }
+    }
 });
 
 test('REQ-007 every level has a runnable CODE example, each example belongs to one level', () => {
@@ -106,8 +118,8 @@ function shownTexts() {
         up.push(w.title);
     for (const L of QQ.LEVELS) {
         up.push(L.title);
-        for (const S of L.steps)
-            up.push(S.title, S.body, S.eli5, S.q, S.why, S.goal, S.hint, S.allowText, ...(S.options || []));
+        for (const S of [...L.steps, ...(L.deep || [])])
+            up.push(S.title, S.body, S.eli5, S.q, S.why, S.goal, S.hint, S.allowText, ...(S.options || []), ...(S.refs || []));
         keep.push(QQ.EXAMPLES[L.code].code, QQ.EXAMPLES[L.code].file);
     }
     for (const b of QQ.BOOK)
@@ -140,7 +152,7 @@ test('REQ-011 text fits the narrowest screen: no long words, formulas fit a line
         for (const word of s.split(/\s+/))
             assert.ok(word.length <= NARROW_COLS, `too long: ${word}`);
     for (const L of QQ.LEVELS)
-        for (const S of L.steps.filter(s => s.body))
+        for (const S of [...L.steps, ...(L.deep || [])].filter(s => s.body))
             for (const para of S.body.split('\n'))
                 if (para.startsWith('  '))
                     assert.ok(para.length - 2 <= NARROW_COLS - 2, `${L.id}: formula too wide: ${para}`);

@@ -44,6 +44,7 @@ test('REQ-006 every source is cited somewhere, and only known sources are cited'
     for (const L of QQ.LEVELS) {
         (L.refs || []).forEach(add);
         L.steps.forEach(s => (s.refs || []).forEach(add));
+        (L.deep || []).forEach(d => d.refs.forEach(add));
     }
     for (const b of [...QQ.BOOK, ...QQ.GLOSSARY])
         b.refs.forEach(add);

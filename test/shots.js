@@ -42,8 +42,8 @@ async function playAll(page, name, shots) {
         for (let s = 0; s < steps; s++) {
             const type = await page.evaluate(() => QQ.LEVELS[QQ.game.G.level].steps[QQ.game.G.step].type);
             const tag = `${lv}-${s + 1}-${type}`;
-            // REQ-041: the three helpers open on every step, show something, and close
-            for (const open of ['openEli5', 'openCode', 'openRefs']) {
+            // REQ-041, REQ-013: the helpers (ELI5, CODE, MORE, SOURCES) open on every step, show something, and close
+            for (const open of ['openEli5', 'openCode', 'openDeep', 'openRefs']) {
                 const o = await page.evaluate(open => {
                     QQ.game[open]();
                     QQ.game.draw();
@@ -52,7 +52,7 @@ async function playAll(page, name, shots) {
                 }, open);
                 if (!o || !o.pages)
                     problem(`${name} ${tag}: ${open} shows nothing`);
-                if (s === 0 && shots && (i % 6 === 0 || open === 'openCode' && i % 6 === 3))
+                if (s === 0 && shots && (i % 6 === 0 || open === 'openCode' && i % 6 === 3 || open === 'openDeep' && i % 6 === 2))
                     await shot(`${lv}-${open.slice(4).toLowerCase()}`);
                 await page.keyboard.press('Escape');
                 if ((await G()).overlay)

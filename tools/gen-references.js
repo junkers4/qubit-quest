@@ -15,6 +15,7 @@ function build() {
         const where = `${i + 1} ${L.title}`;
         (L.refs || []).forEach(c => note(c, where));
         L.steps.forEach(s => (s.refs || []).forEach(c => note(c, where)));
+        (L.deep || []).forEach(d => d.refs.forEach(c => note(c, where + ' (more)')));
     });
     QQ.BOOK.forEach(b => b.refs.forEach(c => note(c, 'gate book')));
     QQ.GLOSSARY.forEach(g => g.refs.forEach(c => note(c, 'glossary')));

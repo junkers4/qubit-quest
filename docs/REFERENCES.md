@@ -7,15 +7,15 @@ Every identifier below was checked against the bibliographic record named under 
 - **ashkin1986**: A. Ashkin, J. M. Dziedzic, J. E. Bjorkholm, S. Chu (1986). Observation of a single-beam gradient force optical trap for dielectric particles. Optics Letters 11(5), 288-290.  
   DOI [10.1364/OL.11.000288](https://doi.org/10.1364/OL.11.000288)  
   checked: <https://scilit.com/publications/201bed87507ea308d702ab7a3ac995d5>  
-  cited in: 46 NEUTRAL ATOMS
+  cited in: 52 NEUTRAL ATOMS
 - **aspect1982**: A. Aspect, J. Dalibard, G. Roger (1982). Experimental Test of Bell's Inequalities Using Time-Varying Analyzers. Physical Review Letters 49(25), 1804-1807.  
   DOI [10.1103/PhysRevLett.49.1804](https://doi.org/10.1103/PhysRevLett.49.1804)  
   checked: <https://scilit.net/publications/c66b58d610ade9ad011b748bfac98618>  
-  cited in: 28 THE BELL TEST
+  cited in: 28 THE BELL TEST; 28 THE BELL TEST (more)
 - **barenco1995**: A. Barenco, C. H. Bennett, R. Cleve, D. P. DiVincenzo, N. Margolus, P. Shor, T. Sleator, J. A. Smolin, H. Weinfurter (1995). Elementary gates for quantum computation. Physical Review A 52(5), 3457-3467.  
   DOI [10.1103/PhysRevA.52.3457](https://doi.org/10.1103/PhysRevA.52.3457) · arXiv [quant-ph/9503016](https://arxiv.org/abs/quant-ph/9503016)  
   checked: <https://arxiv.org/abs/quant-ph/9503016>  
-  cited in: 22 CNOT; 27 TOFFOLI AND UNIVERSALITY; gate book
+  cited in: 22 CNOT; 22 CNOT (more); 27 TOFFOLI AND UNIVERSALITY; gate book
 - **epr1935**: A. Einstein, B. Podolsky, N. Rosen (1935). Can Quantum-Mechanical Description of Physical Reality Be Considered Complete? Physical Review 47(10), 777-780.  
   DOI [10.1103/PhysRev.47.777](https://doi.org/10.1103/PhysRev.47.777)  
   checked: <https://bibsonomy.org/bibtex/27ebc89f882bf857e06159e705d6def1b/derkimbeimlesen>  
@@ -23,91 +23,119 @@ Every identifier below was checked against the bibliographic record named under 
 - **qiskit2024**: A. Javadi-Abhari et al. (2024). Quantum computing with Qiskit. preprint.  
   arXiv [2405.08810](https://arxiv.org/abs/2405.08810)  
   checked: <https://arxiv.org/abs/2405.08810>  
-  cited in: 51 QISKIT IN PRACTICE; glossary
+  cited in: 25 SWAP (more); 59 QISKIT IN PRACTICE; 59 QISKIT IN PRACTICE (more); glossary
 - **ekert1991**: A. K. Ekert (1991). Quantum cryptography based on Bell's theorem. Physical Review Letters 67(6), 661-663.  
   DOI [10.1103/PhysRevLett.67.661](https://doi.org/10.1103/PhysRevLett.67.661)  
   checked: <https://scilit.net/publications/f27dc264598b6103fd84fee25197e406>  
-  cited in: 31 QUANTUM KEYS: BB84
+  cited in: 31 QUANTUM KEYS: BB84; 31 QUANTUM KEYS: BB84 (more)
 - **steane1996**: A. M. Steane (1996). Error Correcting Codes in Quantum Theory. Physical Review Letters 77, 793.  
   DOI [10.1103/PhysRevLett.77.793](https://doi.org/10.1103/PhysRevLett.77.793)  
   checked: <https://journals.aps.org/prl/issues/77/5>  
-  cited in: 49 ERROR CORRECTION
+  cited in: 57 ERROR CORRECTION
+- **tyryshkin2012**: A. M. Tyryshkin et al. (2012). Electron spin coherence exceeding seconds in high-purity silicon. Nature Materials 11, 143-147.  
+  arXiv [1105.3772](https://arxiv.org/abs/1105.3772)  
+  checked: <https://arxiv.org/abs/1105.3772>  
+  cited in: 55 SPIN QUBIT DEVICES
+- **place2021**: A. P. M. Place et al. (2021). New material platform for superconducting transmon qubits with coherence times exceeding 0.3 milliseconds. Nature Communications 12, 1779.  
+  DOI [10.1038/s41467-021-22030-5](https://doi.org/10.1038/s41467-021-22030-5)  
+  checked: <https://pmc.ncbi.nlm.nih.gov/articles/PMC7979772>  
+  cited in: 43 THE QUBIT CHIP; 43 THE QUBIT CHIP (more)
 - **peruzzo2014**: A. Peruzzo, J. McClean, P. Shadbolt, M.-H. Yung, X.-Q. Zhou, P. J. Love, A. Aspuru-Guzik, J. L. O'Brien (2014). A variational eigenvalue solver on a photonic quantum processor. Nature Communications 5, 4213.  
   DOI [10.1038/ncomms5213](https://doi.org/10.1038/ncomms5213) · arXiv [1304.3061](https://arxiv.org/abs/1304.3061)  
   checked: <https://pmc.ncbi.nlm.nih.gov/articles/PMC4124861>  
-  cited in: 50 VARIATIONAL ALGORITHMS
+  cited in: 58 VARIATIONAL ALGORITHMS; 58 VARIATIONAL ALGORITHMS (more)
+- **sorensen1999**: A. Sørensen, K. Mølmer (1999). Quantum Computation with Ions in Thermal Motion. Physical Review Letters 82(9), 1971-1974.  
+  DOI [10.1103/PhysRevLett.82.1971](https://doi.org/10.1103/PhysRevLett.82.1971) · arXiv [quant-ph/9810039](https://arxiv.org/abs/quant-ph/9810039)  
+  checked: <https://arxiv.org/abs/quant-ph/9810039>  
+  cited in: 49 ION TRAP HARDWARE
 - **kitaev1995**: A. Yu. Kitaev (1995). Quantum measurements and the Abelian Stabilizer Problem. preprint.  
   arXiv [quant-ph/9511026](https://arxiv.org/abs/quant-ph/9511026)  
   checked: <https://arxiv.org/abs/quant-ph/9511026>  
-  cited in: 39 PHASE ESTIMATION
+  cited in: 39 PHASE ESTIMATION; 39 PHASE ESTIMATION (more)
 - **hensen2015**: B. Hensen et al. (2015). Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres. Nature 526, 682-686.  
   DOI [10.1038/nature15759](https://doi.org/10.1038/nature15759) · arXiv [1508.05949](https://arxiv.org/abs/1508.05949)  
   checked: <https://arxiv.org/abs/1508.05949>  
-  cited in: 28 THE BELL TEST
+  cited in: 28 THE BELL TEST; 28 THE BELL TEST (more)
 - **tsirelson1980**: B. S. Cirel'son (Tsirelson) (1980). Quantum generalizations of Bell's inequality. Letters in Mathematical Physics 4(2), 93-100.  
   DOI [10.1007/BF00417500](https://doi.org/10.1007/BF00417500)  
   checked: <https://link.springer.com/doi/10.1007/BF00417500>  
-  cited in: 28 THE BELL TEST
+  cited in: 28 THE BELL TEST; 28 THE BELL TEST (more)
 - **bruzewicz2019**: C. D. Bruzewicz, J. Chiaverini, R. McConnell, J. M. Sage (2019). Trapped-ion quantum computing: Progress and challenges. Applied Physics Reviews 6, 021314.  
   DOI [10.1063/1.5088164](https://doi.org/10.1063/1.5088164) · arXiv [1904.04178](https://arxiv.org/abs/1904.04178)  
   checked: <https://arxiv.org/abs/1904.04178>  
-  cited in: 44 TRAPPED IONS AND LASERS
+  cited in: 48 TRAPPED IONS AND LASERS; 48 TRAPPED IONS AND LASERS (more); 49 ION TRAP HARDWARE; 49 ION TRAP HARDWARE (more)
 - **shannon1948**: C. E. Shannon (1948). A Mathematical Theory of Communication. Bell System Technical Journal 27(3), 379-423.  
   DOI [10.1002/j.1538-7305.1948.tb01338.x](https://doi.org/10.1002/j.1538-7305.1948.tb01338.x)  
   checked: <https://www.bibsonomy.org/bibtex/1754130207906fcec16a53d330eeff348/mabdelaal86>  
-  cited in: 1 BITS; 2 BINARY NUMBERS; 3 LOGIC GATES
+  cited in: 1 BITS; 1 BITS (more); 2 BINARY NUMBERS; 3 LOGIC GATES
 - **bennett1973**: C. H. Bennett (1973). Logical Reversibility of Computation. IBM Journal of Research and Development 17(6), 525-532.  
   DOI [10.1147/rd.176.0525](https://doi.org/10.1147/rd.176.0525)  
   checked: <https://scilit.com/publications/8f8e42bd9388d90af57eec6b7ff1712f>  
-  cited in: 4 REVERSIBLE COMPUTING
+  cited in: 4 REVERSIBLE COMPUTING; 4 REVERSIBLE COMPUTING (more)
 - **bb84**: C. H. Bennett, G. Brassard (2014). Quantum cryptography: Public key distribution and coin tossing (BB84, first published 1984). Theoretical Computer Science 560, 7-11.  
   DOI [10.1016/j.tcs.2014.05.025](https://doi.org/10.1016/j.tcs.2014.05.025) · arXiv [2003.06557](https://arxiv.org/abs/2003.06557)  
   checked: <https://arxiv.org/abs/2003.06557>  
-  cited in: 31 QUANTUM KEYS: BB84
+  cited in: 31 QUANTUM KEYS: BB84; 31 QUANTUM KEYS: BB84 (more)
 - **bennett1993**: C. H. Bennett, G. Brassard, C. Crépeau, R. Jozsa, A. Peres, W. K. Wootters (1993). Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels. Physical Review Letters 70(13), 1895-1899.  
   DOI [10.1103/PhysRevLett.70.1895](https://doi.org/10.1103/PhysRevLett.70.1895)  
   checked: <https://ui.adsabs.harvard.edu/abs/10.1103/PhysRevLett.70.1895/abstract>  
-  cited in: 30 TELEPORTATION
+  cited in: 26 NO CLONING (more); 30 TELEPORTATION; 30 TELEPORTATION (more)
 - **bennett1992**: C. H. Bennett, S. J. Wiesner (1992). Communication via one- and two-particle operators on Einstein-Podolsky-Rosen states. Physical Review Letters 69(20), 2881-2884.  
   DOI [10.1103/PhysRevLett.69.2881](https://doi.org/10.1103/PhysRevLett.69.2881)  
   checked: <https://scilit.com/publications/71ccb17ffcd4fec42f2d10213310180b>  
-  cited in: 29 SUPERDENSE CODING
+  cited in: 29 SUPERDENSE CODING; 29 SUPERDENSE CODING (more)
 - **hom1987**: C. K. Hong, Z. Y. Ou, L. Mandel (1987). Measurement of subpicosecond time intervals between two photons by interference. Physical Review Letters 59(18), 2044-2046.  
   DOI [10.1103/PhysRevLett.59.2044](https://doi.org/10.1103/PhysRevLett.59.2044)  
   checked: <https://scilit.com/publications/cf03bafb2fd513d3d8eae501b2cfe7a2>  
-  cited in: 45 OPTICS AND PHOTONS
+  cited in: 50 OPTICS AND PHOTONS
 - **grinstead1997**: C. M. Grinstead, J. L. Snell (1997). Introduction to Probability, 2nd revised edition (free under the GNU FDL). American Mathematical Society.  
   ISBN 978-0-8218-0749-1 · <https://textbooks.aimath.org/textbooks/approved-textbooks/grinstead-snell/>  
   checked: <https://textbooks.aimath.org/textbooks/approved-textbooks/grinstead-snell/>  
-  cited in: 5 PROBABILITY; glossary
+  cited in: 5 PROBABILITY; 5 PROBABILITY (more); glossary
+- **macklin2015**: C. Macklin, K. O'Brien, D. Hover, M. E. Schwartz, V. Bolkhovsky, X. Zhang, W. D. Oliver, I. Siddiqi (2015). A near-quantum-limited Josephson traveling-wave parametric amplifier. Science 350(6258), 307-310.  
+  DOI [10.1126/science.aaa8525](https://doi.org/10.1126/science.aaa8525) · arXiv [1503.04364](https://arxiv.org/abs/1503.04364)  
+  checked: <https://ui.adsabs.harvard.edu/abs/2015Sci...350..307M>  
+  cited in: 46 WIRES, FILTERS, SHIELDS; 47 CONTROL AND READOUT; 47 CONTROL AND READOUT (more)
+- **barredo2016**: D. Barredo, S. de Léséleuc, V. Lienhard, T. Lahaye, A. Browaeys (2016). An atom-by-atom assembler of defect-free arbitrary two-dimensional atomic arrays. Science 354(6315), 1021-1023.  
+  DOI [10.1126/science.aah3778](https://doi.org/10.1126/science.aah3778) · arXiv [1607.03042](https://arxiv.org/abs/1607.03042)  
+  checked: <https://arxiv.org/abs/1607.03042>  
+  cited in: 53 ATOM ARRAY HARDWARE; 53 ATOM ARRAY HARDWARE (more)
 - **coppersmith1994**: D. Coppersmith (1994). An approximate Fourier transform useful in quantum factoring (IBM Research Report RC 19642). IBM Research.  
   arXiv [quant-ph/0201067](https://arxiv.org/abs/quant-ph/0201067)  
   checked: <https://arxiv.org/abs/quant-ph/0201067>  
-  cited in: 38 FOURIER TRANSFORM; glossary
+  cited in: 38 FOURIER TRANSFORM; 38 FOURIER TRANSFORM (more); glossary
 - **deutsch1985**: D. Deutsch (1985). Quantum theory, the Church-Turing principle and the universal quantum computer. Proceedings of the Royal Society of London A 400(1818), 97-117.  
   DOI [10.1098/rspa.1985.0070](https://doi.org/10.1098/rspa.1985.0070)  
   checked: <https://www.daviddeutsch.org.uk/wp-content/deutsch85.pdf>  
-  cited in: 33 DEUTSCH
+  cited in: 33 DEUTSCH; 33 DEUTSCH (more)
 - **dj1992**: D. Deutsch, R. Jozsa (1992). Rapid Solution of Problems by Quantum Computation. Proceedings of the Royal Society of London A 439(1907), 553-558.  
   DOI [10.1098/rspa.1992.0167](https://doi.org/10.1098/rspa.1992.0167)  
   checked: <https://ui.adsabs.harvard.edu/abs/1992RSPSA.439..553D/abstract>  
-  cited in: 34 DEUTSCH-JOZSA
+  cited in: 34 DEUTSCH-JOZSA; 34 DEUTSCH-JOZSA (more)
 - **dieks1982**: D. Dieks (1982). Communication by EPR devices. Physics Letters A 92(6), 271-272.  
   DOI [10.1016/0375-9601(82)90084-6](https://doi.org/10.1016/0375-9601(82)90084-6)  
   checked: <https://arxiv.org/pdf/1707.06910>  
   cited in: 26 NO CLONING; glossary
+- **knuth1997**: D. E. Knuth (1997). The Art of Computer Programming, Volume 2: Seminumerical Algorithms, 3rd edition. Addison-Wesley.  
+  ISBN 978-0-201-89684-8  
+  checked: <https://www.informit.com/store/art-of-computer-programming-volume-2-seminumerical-9780201896848>  
+  cited in: 2 BINARY NUMBERS (more); 3 LOGIC GATES (more)
 - **wineland1978**: D. J. Wineland, R. E. Drullinger, F. L. Walls (1978). Radiation-Pressure Cooling of Bound Resonant Absorbers. Physical Review Letters 40, 1639-1642.  
   DOI [10.1103/PhysRevLett.40.1639](https://doi.org/10.1103/PhysRevLett.40.1639)  
   checked: <https://scilit.net/publications/d8cc97e32b809abe6097b8c3bddd0d55>  
-  cited in: 44 TRAPPED IONS AND LASERS
+  cited in: 48 TRAPPED IONS AND LASERS; 48 TRAPPED IONS AND LASERS (more)
 - **jaksch2000**: D. Jaksch, J. I. Cirac, P. Zoller, S. L. Rolston, R. Côté, M. D. Lukin (2000). Fast Quantum Gates for Neutral Atoms. Physical Review Letters 85(10), 2208-2211.  
   arXiv [quant-ph/0004038](https://arxiv.org/abs/quant-ph/0004038)  
   checked: <https://www.nist.gov/publications/fast-quantum-gates-neutral-atoms>  
-  cited in: 46 NEUTRAL ATOMS
+  cited in: 52 NEUTRAL ATOMS
+- **kielpinski2002**: D. Kielpinski, C. Monroe, D. J. Wineland (2002). Architecture for a large-scale ion-trap quantum computer. Nature 417(6890), 709-711.  
+  DOI [10.1038/nature00784](https://doi.org/10.1038/nature00784)  
+  checked: <https://scholars.duke.edu/publication/1641663>  
+  cited in: 49 ION TRAP HARDWARE; 49 ION TRAP HARDWARE (more)
 - **loss1998**: D. Loss, D. P. DiVincenzo (1998). Quantum computation with quantum dots. Physical Review A 57(1), 120-126.  
   arXiv [cond-mat/9701055](https://arxiv.org/abs/cond-mat/9701055)  
   checked: <https://arxiv.org/abs/cond-mat/9701055>  
-  cited in: 47 SPINS IN SILICON
+  cited in: 54 SPINS IN SILICON; 54 SPINS IN SILICON (more)
 - **divincenzo2000**: D. P. DiVincenzo (2000). The Physical Implementation of Quantum Computation. Fortschritte der Physik 48, 771-783.  
   arXiv [quant-ph/0002077](https://arxiv.org/abs/quant-ph/0002077)  
   checked: <https://arxiv.org/abs/quant-ph/0002077>  
@@ -115,63 +143,99 @@ Every identifier below was checked against the bibliographic record named under 
 - **simon1997**: D. R. Simon (1997). On the Power of Quantum Computation. SIAM Journal on Computing 26(5), 1474-1483.  
   DOI [10.1137/S0097539796298637](https://doi.org/10.1137/S0097539796298637)  
   checked: <https://epubs.siam.org/doi/10.1137/S0097539796298637>  
-  cited in: 36 SIMON
+  cited in: 36 SIMON; 36 SIMON (more)
 - **bv1997**: E. Bernstein, U. Vazirani (1997). Quantum Complexity Theory. SIAM Journal on Computing 26(5), 1411-1473.  
   DOI [10.1137/S0097539796300921](https://doi.org/10.1137/S0097539796300921)  
   checked: <https://data.zhenzhi.com/details/1/906242704>  
-  cited in: 35 BERNSTEIN-VAZIRANI
+  cited in: 35 BERNSTEIN-VAZIRANI; 35 BERNSTEIN-VAZIRANI (more)
 - **farhi2014**: E. Farhi, J. Goldstone, S. Gutmann (2014). A Quantum Approximate Optimization Algorithm. preprint.  
   arXiv [1411.4028](https://arxiv.org/abs/1411.4028)  
   checked: <https://arxiv.org/pdf/1411.4028>  
-  cited in: 50 VARIATIONAL ALGORITHMS
+  cited in: 58 VARIATIONAL ALGORITHMS; 58 VARIATIONAL ALGORITHMS (more)
 - **klm2001**: E. Knill, R. Laflamme, G. J. Milburn (2001). A scheme for efficient quantum computation with linear optics. Nature 409, 46-52.  
   DOI [10.1038/35051009](https://doi.org/10.1038/35051009) · arXiv [quant-ph/0006088](https://arxiv.org/abs/quant-ph/0006088)  
   checked: <https://ideas.repec.org/a/nat/nature/v409y2001i6816d10.1038_35051009.html>  
-  cited in: 45 OPTICS AND PHOTONS
+  cited in: 50 OPTICS AND PHOTONS; 50 OPTICS AND PHOTONS (more)
+- **raab1987**: E. L. Raab, M. Prentiss, A. Cable, S. Chu, D. E. Pritchard (1987). Trapping of Neutral Sodium Atoms with Radiation Pressure (the magneto-optical trap). Physical Review Letters 59(23), 2631-2634.  
+  DOI [10.1103/PhysRevLett.59.2631](https://doi.org/10.1103/PhysRevLett.59.2631)  
+  checked: <https://link.aps.org/doi/10.1103/PhysRevLett.59.2631>  
+  cited in: 53 ATOM ARRAY HARDWARE
 - **bloch1946**: F. Bloch (1946). Nuclear Induction. Physical Review 70, 460-474.  
   DOI [10.1103/PhysRev.70.460](https://doi.org/10.1103/PhysRev.70.460)  
   checked: <https://bibbase.org/network/publication/bloch-nuclearinduction>  
   cited in: 19 THE BLOCH SPHERE; glossary
+- **marsili2013**: F. Marsili et al. (2013). Detecting single infrared photons with 93% system efficiency. Nature Photonics 7.  
+  arXiv [1209.5774](https://arxiv.org/abs/1209.5774)  
+  checked: <https://arxiv.org/pdf/1209.5774>  
+  cited in: 51 PHOTON SOURCES, DETECTORS; 51 PHOTON SOURCES, DETECTORS (more)
+- **motzoi2009**: F. Motzoi, J. M. Gambetta, P. Rebentrost, F. K. Wilhelm (2009). Simple Pulses for Elimination of Leakage in Weakly Nonlinear Qubits (DRAG). Physical Review Letters 103, 110501.  
+  DOI [10.1103/PhysRevLett.103.110501](https://doi.org/10.1103/PhysRevLett.103.110501) · arXiv [0901.0534](https://arxiv.org/abs/0901.0534)  
+  checked: <https://ui.adsabs.harvard.edu/abs/10.1103/PhysRevLett.103.110501/abstract>  
+  cited in: 47 CONTROL AND READOUT
+- **pobell2007**: F. Pobell (2007). Matter and Methods at Low Temperatures, 3rd edition. Springer.  
+  ISBN 978-3-540-46356-6 · <https://www.springer.com/978-3-540-46356-6>  
+  checked: <https://www.springer.com/978-3-540-46356-6>  
+  cited in: 44 THE DILUTION FRIDGE; 45 HELIUM DILUTION; 45 HELIUM DILUTION (more)
 - **burkard2023**: G. Burkard, T. D. Ladd, A. Pan, J. M. Nichol, J. R. Petta (2023). Semiconductor spin qubits. Reviews of Modern Physics 95, 025003.  
   DOI [10.1103/RevModPhys.95.025003](https://doi.org/10.1103/RevModPhys.95.025003) · arXiv [2112.08863](https://arxiv.org/abs/2112.08863)  
   checked: <https://arxiv.org/abs/2112.08863>  
-  cited in: 47 SPINS IN SILICON
+  cited in: 54 SPINS IN SILICON; 54 SPINS IN SILICON (more); 55 SPIN QUBIT DEVICES; 55 SPIN QUBIT DEVICES (more)
 - **hardy2008**: G. H. Hardy, E. M. Wright (rev. D. R. Heath-Brown, J. H. Silverman) (2008). An Introduction to the Theory of Numbers, 6th edition. Oxford University Press.  
   ISBN 978-0-19-921986-5  
   checked: <https://www.biblio.com/9780199219865>  
-  cited in: 40 SHOR FACTORING
+  cited in: 40 SHOR FACTORING; 40 SHOR FACTORING (more)
+- **dolan1977**: G. J. Dolan (1977). Offset masks for lift-off photoprocessing. Applied Physics Letters 31(5), 337-339.  
+  DOI [10.1063/1.89690](https://doi.org/10.1063/1.89690)  
+  checked: <https://wikipedia.com/wiki/Niemeyer-Dolan_technique>  
+  cited in: 43 THE QUBIT CHIP; 43 THE QUBIT CHIP (more)
+- **goltsman2001**: G. N. Gol'tsman et al. (2001). Picosecond superconducting single-photon optical detector. Applied Physics Letters 79(6), 705-707.  
+  DOI [10.1063/1.1388868](https://doi.org/10.1063/1.1388868)  
+  checked: <https://scilit.com/publications/120d1ae759641e5a17e0f63b83213053>  
+  cited in: 51 PHOTON SOURCES, DETECTORS; 51 PHOTON SOURCES, DETECTORS (more)
 - **strang2016**: G. Strang (2016). Introduction to Linear Algebra, 5th edition. Wellesley-Cambridge Press.  
   ISBN 978-0-9802327-7-6  
   checked: <https://www.tenlong.com.tw/products/9780980232776>  
-  cited in: 6 VECTORS; 7 MATRICES; 10 INNER PRODUCTS; 12 UNITARY MATRICES; glossary
+  cited in: 6 VECTORS; 6 VECTORS (more); 7 MATRICES; 7 MATRICES (more); 10 INNER PRODUCTS; 12 UNITARY MATRICES; 12 UNITARY MATRICES (more); glossary
 - **google2025**: Google Quantum AI and Collaborators (2025). Quantum error correction below the surface code threshold. Nature.  
   DOI [10.1038/s41586-024-08449-y](https://doi.org/10.1038/s41586-024-08449-y) · arXiv [2408.13687](https://arxiv.org/abs/2408.13687)  
   checked: <https://arxiv.org/pdf/2408.13687>  
-  cited in: 49 ERROR CORRECTION; glossary
+  cited in: 57 ERROR CORRECTION; 57 ERROR CORRECTION (more); glossary
+- **haffner2008**: H. Häffner, C. F. Roos, R. Blatt (2008). Quantum computing with trapped ions. Physics Reports 469, 155-203.  
+  arXiv [0809.4368](https://arxiv.org/abs/0809.4368)  
+  checked: <https://arxiv.org/abs/0809.4368>  
+  cited in: 49 ION TRAP HARDWARE
 - **london1962**: H. London, G. R. Clarke, E. Mendoza (1962). Osmotic Pressure of He3 in Liquid He4, with Proposals for a Refrigerator to Work below 1 K. Physical Review 128(5), 1992.  
   <https://www.osti.gov/biblio/4775592>  
   checked: <https://www.osti.gov/biblio/4775592>  
-  cited in: 43 THE DILUTION FRIDGE
+  cited in: 45 HELIUM DILUTION
 - **qiskitdocs**: IBM Quantum (accessed 2026). Qiskit SDK API reference (QuantumCircuit, quantum_info, primitives). IBM Quantum Platform documentation.  
   <https://quantum.cloud.ibm.com/docs/en/api/qiskit>  
   checked: <https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.primitives.StatevectorSampler.md>  
-  cited in: 51 QISKIT IN PRACTICE; glossary
+  cited in: 2 BINARY NUMBERS (more); 20 BASES AND ROTATIONS (more); 59 QISKIT IN PRACTICE; 59 QISKIT IN PRACTICE (more); glossary
+- **carolan2015**: J. Carolan et al. (2015). Universal linear optics. Science 349(6249), 711-716.  
+  DOI [10.1126/science.aab3642](https://doi.org/10.1126/science.aab3642) · arXiv [1505.01182](https://arxiv.org/abs/1505.01182)  
+  checked: <https://arxiv.org/abs/1505.01182>  
+  cited in: 51 PHOTON SOURCES, DETECTORS
 - **chsh1969**: J. F. Clauser, M. A. Horne, A. Shimony, R. A. Holt (1969). Proposed Experiment to Test Local Hidden-Variable Theories. Physical Review Letters 23(15), 880-884.  
   DOI [10.1103/PhysRevLett.23.880](https://doi.org/10.1103/PhysRevLett.23.880)  
   checked: <https://scilit.com/publications/d3baa571c13718215927c795cfd0442f>  
-  cited in: 28 THE BELL TEST
+  cited in: 28 THE BELL TEST; 28 THE BELL TEST (more)
 - **cirac1995**: J. I. Cirac, P. Zoller (1995). Quantum Computations with Cold Trapped Ions. Physical Review Letters 74(20), 4091-4094.  
   DOI [10.1103/PhysRevLett.74.4091](https://doi.org/10.1103/PhysRevLett.74.4091)  
   checked: <https://scilit.com/publications/27f99db1adc1b579c2535bc7b986955e>  
-  cited in: 44 TRAPPED IONS AND LASERS
+  cited in: 48 TRAPPED IONS AND LASERS
 - **koch2007**: J. Koch, T. M. Yu, J. Gambetta, A. A. Houck, D. I. Schuster, J. Majer, A. Blais, M. H. Devoret, S. M. Girvin, R. J. Schoelkopf (2007). Charge-insensitive qubit design derived from the Cooper pair box (the transmon). Physical Review A 76, 042319.  
   DOI [10.1103/PhysRevA.76.042319](https://doi.org/10.1103/PhysRevA.76.042319) · arXiv [cond-mat/0703002](https://arxiv.org/abs/cond-mat/0703002)  
   checked: <https://arxiv.org/abs/cond-mat/0703002>  
-  cited in: 42 SUPERCONDUCTING QUBITS
+  cited in: 42 SUPERCONDUCTING QUBITS; 42 SUPERCONDUCTING QUBITS (more)
+- **elzerman2004**: J. M. Elzerman, R. Hanson, L. H. Willems van Beveren, B. Witkamp, L. M. K. Vandersypen, L. P. Kouwenhoven (2004). Single-shot read-out of an individual electron spin in a quantum dot. Nature 430, 431-435.  
+  DOI [10.1038/nature02693](https://doi.org/10.1038/nature02693) · arXiv [cond-mat/0411232](https://arxiv.org/abs/cond-mat/0411232)  
+  checked: <https://ui.adsabs.harvard.edu/abs/10.1038/nature02693/abstract>  
+  cited in: 55 SPIN QUBIT DEVICES; 55 SPIN QUBIT DEVICES (more)
 - **preskill2018**: J. Preskill (2018). Quantum Computing in the NISQ era and beyond. Quantum 2, 79.  
   DOI [10.22331/q-2018-08-06-79](https://doi.org/10.22331/q-2018-08-06-79) · arXiv [1801.00862](https://arxiv.org/abs/1801.00862)  
   checked: <https://doaj.org/article/b27bd39720084a80ba9c8e79c469a945>  
-  cited in: 48 NOISE; 50 VARIATIONAL ALGORITHMS; 52 WHAT NEXT; glossary
+  cited in: 41 WHAT A QUBIT NEEDS (more); 56 NOISE; 58 VARIATIONAL ALGORITHMS; 60 WHAT NEXT; 60 WHAT NEXT (more); glossary
 - **bell1964**: J. S. Bell (1964). On the Einstein Podolsky Rosen Paradox. Physics Physique Fizika 1(3), 195-200.  
   DOI [10.1103/PhysicsPhysiqueFizika.1.195](https://doi.org/10.1103/PhysicsPhysiqueFizika.1.195)  
   checked: <https://bibbase.org/network/publication/bell-ontheeinsteinpodolskyrosenparadox-1964>  
@@ -179,11 +243,11 @@ Every identifier below was checked against the bibliographic record named under 
 - **watrous2025**: J. Watrous (2025). Understanding Quantum Information and Computation. lecture notes.  
   arXiv [2507.11536](https://arxiv.org/abs/2507.11536)  
   checked: <https://arxiv.org/pdf/2507.11536>  
-  cited in: 52 WHAT NEXT
+  cited in: 60 WHAT NEXT; 60 WHAT NEXT (more)
 - **ibmbasics**: J. Watrous (IBM Quantum Learning) (accessed 2026). Basics of quantum information (course). IBM Quantum Platform.  
   <https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information>  
   checked: <https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information.md>  
-  cited in: 13 THE QUBIT; 28 THE BELL TEST; 29 SUPERDENSE CODING; 30 TELEPORTATION; 52 WHAT NEXT
+  cited in: 13 THE QUBIT; 28 THE BELL TEST; 29 SUPERDENSE CODING; 30 TELEPORTATION; 60 WHAT NEXT; 60 WHAT NEXT (more)
 - **grover1996**: L. K. Grover (1996). A fast quantum mechanical algorithm for database search. Proceedings of the 28th Annual ACM Symposium on Theory of Computing (STOC), 212-219.  
   DOI [10.1145/237814.237866](https://doi.org/10.1145/237814.237866) · arXiv [quant-ph/9605043](https://arxiv.org/abs/quant-ph/9605043)  
   checked: <https://bibtex.github.io/STOC-1996-Grover.html>  
@@ -191,7 +255,7 @@ Every identifier below was checked against the bibliographic record named under 
 - **nc2010**: M. A. Nielsen, I. L. Chuang (2010). Quantum Computation and Quantum Information, 10th anniversary edition. Cambridge University Press.  
   ISBN 978-1-107-00217-3 · <https://michaelnielsen.org/qcqi/>  
   checked: <https://readings.com.au/product/9781107002173/9781107002173>  
-  cited in: 1 BITS; 2 BINARY NUMBERS; 3 LOGIC GATES; 4 REVERSIBLE COMPUTING; 7 MATRICES; 8 COMPLEX NUMBERS; 9 PHASE AND EULER; 10 INNER PRODUCTS; 11 TENSOR PRODUCTS; 12 UNITARY MATRICES; 13 THE QUBIT; 14 MEASUREMENT; 15 THE X GATE; 16 SUPERPOSITION; 17 INTERFERENCE; 18 PHASE: Z S T; 19 THE BLOCH SPHERE; 20 BASES AND ROTATIONS; 21 TWO QUBITS; 22 CNOT; 23 ENTANGLEMENT; 24 ALL FOUR BELLS; 25 SWAP; 26 NO CLONING; 27 TOFFOLI AND UNIVERSALITY; 29 SUPERDENSE CODING; 30 TELEPORTATION; 31 QUANTUM KEYS: BB84; 32 PHASE KICKBACK; 33 DEUTSCH; 34 DEUTSCH-JOZSA; 35 BERNSTEIN-VAZIRANI; 37 GROVER SEARCH; 38 FOURIER TRANSFORM; 39 PHASE ESTIMATION; 40 SHOR FACTORING; 41 WHAT A QUBIT NEEDS; 48 NOISE; 49 ERROR CORRECTION; 52 WHAT NEXT; gate book; glossary
+  cited in: 1 BITS; 1 BITS (more); 2 BINARY NUMBERS; 2 BINARY NUMBERS (more); 3 LOGIC GATES; 3 LOGIC GATES (more); 4 REVERSIBLE COMPUTING; 4 REVERSIBLE COMPUTING (more); 6 VECTORS (more); 7 MATRICES; 7 MATRICES (more); 8 COMPLEX NUMBERS; 8 COMPLEX NUMBERS (more); 9 PHASE AND EULER; 9 PHASE AND EULER (more); 10 INNER PRODUCTS; 10 INNER PRODUCTS (more); 11 TENSOR PRODUCTS; 11 TENSOR PRODUCTS (more); 12 UNITARY MATRICES; 12 UNITARY MATRICES (more); 13 THE QUBIT; 13 THE QUBIT (more); 14 MEASUREMENT; 14 MEASUREMENT (more); 15 THE X GATE; 15 THE X GATE (more); 16 SUPERPOSITION; 16 SUPERPOSITION (more); 17 INTERFERENCE; 17 INTERFERENCE (more); 18 PHASE: Z S T; 18 PHASE: Z S T (more); 19 THE BLOCH SPHERE; 19 THE BLOCH SPHERE (more); 20 BASES AND ROTATIONS; 20 BASES AND ROTATIONS (more); 21 TWO QUBITS; 21 TWO QUBITS (more); 22 CNOT; 22 CNOT (more); 23 ENTANGLEMENT; 23 ENTANGLEMENT (more); 24 ALL FOUR BELLS; 24 ALL FOUR BELLS (more); 25 SWAP; 25 SWAP (more); 26 NO CLONING; 26 NO CLONING (more); 27 TOFFOLI AND UNIVERSALITY; 27 TOFFOLI AND UNIVERSALITY (more); 28 THE BELL TEST (more); 29 SUPERDENSE CODING; 29 SUPERDENSE CODING (more); 30 TELEPORTATION; 30 TELEPORTATION (more); 31 QUANTUM KEYS: BB84; 31 QUANTUM KEYS: BB84 (more); 32 PHASE KICKBACK; 32 PHASE KICKBACK (more); 33 DEUTSCH; 33 DEUTSCH (more); 34 DEUTSCH-JOZSA; 34 DEUTSCH-JOZSA (more); 35 BERNSTEIN-VAZIRANI; 36 SIMON (more); 37 GROVER SEARCH; 37 GROVER SEARCH (more); 38 FOURIER TRANSFORM; 38 FOURIER TRANSFORM (more); 39 PHASE ESTIMATION; 39 PHASE ESTIMATION (more); 40 SHOR FACTORING; 40 SHOR FACTORING (more); 41 WHAT A QUBIT NEEDS; 56 NOISE; 56 NOISE (more); 57 ERROR CORRECTION; 57 ERROR CORRECTION (more); 60 WHAT NEXT; 60 WHAT NEXT (more); gate book; glossary
 - **born1926**: M. Born (1926). Zur Quantenmechanik der Stoßvorgänge (the probability rule). Zeitschrift für Physik 37, 863-867 (a copy is hosted by the University of Pavia).  
   <https://fisica.unipv.it/antoci/mq/Born26a.pdf>  
   checked: <https://fisica.unipv.it/antoci/mq/Born26a.pdf>  
@@ -199,63 +263,99 @@ Every identifier below was checked against the bibliographic record named under 
 - **bbht1998**: M. Boyer, G. Brassard, P. Høyer, A. Tapp (1998). Tight bounds on quantum searching. Fortschritte der Physik 46, 493-506.  
   arXiv [quant-ph/9605034](https://arxiv.org/abs/quant-ph/9605034)  
   checked: <https://arxiv.org/abs/quant-ph/9605034>  
-  cited in: 37 GROVER SEARCH
+  cited in: 37 GROVER SEARCH; 37 GROVER SEARCH (more)
+- **dewit2019**: M. de Wit, G. Welker, K. Heeck, F. M. Buters, H. J. Eerkens, G. Koning, H. van der Meer, D. Bouwmeester, T. H. Oosterkamp (2019). Vibration isolation with high thermal conductance for a cryogen-free dilution refrigerator. Review of Scientific Instruments 90, 015112.  
+  DOI [10.1063/1.5066618](https://doi.org/10.1063/1.5066618) · arXiv [1810.06847](https://arxiv.org/abs/1810.06847)  
+  checked: <https://openaccess.leidenuniv.nl/handle/1887/69913>  
+  cited in: 44 THE DILUTION FRIDGE; 44 THE DILUTION FRIDGE (more)
 - **endres2016**: M. Endres, H. Bernien, A. Keesling, H. Levine, E. R. Anschuetz, A. Krajenbrink, C. Senko, V. Vuletic, M. Greiner, M. D. Lukin (2016). Atom-by-atom assembly of defect-free one-dimensional cold atom arrays. Science 354(6315), 1024-1027.  
   DOI [10.1126/science.aah3752](https://doi.org/10.1126/science.aah3752)  
   checked: <https://www.pubmed.gov/27811284/>  
-  cited in: 46 NEUTRAL ATOMS
+  cited in: 52 NEUTRAL ATOMS; 53 ATOM ARRAY HARDWARE; 53 ATOM ARRAY HARDWARE (more)
+- **kjaergaard2020**: M. Kjaergaard, M. E. Schwartz, J. Braumüller, P. Krantz, J. I.-J. Wang, S. Gustavsson, W. D. Oliver (2020). Superconducting Qubits: Current State of Play. Annual Review of Condensed Matter Physics 11, 369-395.  
+  DOI [10.1146/annurev-conmatphys-031119-050605](https://doi.org/10.1146/annurev-conmatphys-031119-050605) · arXiv [1905.13641](https://arxiv.org/abs/1905.13641)  
+  checked: <https://research.chalmers.se/publication/?id=516803>  
+  cited in: 43 THE QUBIT CHIP; 43 THE QUBIT CHIP (more)
 - **reck1994**: M. Reck, A. Zeilinger, H. J. Bernstein, P. Bertani (1994). Experimental realization of any discrete unitary operator. Physical Review Letters 73(1), 58-61.  
   DOI [10.1103/PhysRevLett.73.58](https://doi.org/10.1103/PhysRevLett.73.58)  
   checked: <https://scilit.com/publications/7847174bdc9e34ec9b5e0dcc82a554c8>  
-  cited in: 45 OPTICS AND PHOTONS
+  cited in: 50 OPTICS AND PHOTONS
 - **saffman2010**: M. Saffman, T. G. Walker, K. Mølmer (2010). Quantum information with Rydberg atoms. Reviews of Modern Physics 82, 2313-2363.  
   DOI [10.1103/RevModPhys.82.2313](https://doi.org/10.1103/RevModPhys.82.2313) · arXiv [0909.4777](https://arxiv.org/abs/0909.4777)  
   checked: <https://arxiv.org/abs/0909.4777>  
-  cited in: 46 NEUTRAL ATOMS
+  cited in: 52 NEUTRAL ATOMS; 52 NEUTRAL ATOMS (more); 53 ATOM ARRAY HARDWARE
+- **veldhorst2015**: M. Veldhorst, C. H. Yang, J. C. C. Hwang, W. Huang, J. P. Dehollain, J. T. Muhonen, S. Simmons, A. Laucht, F. E. Hudson, K. M. Itoh, A. Morello, A. S. Dzurak (2015). A two-qubit logic gate in silicon. Nature 526, 410-414.  
+  DOI [10.1038/nature15263](https://doi.org/10.1038/nature15263) · arXiv [1411.5760](https://arxiv.org/abs/1411.5760)  
+  checked: <https://www.diraq.com/research-papers/a-two-qubit-logic-gate-in-silicon>  
+  cited in: 55 SPIN QUBIT DEVICES
 - **mermin2007**: N. D. Mermin (2007). Quantum Computer Science: An Introduction. Cambridge University Press.  
   ISBN 978-0-521-87658-2 · <https://www.cambridge.org/9780521876582>  
   checked: <https://www.cambridge.org/9780521876582>  
-  cited in: 36 SIMON; 52 WHAT NEXT
+  cited in: 36 SIMON; 60 WHAT NEXT
 - **dirac1939**: P. A. M. Dirac (1939). A new notation for quantum mechanics. Mathematical Proceedings of the Cambridge Philosophical Society 35(3), 416-418.  
   DOI [10.1017/S0305004100021162](https://doi.org/10.1017/S0305004100021162)  
   checked: <https://www.sciencegate.app/document/10.1017/s0305004100021162>  
   cited in: 10 INNER PRODUCTS; glossary
+- **kwiat1995**: P. G. Kwiat, K. Mattle, H. Weinfurter, A. Zeilinger, A. V. Sergienko, Y. Shih (1995). New High-Intensity Source of Polarization-Entangled Photon Pairs. Physical Review Letters 75(24), 4337-4341.  
+  DOI [10.1103/PhysRevLett.75.4337](https://doi.org/10.1103/PhysRevLett.75.4337)  
+  checked: <https://mdsoar.org/items/965f6000-4808-479a-a52c-34fcc1a82cec>  
+  cited in: 51 PHOTON SOURCES, DETECTORS
 - **kok2007**: P. Kok, W. J. Munro, K. Nemoto, T. C. Ralph, J. P. Dowling, G. J. Milburn (2007). Linear optical quantum computing with photonic qubits. Reviews of Modern Physics 79, 135-174.  
   DOI [10.1103/RevModPhys.79.135](https://doi.org/10.1103/RevModPhys.79.135) · arXiv [quant-ph/0512071](https://arxiv.org/abs/quant-ph/0512071)  
   checked: <https://scilit.com/publications/4a93df5f5bfad5c4d4812def72206f49>  
-  cited in: 45 OPTICS AND PHOTONS
+  cited in: 17 INTERFERENCE (more); 50 OPTICS AND PHOTONS; 50 OPTICS AND PHOTONS (more); 51 PHOTON SOURCES, DETECTORS (more)
 - **krantz2019**: P. Krantz, M. Kjaergaard, F. Yan, T. P. Orlando, S. Gustavsson, W. D. Oliver (2019). A quantum engineer's guide to superconducting qubits. Applied Physics Reviews 6, 021318.  
   DOI [10.1063/1.5089550](https://doi.org/10.1063/1.5089550) · arXiv [1904.06560](https://arxiv.org/abs/1904.06560)  
   checked: <https://dspace.mit.edu/handle/1721.1/133690>  
-  cited in: 42 SUPERCONDUCTING QUBITS; 43 THE DILUTION FRIDGE
+  cited in: 41 WHAT A QUBIT NEEDS (more); 42 SUPERCONDUCTING QUBITS; 42 SUPERCONDUCTING QUBITS (more); 43 THE QUBIT CHIP; 43 THE QUBIT CHIP (more); 46 WIRES, FILTERS, SHIELDS; 47 CONTROL AND READOUT; 47 CONTROL AND READOUT (more); 56 NOISE (more)
+- **senellart2017**: P. Senellart, G. Solomon, A. White (2017). High-performance semiconductor quantum-dot single-photon sources. Nature Nanotechnology 12, 1026-1039.  
+  DOI [10.1038/nnano.2017.218](https://doi.org/10.1038/nnano.2017.218)  
+  checked: <https://ui.adsabs.harvard.edu/abs/2017NatNa..12.1026S>  
+  cited in: 51 PHOTON SOURCES, DETECTORS; 51 PHOTON SOURCES, DETECTORS (more)
 - **shor1997**: P. W. Shor (1997). Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer. SIAM Journal on Computing 26(5), 1484-1509.  
   DOI [10.1137/S0097539795293172](https://doi.org/10.1137/S0097539795293172) · arXiv [quant-ph/9508027](https://arxiv.org/abs/quant-ph/9508027)  
   checked: <https://arxiv.org/abs/quant-ph/9508027>  
-  cited in: 40 SHOR FACTORING
+  cited in: 40 SHOR FACTORING; 40 SHOR FACTORING (more)
 - **shor1995**: P. W. Shor (1995). Scheme for reducing decoherence in quantum computer memory. Physical Review A 52(4), R2493-R2496.  
   DOI [10.1103/PhysRevA.52.R2493](https://doi.org/10.1103/PhysRevA.52.R2493)  
   checked: <https://scilit.net/publications/2037e3256715550a2453da4c116fafbc>  
-  cited in: 49 ERROR CORRECTION; glossary
+  cited in: 57 ERROR CORRECTION; glossary
+- **barends2011**: R. Barends et al. (2011). Minimizing quasiparticle generation from stray infrared light in superconducting quantum circuits. Applied Physics Letters 99, 113507.  
+  DOI [10.1063/1.3638063](https://doi.org/10.1063/1.3638063) · arXiv [1105.4642](https://arxiv.org/abs/1105.4642)  
+  checked: <https://clelandlab.uchicago.edu/pdf/barends%20infrared%20light%20loss%20apl%202011.pdf>  
+  cited in: 46 WIRES, FILTERS, SHIELDS
 - **cleve1998**: R. Cleve, A. Ekert, C. Macchiavello, M. Mosca (1998). Quantum algorithms revisited. Proceedings of the Royal Society of London A 454, 339-354.  
   DOI [10.1098/rspa.1998.0164](https://doi.org/10.1098/rspa.1998.0164) · arXiv [quant-ph/9708016](https://arxiv.org/abs/quant-ph/9708016)  
   checked: <https://arxiv.org/abs/quant-ph/9708016>  
-  cited in: 17 INTERFERENCE; 32 PHASE KICKBACK; 33 DEUTSCH; 34 DEUTSCH-JOZSA; 39 PHASE ESTIMATION; glossary
+  cited in: 17 INTERFERENCE; 17 INTERFERENCE (more); 32 PHASE KICKBACK; 32 PHASE KICKBACK (more); 33 DEUTSCH; 33 DEUTSCH (more); 34 DEUTSCH-JOZSA; 39 PHASE ESTIMATION; glossary
 - **landauer1961**: R. Landauer (1961). Irreversibility and Heat Generation in the Computing Process. IBM Journal of Research and Development 5(3), 183-191.  
   DOI [10.1147/rd.53.0183](https://doi.org/10.1147/rd.53.0183)  
   checked: <https://scilit.com/publications/307b121fc39fba344dc560299e75e9ab>  
-  cited in: 4 REVERSIBLE COMPUTING
+  cited in: 4 REVERSIBLE COMPUTING; 4 REVERSIBLE COMPUTING (more)
 - **feynman1982**: R. P. Feynman (1982). Simulating physics with computers. International Journal of Theoretical Physics 21, 467-488.  
   DOI [10.1007/BF02650179](https://doi.org/10.1007/BF02650179)  
   checked: <https://link.springer.com/article/10.1007/BF02650179>  
   cited in: 13 THE QUBIT
+- **radebaugh2009**: R. Radebaugh (2009). Cryocoolers: the state of the art and recent developments. Journal of Physics: Condensed Matter 21.  
+  <https://www.nist.gov/publications/cryocoolers-state-art-and-recent-developments>  
+  checked: <https://www.nist.gov/publications/cryocoolers-state-art-and-recent-developments>  
+  cited in: 44 THE DILUTION FRIDGE
+- **evered2023**: S. J. Evered, D. Bluvstein, M. Kalinowski et al. (2023). High-fidelity parallel entangling gates on a neutral-atom quantum computer. Nature 622, 268-272.  
+  DOI [10.1038/s41586-023-06481-y](https://doi.org/10.1038/s41586-023-06481-y) · arXiv [2304.05420](https://arxiv.org/abs/2304.05420)  
+  checked: <https://www.pubmed.gov/37821591/>  
+  cited in: 52 NEUTRAL ATOMS (more); 53 ATOM ARRAY HARDWARE
 - **krinner2019**: S. Krinner, S. Storz, P. Kurpiers, P. Magnard, J. Heinsoo, R. Keller, J. Lütolf, C. Eichler, A. Wallraff (2019). Engineering cryogenic setups for 100-qubit scale superconducting circuit systems. EPJ Quantum Technology 6, 2.  
   DOI [10.1140/epjqt/s40507-019-0072-0](https://doi.org/10.1140/epjqt/s40507-019-0072-0) · arXiv [1806.07862](https://arxiv.org/abs/1806.07862)  
   checked: <https://arxiv.org/abs/1806.07862>  
-  cited in: 43 THE DILUTION FRIDGE
+  cited in: 44 THE DILUTION FRIDGE; 44 THE DILUTION FRIDGE (more); 46 WIRES, FILTERS, SHIELDS; 46 WIRES, FILTERS, SHIELDS (more)
+- **olmschenk2007**: S. Olmschenk, K. C. Younge, D. L. Moehring, D. N. Matsukevich, P. Maunz, C. Monroe (2007). Manipulation and detection of a trapped Yb+ hyperfine qubit. Physical Review A 76, 052314.  
+  DOI [10.1103/PhysRevA.76.052314](https://doi.org/10.1103/PhysRevA.76.052314) · arXiv [0708.0657](https://arxiv.org/abs/0708.0657)  
+  checked: <https://arxiv.org/abs/0708.0657>  
+  cited in: 48 TRAPPED IONS AND LASERS (more); 49 ION TRAP HARDWARE
 - **needham1997**: T. Needham (1997). Visual Complex Analysis. Oxford University Press.  
   ISBN 978-0-19-853446-4  
   checked: <https://www.hatchards.co.uk/book/visual-complex-analysis/tristan-needham/9780198534464>  
-  cited in: 8 COMPLEX NUMBERS; 9 PHASE AND EULER; glossary
+  cited in: 8 COMPLEX NUMBERS; 8 COMPLEX NUMBERS (more); 9 PHASE AND EULER; 9 PHASE AND EULER (more); glossary
 - **toffoli1980**: T. Toffoli (1980). Reversible Computing. Automata, Languages and Programming (ICALP 1980), LNCS 85, 632-644, Springer.  
   DOI [10.1007/3-540-10003-2_104](https://doi.org/10.1007/3-540-10003-2_104)  
   checked: <https://mathizv.isu.ru/en/article?id=1274>  
@@ -263,19 +363,19 @@ Every identifier below was checked against the bibliographic record named under 
 - **zurek2003**: W. H. Zurek (2003). Decoherence, einselection, and the quantum origins of the classical. Reviews of Modern Physics 75, 715.  
   DOI [10.1103/RevModPhys.75.715](https://doi.org/10.1103/RevModPhys.75.715) · arXiv [quant-ph/0105127](https://arxiv.org/abs/quant-ph/0105127)  
   checked: <https://arxiv.org/abs/quant-ph/0105127>  
-  cited in: 48 NOISE; glossary
+  cited in: 56 NOISE; glossary
 - **wootters1982**: W. K. Wootters, W. H. Zurek (1982). A single quantum cannot be cloned. Nature 299, 802-803.  
   DOI [10.1038/299802a0](https://doi.org/10.1038/299802a0)  
   checked: <https://ui.adsabs.harvard.edu/abs/1982Natur.299..802W/abstract>  
-  cited in: 26 NO CLONING; 31 QUANTUM KEYS: BB84; glossary
+  cited in: 26 NO CLONING; 26 NO CLONING (more); 31 QUANTUM KEYS: BB84; glossary
 - **paul1990**: W. Paul (1990). Electromagnetic traps for charged and neutral particles (Nobel lecture). Reviews of Modern Physics 62(3), 531-540.  
   DOI [10.1103/RevModPhys.62.531](https://doi.org/10.1103/RevModPhys.62.531)  
   checked: <https://en.wikipedia.org/wiki/Wolfgang_Paul>  
-  cited in: 44 TRAPPED IONS AND LASERS
+  cited in: 48 TRAPPED IONS AND LASERS
 - **pauli1927**: W. Pauli (1927). Zur Quantenmechanik des magnetischen Elektrons. Zeitschrift für Physik 43, 601-623.  
   DOI [10.1007/BF01397326](https://doi.org/10.1007/BF01397326)  
   checked: <https://libop-nifs.nifs.ac.jp/pdf/10165769.pdf>  
-  cited in: 15 THE X GATE; gate book
+  cited in: 15 THE X GATE; 15 THE X GATE (more); gate book
 - **nakamura1999**: Y. Nakamura, Yu. A. Pashkin, J. S. Tsai (1999). Coherent control of macroscopic quantum states in a single-Cooper-pair box. Nature 398, 786-788.  
   DOI [10.1038/19718](https://doi.org/10.1038/19718) · arXiv [cond-mat/9904003](https://arxiv.org/abs/cond-mat/9904003)  
   checked: <https://link.springer.com/article/10.1038/19718>  
