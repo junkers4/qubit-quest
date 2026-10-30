@@ -58,6 +58,14 @@ How it works: the program serves the game to itself on 127.0.0.1 only, under a s
 security policy, and quits a few seconds after its last window closes. The simulator inside is
 still the hand-written WebAssembly core.
 
+**On Android.** `qubit-quest-VERSION.apk` from the [releases](../../releases): open it on the
+phone and allow installing it (Android 7 or later). It is the web game in an app of its own:
+full screen, offline, no permissions, progress kept on the phone; the back button works as
+Esc. Built without Gradle by `android/build.sh` (`make android`; needs the Android SDK, a JDK
+and Go), tested on an emulator in CI. Releases signed with a fixed key need the GitHub secrets
+`ANDROID_KEYSTORE` (base64), `ANDROID_KEYSTORE_PASSWORD` and `ANDROID_KEY_ALIAS`; without them
+each release has its own key and an older copy must be uninstalled first.
+
 **In assembler (Linux, Windows).** The same game written again in x86-64 assembler (NASM):
 no JavaScript, no browser, no runtime. One core in `asm/core/` simulates the qubits (SSE2
 complex doubles), draws every screen into a 320 x 200 frame buffer with the pixel font, and
@@ -135,6 +143,8 @@ system and attaches it to the GitHub release.
 - `asm/` the assembler game: `core/sim.asm` qubits, `core/gfx.asm` drawing and word wrap,
   `core/game.asm` screens and rules, `gen/data.asm` the generated levels and font,
   `linux/main.asm` X11, `win/main.asm` Win32; `tools/asm-data.js` writes the data
+- `android/` the Android app: `AndroidManifest.xml`, one activity (`src/.../MainActivity.java`)
+  with a WebView, `build.sh`, `smoke-test.sh` (the emulator check)
 - `desktop/` the desktop app (Go): `main.go` start, `server.go` serves the game, `window.go`
   opens the app window; `game.go` embeds the game; `tools/icon` draws the icons and the
   Windows icon resource; `tools/package.sh` builds every system into `dist/`

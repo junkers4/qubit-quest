@@ -1,19 +1,22 @@
 // Draws the desktop app icon from the game's own pixel icon (ICON in src/font.js): the qubit
 // icon on the dark background in a red pixel frame, scaled by whole numbers, no smoothing.
 // Writes desktop/icon.png (256 x 256), desktop/icon.ico (16, 32, 48, 256) and the Windows
-// resource objects desktop/rsrc_windows_{amd64,arm64}.syso that put the icon in the .exe.
+// resource objects desktop/rsrc_windows_{amd64,arm64}.syso that put the icon in the .exe;
+// with -android DIR also the Android launcher icons DIR/mipmap-*/ic_launcher.png.
 //
-//	go run ./tools/icon
+//	go run ./tools/icon [-android DIR]
 package main
 
 import (
 	"bytes"
 	"encoding/binary"
+	"flag"
 	"image"
 	"image/color"
 	"image/png"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -133,8 +136,20 @@ func ico(sizes []int, images [][]byte) []byte {
 	return b.Bytes()
 }
 
+// the Android launcher icon sizes, by screen density
+var androidSizes = map[string]int{"mdpi": 48, "hdpi": 72, "xhdpi": 96, "xxhdpi": 144, "xxxhdpi": 192}
+
 func main() {
+	androidDir := flag.String("android", "", "also write the Android launcher icons under this res directory")
+	flag.Parse()
 	icon := readIcon()
+	if *androidDir != "" {
+		for density, size := range androidSizes {
+			dir := filepath.Join(*androidDir, "mipmap-"+density)
+			must(os.MkdirAll(dir, 0o755))
+			must(os.WriteFile(filepath.Join(dir, "ic_launcher.png"), pngBytes(draw(grid(icon, true), size)), 0o644))
+		}
+	}
 	sizes := []int{16, 32, 48, 256}
 	var images, res [][]byte
 	for _, s := range sizes {

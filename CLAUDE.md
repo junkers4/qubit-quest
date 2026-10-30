@@ -35,3 +35,7 @@
   font run `make generate`. `make -C asm test` (headless, 140 tests) and `make -C asm test-window`
   (both real programs under xvfb-run; the .exe in wine). Screenshots in `/tmp/qq-asm`: look at them
   after a visual change. Tools here: `apt-get install nasm gcc-mingw-w64-x86-64 wine64 xdotool`.
+- Android app: `android/` (no Gradle): the web game as APK assets in a WebView (`MainActivity.java`,
+  Java 8 API only, no androidx). `android/build.sh` needs the Android SDK, which this container
+  does not have (dl.google.com is blocked): it is built and run on an emulator by the CI job
+  `android` (`android/smoke-test.sh` waits for logcat `qubit-quest: ready "webassembly N"`).

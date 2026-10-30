@@ -12,6 +12,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | **D** desktop | `test/desktop.js`: the built app run with `-serve`, the game played from it in headless Chromium | `make test-desktop` |
 | **A** assembler | `tests/test_asm.py`, `tests/test_asm_game.py`: the assembler core as a shared library, headless | `make -C asm test` |
 | **W** windows | `tests/asm_window.py`: the Linux and Windows programs in real windows (Xvfb, wine), driven by X events | `make -C asm test-window` |
+| **E** emulator | `android/smoke-test.sh`: the APK on an Android emulator in CI | CI job `android` |
 | **O** online | `tools/check-refs.js`: every DOI, arXiv id and URL resolves | `make check-refs` |
 
 ## Curriculum
@@ -82,3 +83,9 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ-075 | The assembler core gives every qubit's Bloch vector (from its reduced state) as the web game does; a qubit of a Bell pair has none (length 0). | A |
 | REQ-076 | Pictures in the assembler game: the 16 hardware drawings pixel for pixel as in the web game, demo circuits on lesson pages, and in every puzzle three views of the state (chances and phase dials; one Bloch sphere per qubit in perspective, shorter and purple when entangled; 100 measurement shots against the exact chances), gates animated as turns about their own axis, and a window of exact amplitudes, chances, phases and Bloch vectors. | A |
 | REQ-077 | Drawings move where it helps to see the physics: control pulses down the fridge's lines, drive and readout of a transmon, light running between a laser's mirrors and out as the beam, the polarization field swinging and turning through wave plates, one photon taking both arms of an interferometer, pairs from down-conversion, ions moving together in their trap, photons slowing an atom, atoms drifting into a trap; the web game and the assembler game draw the same moving parts at the same frame. | A |
+
+## The Android app
+
+| REQ | requirement | test |
+|---|---|---|
+| REQ-078 | `android/build.sh` builds an Android app (APK, Android 7 and later, no permissions) holding the web game; on a phone it runs full screen and offline with the WebAssembly core and every level, keeps progress, takes taps, and the back button works as Esc. | E |
