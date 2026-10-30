@@ -5,3 +5,4 @@ dist/
 desktop/*.syso
 !desktop/icon.png
 build/
+__pycache__/
