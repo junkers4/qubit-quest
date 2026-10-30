@@ -1,0 +1,49 @@
+; The layout of the generated game data (asm/gen/data.asm, written by tools/asm-data.js from
+; the same levels, font and texts the web game uses). Only data: every rule that works on it
+; is in the core.
+
+; strings: glyph numbers, ended by STR_END; STR_NL starts a new paragraph
+STR_END     equ 0
+STR_NL      equ 1
+STR_SPACE   equ 2
+GLYPH_ROWS  equ 11          ; 2 accent rows + up to 9 rows (lower case has descenders)
+
+; a level: 32 bytes
+LV_TITLE    equ 0           ; string
+LV_STEPS    equ 8           ; first step
+LV_NSTEPS   equ 16
+LV_WORLD    equ 24          ; 0-based
+LV_SIZE     equ 32
+
+; a step: 24 qwords
+ST_TYPE     equ 0           ; T_TEXT, T_QUIZ, T_CIRCUIT
+ST_TITLE    equ 8           ; text: title; quiz: question; circuit: goal
+ST_BODY     equ 16          ; text: body; quiz: why (after a right answer)
+ST_ELI5     equ 24          ; string
+ST_HINT     equ 32          ; circuit: string
+ST_OPTS     equ 40          ; quiz: pointer to option strings
+ST_NOPTS    equ 48
+ST_ANSWER   equ 56          ; 0-based
+ST_QUBITS   equ 64
+ST_GATES    equ 72          ; circuit: palette, one gate number per byte
+ST_NGATES   equ 80
+ST_PAR      equ 88
+ST_SETUP    equ 96          ; ops (4 bytes each)
+ST_NSETUP   equ 104
+ST_AFTER    equ 112
+ST_NAFTER   equ 120
+ST_BOXES    equ 128         ; box table for qs_run: {ops, count} per box
+ST_SOL      equ 136
+ST_NSOL     equ 144
+ST_KEEP     equ 152         ; goal qubits mask (0: the whole state)
+ST_FLAGS    equ 160         ; 1: only the chances count
+ST_LIMITS   equ 168         ; per palette gate: most uses (255: no limit), bytes
+ST_ALLOW    equ 176         ; per palette gate: pointer to wire rules, or 0
+ST_BOXNAMES equ 184         ; per box: name string
+ST_SIZE     equ 192
+
+T_TEXT      equ 0
+T_QUIZ      equ 1
+T_CIRCUIT   equ 2
+
+; a wire rule list (ST_ALLOW): count, then 3 bytes per rule (wires; symmetric gates sorted)
