@@ -104,3 +104,26 @@ def test_both_verdicts_are_tested():
     assert any(c["keep"] for c in GOALS)
     assert any(c["probsOnly"] for c in GOALS)
     assert any(c["boxes"] for c in GOALS)
+
+
+@pytest.mark.parametrize("case", GOALS, ids=lambda c: c["name"])
+def test_bloch_vectors_like_the_game(core, case):
+    """REQ-075: each qubit's Bloch vector (its reduced state)."""
+    core.qs_bloch.argtypes = [ctypes.c_void_p, ctypes.c_int,
+                              ctypes.c_int, ctypes.c_void_p]
+    n = case["n"]
+    state = as_state(n, case["goal"])
+    for q, want in enumerate(case["bloch"]):
+        out = (ctypes.c_double * 3)()
+        core.qs_bloch(state, n, q, out)
+        assert np.allclose(list(out), want, atol=1e-9), q
+
+
+def test_bloch_shows_entanglement(core):
+    """A Bell pair: each qubit alone has no direction (length 0)."""
+    core.qs_bloch.argtypes = [ctypes.c_void_p, ctypes.c_int,
+                              ctypes.c_int, ctypes.c_void_p]
+    state = run(core, 2, [["H", 0], ["CX", 0, 1]])
+    out = (ctypes.c_double * 3)()
+    core.qs_bloch(state, 2, 0, out)
+    assert np.allclose(list(out), [0, 0, 0], atol=1e-12)

@@ -56,6 +56,16 @@ const UI = {
     OVKEYS: 'ENTER: MORE  ESC: CLOSE',
     OVLAST: 'ENTER / ESC: CLOSE',
     OVERPAR: 'MORE GATES THAN NEEDED: ONE STAR LESS.',
+    CIRCKEYS2: '0-2:WIRE BKSP:UNDO ?:HINT O:VIEW M:MEASURE A:EXACT',
+    TAB_STATE: 'STATE',
+    TAB_BLOCH: 'BLOCH',
+    TAB_SHOTS: 'SHOTS',
+    SHOTSINFO: 'EACH SHOT GIVES ONE RESULT. ONLY MANY SHOTS SHOW THE CHANCES: THE TICKS MARK THE EXACT ONES.',
+    BLOCHINFO: 'ONE SPHERE PER QUBIT. AN ARROW SHORTER THAN THE RADIUS: THAT QUBIT IS ENTANGLED WITH THE OTHERS.',
+    EXACT: 'EXACT STATE',
+    EXACTHEAD: 'BASIS    AMPLITUDE         CHANCE  PHASE',
+    EXACTBLOCH: 'BLOCH VECTORS (LENGTH 1: PURE, 0: FULLY MIXED)',
+    ENTANGLED: 'ENTANGLED',
 };
 
 function build() {
@@ -95,6 +105,7 @@ function build() {
 
     // ---------------------------------------------------------------- strings
     const out = [];
+    const picStats = []; // for the tests: pixels of each colour in each drawing
     const strings = new Map(); // dedupe identical strings
     const str = (text, keepCase = false) => {
         if (text === undefined || text === null)
@@ -124,17 +135,99 @@ function build() {
         return [g, ...w, 0, 0, 0].slice(0, 4);
     }));
 
+    // ---------------------------------------------------------------- hardware drawings
+    // each drawing of src/pics.js, drawn by its own code into a pixel grid with the same
+    // rectangles, lines, circles and font as the web game, then run-length encoded
+    const picNames = Object.keys(QQ.PICS);
+    const picColors = [];
+    const colorIndex = c => {
+        const k = c.toLowerCase();
+        if (!picColors.includes(k))
+            picColors.push(k);
+        return picColors.indexOf(k) + 1;
+    };
+    const pics = picNames.map(name => {
+        const P = QQ.PICS[name], w = 230, h = P.h;
+        const px = new Uint8Array(w * h);
+        const R = (c, x, y, rw, rh) => {
+            const k = colorIndex(c);
+            for (let yy = Math.round(y); yy < Math.round(y) + rh; yy++)
+                for (let xx = Math.round(x); xx < Math.round(x) + rw; xx++)
+                    if (xx >= 0 && xx < w && yy >= 0 && yy < h)
+                        px[yy * w + xx] = k;
+        };
+        const ctx = {c: '#000', set fillStyle(v) { this.c = v; }, fillRect(x, y, rw, rh) { R(this.c, x, y, rw, rh); }};
+        const text = (t, x, y, c = QQ.PAL.white, size = 1, sh = QQ.PAL.shadow, keep = false) =>
+            QQ.drawText(ctx, t, x, y, size, c, sh, keep);
+        const line = (x0, y0, x1, y1, c) => { // as src/game.js draws them
+            x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+            const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+            let e = dx + dy;
+            for (;;) {
+                R(c, x0, y0, 1, 1);
+                if (x0 === x1 && y0 === y1)
+                    break;
+                const e2 = 2 * e;
+                if (e2 >= dy) { e += dy; x0 += sx; }
+                if (e2 <= dx) { e += dx; y0 += sy; }
+            }
+        };
+        const circle = (cx, cy, r, c) => {
+            let x = r, y = 0, e = 1 - r;
+            while (x >= y) {
+                for (const [a, b] of [[x, y], [y, x], [-y, x], [-x, y], [-x, -y], [-y, -x], [y, -x], [x, -y]])
+                    R(c, cx + a, cy + b, 1, 1);
+                y++;
+                if (e < 0) {
+                    e += 2 * y + 1;
+                } else {
+                    x--;
+                    e += 2 * (y - x) + 1;
+                }
+            }
+        };
+        P.draw({R, text, line, circle}, 0, 0, w);
+        const runs = [];
+        for (let y = 0; y < h; y++) {
+            let x = 0;
+            while (x < w) {
+                let n = 1;
+                while (x + n < w && n < 255 && px[y * w + x + n] === px[y * w + x])
+                    n++;
+                runs.push(n, px[y * w + x]);
+                x += n;
+            }
+        }
+        runs.push(0, 0);
+        const label = 'PIC_' + name;
+        out.push(`${label}: db ${runs.join(',')}`);
+        const counts = {};
+        px.forEach(k => { if (k) counts[k] = (counts[k] || 0) + 1; });
+        picStats.push({name, w, h, counts});
+        return {label, w, h};
+    });
+    if (picColors.length > 15)
+        throw new Error('too many drawing colours');
+
     // ---------------------------------------------------------------- levels
     const steps = [];
     const levels = QQ.LEVELS.map((L, li) => {
         const first = steps.length;
         L.steps.forEach((S, si) => {
-            const f = {type: 0, title: '0', body: '0', eli5: str(QQ.eli5For(L, si)), hint: '0', opts: '0', nopts: 0,
+            const f = {pic: 0, demo: '0', ndemo: 0, demoq: 0,
+                type: 0, title: '0', body: '0', eli5: str(QQ.eli5For(L, si)), hint: '0', opts: '0', nopts: 0,
                 answer: 0, qubits: 0, gates: '0', ngates: 0, par: 0, setup: '0', nsetup: 0, after: '0', nafter: 0,
                 boxes: '0', sol: '0', nsol: 0, keep: 0, flags: 0, limits: '0', allow: '0', boxnames: '0'};
             if (S.type === 'text') {
                 f.title = str(S.title);
                 f.body = str(S.body);
+                if (S.pic)
+                    f.pic = picNames.indexOf(S.pic) + 1;
+                if (S.demo) {
+                    f.demo = ops(S.demo.ops, []);
+                    f.ndemo = S.demo.ops.length;
+                    f.demoq = S.demo.qubits;
+                }
             } else if (S.type === 'quiz') {
                 f.type = 1;
                 f.title = str(S.q);
@@ -190,6 +283,7 @@ function build() {
     const gateTips = ['0', ...names.map(g => str(QQ.GATE_TIPS[g] || ''))];
     const gateKeys = [0, ...names.map(g => QQ.GATES[g].key.charCodeAt(0))];
     const ui = Object.entries(UI).map(([k, v]) => `U_${k}: dq ${str(v)}`);
+    const g_deg = glyphOf('°'), g_pct = glyphOf('%'), g_i = glyphOf('i', true); // before the table is written
     const worlds = QQ.WORLDS.map(w => str(w.title));
     // ASCII 32..126 in lesson (upper case) glyphs, for text the core builds (numbers, kets)
     const ascii = [];
@@ -211,7 +305,7 @@ function build() {
         '%include "core/data.inc"',
         'section .rodata',
         'align 8',
-        `global GLYPHS, GLYPH_COUNT, LEVELS, LEVEL_COUNT, STEPS, WORLDS, WORLD_COUNT, GATE_LABELS, GATE_TIPS, GATE_KEYS, ASCII, ICON, ICON_COLORS`,
+        `global GLYPHS, GLYPH_COUNT, LEVELS, LEVEL_COUNT, STEPS, WORLDS, WORLD_COUNT, GATE_LABELS, GATE_TIPS, GATE_KEYS, ASCII, ICON, ICON_COLORS, PICS, PIC_COUNT, PIC_COLORS, G_DEG, G_PCT, G_I`,
         `global ${Object.keys(UI).map(k => 'U_' + k).join(', ')}`,
         `GLYPH_COUNT: dq ${glyphs.length}`,
         `LEVEL_COUNT: dq ${levels.length}`,
@@ -224,7 +318,14 @@ function build() {
         'STEPS:',
         ...steps.map(f => `    dq ${[f.type, f.title, f.body, f.eli5, f.hint, f.opts, f.nopts, f.answer, f.qubits,
             f.gates, f.ngates, f.par, f.setup, f.nsetup, f.after, f.nafter, f.boxes, f.sol, f.nsol, f.keep, f.flags,
-            f.limits, f.allow, f.boxnames].join(', ')}`),
+            f.limits, f.allow, f.boxnames, f.pic, f.demo, f.ndemo, f.demoq].join(', ')}`),
+        `PIC_COUNT: dq ${pics.length}`,
+        'PICS:',
+        ...pics.map(p => `    dq ${p.label}\n    dd ${p.w}, ${p.h}`),
+        `PIC_COLORS: dd 0, ${picColors.map(c => '0x' + c.slice(1)).join(', ')}`,
+        `G_DEG: db ${g_deg}`,
+        `G_PCT: db ${g_pct}`,
+        `G_I: db ${g_i}`,
         `WORLDS: dq ${worlds.join(', ')}`,
         `GATE_LABELS: dq ${gateLabels.join(', ')}`,
         `GATE_TIPS: dq ${gateTips.join(', ')}`,
@@ -240,6 +341,8 @@ function build() {
     ];
     if (glyphs.length > 255)
         throw new Error('too many glyphs: ' + glyphs.length);
+    build.picStats = picStats;
+    build.picColors = picColors;
     return lines.join('\n');
 }
 

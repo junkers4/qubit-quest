@@ -23,12 +23,14 @@ extern ASCII, ICON, ICON_COLORS
 extern fb, text_px
 extern gfx_fill, gfx_rect, gfx_text, gfx_line, gfx_pixel, text_width, str_len
 extern wrap_count, draw_wrapped, ascii_to, num_to, str_copy
-extern qs_zero, qs_run, qs_matches, qs_prob
+extern qs_zero, qs_run, qs_matches, qs_prob, qs_bloch
+extern sphere, vec_rotate, fmt_num, fmt_deg, draw_pic, PICS, G_DEG, G_I
 extern plat_save, plat_load
 extern U_TITLE, U_TAGLINE, U_START, U_SELECT, U_QUIT, U_SPINOFF, U_CORE, U_WORLD, U_DONE
 extern U_RIGHT, U_WRONG, U_SOLVED, U_STATE, U_PICK2, U_PICKT, U_PICKC2, U_NOTALLOWED
 extern U_BOXRAN, U_DONENEXT, U_ELI5TITLE, U_HINT, U_MAPKEYS, U_TEXTKEYS, U_QUIZKEYS
 extern U_CIRCKEYS, U_SOLVEDKEYS, U_OVKEYS, U_OVLAST, U_OVERPAR, U_LIMIT, U_FULL, U_PAR
+extern U_CIRCKEYS2, U_TAB_STATE, U_SHOTSINFO, U_BLOCHINFO, U_EXACT, U_EXACTHEAD, U_EXACTBLOCH
 
 MAXOPS      equ 16
 MAXHITS     equ 64
@@ -42,6 +44,11 @@ SC_DONE     equ 3
 OV_NONE     equ 0
 OV_ELI5     equ 1
 OV_HINT     equ 2
+OV_EXACT    equ 3
+
+ANIM_N      equ 10              ; frames a change takes to show (a third of a second)
+SHOTS       equ 100
+SHOTS_PER_FRAME equ 3
 
 TEXT_LINES  equ 13              ; lesson lines per page
 OV_LINES    equ 12              ; window lines per page
@@ -53,6 +60,20 @@ SAVE_MAGIC: db "QQS1"
 A_Q0:       db "Q0", 0
 A_SLASH:    db "/", 0
 A_KET:      db "|000>", 0
+AXIS_NAMES: db "XYZ"
+align 8
+PURE:       dq 0.99
+ONE_D:      dq 1.0
+; each one-qubit gate turns the Bloch sphere: axis (x, y, z) and angle, for gates 1..8
+AXES:
+    dq 1.0, 0.0, 0.0, 3.14159265358979323846                        ; X
+    dq 0.0, 1.0, 0.0, 3.14159265358979323846                        ; Y
+    dq 0.0, 0.0, 1.0, 3.14159265358979323846                        ; Z
+    dq 0.70710678118654752440, 0.0, 0.70710678118654752440, 3.14159265358979323846 ; H
+    dq 0.0, 0.0, 1.0, 1.57079632679489661923                        ; S
+    dq 0.0, 0.0, 1.0, -1.57079632679489661923                       ; S dagger
+    dq 0.0, 0.0, 1.0, 0.78539816339744830962                        ; T
+    dq 0.0, 0.0, 1.0, -0.78539816339744830962                       ; T dagger
 
 section .bss
 alignb 16
@@ -91,6 +112,17 @@ c_pick:     resd 1              ; palette index + 1 of a gate waiting for wires,
 c_pickn:    resd 1
 c_pickw:    resd 4
 c_info:     resq 1              ; string under the palette, or 0
+c_prev:     resb 16 * 8         ; the state before the last change (the animation starts there)
+c_demo:     resb 16 * 8
+FN_DATA view, 4                ; the puzzle's picture: 0 STATE, 1 BLOCH, 2 SHOTS
+anim_f:     resd 1              ; frames of the animation left
+anim_gate:  resd 1
+anim_q:     resd 1
+anim_dir:   resd 1
+FN_DATA shot_n, 4
+FN_DATA shot_counts, 4 * 8
+seed:       resd 1
+wire_top:   resd 1              ; y of wire 0
 
 section .text
 
@@ -406,6 +438,7 @@ FN game_init
     and edi, 1
     mov [unlock_all], edi
     mov dword [game_screen], SC_TITLE
+    mov dword [wire_top], 66
     call load_progress
     ret
 
@@ -431,6 +464,8 @@ enter_step:
     mov dword [c_sel], 0
     mov dword [c_pick], 0
     mov qword [c_info], 0
+    mov dword [anim_f], 0
+    call shots_reset
     call step_ptr
     mov rbx, rax
     cmp qword [rbx + ST_TYPE], T_CIRCUIT
@@ -878,6 +913,9 @@ push_op:
     mov [c_info], rax
     jmp .out
 .ok:
+    mov edi, r12d               ; the pictures move from the state before
+    mov esi, 1
+    call anim_begin
     mov eax, [c_nops]
     lea rcx, [c_ops]
     mov [rcx + rax*4], r12d
@@ -961,6 +999,11 @@ undo:
     jne .out
     cmp dword [c_nops], 0
     je .out
+    mov eax, [c_nops]
+    lea rcx, [c_ops]
+    mov edi, [rcx + rax*4 - 4]
+    mov esi, -1
+    call anim_begin
     dec dword [c_nops]
     mov qword [c_info], 0
 .out:
@@ -1252,6 +1295,42 @@ FN game_key
     call answer
     jmp .out
 .circ:
+    cmp ebx, 'o'                ; the next picture: STATE, BLOCH, SHOTS
+    jne .cv
+    mov eax, [view]
+    inc eax
+    cmp eax, 3
+    jb .cvs
+    xor eax, eax
+.cvs:
+    mov [view], eax
+    cmp eax, 2
+    jne .out
+    call shots_reset
+    jmp .out
+.cv:
+    cmp ebx, 'm'                ; measure: SHOTS, from the start
+    jne .cm
+    mov dword [view], 2
+    call shots_reset
+    jmp .out
+.cm:
+    cmp ebx, 'a'                ; the exact numbers
+    jne .ca
+    mov edi, OV_EXACT
+    call open_overlay
+    jmp .out
+.ca:
+    mov eax, ebx
+    sub eax, K_VIEW
+    cmp eax, 3
+    jae .c0
+    mov [view], eax
+    cmp eax, 2
+    jne .out
+    call shots_reset
+    jmp .out
+.c0:
     cmp ebx, '?'
     jne .c1
     mov edi, OV_HINT
@@ -1421,6 +1500,10 @@ FN game_draw
     call draw_level
 .f:
     call draw_frame
+    cmp dword [anim_f], 0
+    je .na
+    dec dword [anim_f]
+.na:
     add rsp, 16
     pop rbx
     ret
@@ -1687,7 +1770,9 @@ draw_level:
 draw_text_step:
     push rbx
     push r12
-    sub rsp, 8
+    push r13
+    push r14
+    push r15
     call step_ptr
     mov rbx, rax
     mov rdx, [rbx + ST_TITLE]
@@ -1695,7 +1780,26 @@ draw_text_step:
     mov rdi, [rbx + ST_BODY]
     mov esi, COLS
     call wrap_count
-    add eax, TEXT_LINES - 1
+    mov r12d, eax               ; lines
+    ; a drawing or a demo circuit under the text: its height
+    xor r13d, r13d
+    mov rax, [rbx + ST_PIC]
+    test rax, rax
+    jz .demo
+    dec eax
+    shl eax, 4
+    lea rcx, [PICS]
+    mov r13d, [rcx + rax + PIC_H]
+    add r13d, 6
+    jmp .pages
+.demo:
+    mov rdi, rbx
+    call demo_height
+    test eax, eax
+    jz .pages
+    lea r13d, [rax + 6]
+.pages:
+    lea eax, [r12 + TEXT_LINES - 1]
     xor edx, edx
     mov ecx, TEXT_LINES
     div ecx
@@ -1703,6 +1807,19 @@ draw_text_step:
     jge .p
     mov eax, 1
 .p:
+    lea r14d, [rax - 1]         ; the page the picture goes on: the last,
+    test r13d, r13d
+    jz .np
+    imul ecx, r14d, TEXT_LINES  ; or a page of its own when it does not fit under the text
+    mov edx, r12d
+    sub edx, ecx
+    imul edx, edx, LEADING
+    add edx, r13d
+    cmp edx, TEXT_LINES * LEADING
+    jle .np
+    inc eax
+    inc r14d
+.np:
     mov [pages], eax
     mov ecx, [page]             ; clamp (back from the next step asks for the last page)
     cmp ecx, eax
@@ -1720,6 +1837,25 @@ draw_text_step:
     push TEXT_LINES
     call draw_wrapped
     add rsp, 16
+    mov r15d, eax               ; y under the text
+    test r13d, r13d
+    jz .nopic
+    cmp [page], r14d
+    jne .nopic
+    add r15d, 6
+    mov rax, [rbx + ST_PIC]
+    test rax, rax
+    jz .d
+    lea edi, [rax - 1]
+    mov esi, (FB_W - 230) / 2
+    mov edx, r15d
+    call draw_pic
+    jmp .nopic
+.d:
+    mov rdi, rbx
+    mov esi, r15d
+    call draw_demo
+.nopic:
     ; the page and the keys
     cmp dword [pages], 1
     je .k
@@ -1745,7 +1881,9 @@ draw_text_step:
     mov ecx, FB_H - 30
     mov r8d, K_NEXT
     call hit_add
-    add rsp, 8
+    pop r15
+    pop r14
+    pop r13
     pop r12
     pop rbx
     ret
@@ -1862,7 +2000,7 @@ draw_quiz:
 ; y of wire q (edi) -> eax
 wire_y:
     imul eax, edi, 20
-    add eax, 66
+    add eax, [wire_top]
     ret
 
 ; a control dot on wire edi at x esi
@@ -2163,6 +2301,7 @@ draw_circuit:
     call step_ptr
     mov rbx, rax
     mov r15d, [rbx + ST_QUBITS]
+    mov dword [wire_top], 66
     ; the goal
     mov edi, 8
     mov esi, 15
@@ -2282,7 +2421,7 @@ draw_circuit:
     inc r12d
     jmp .pal
 .state:
-    call draw_state
+    call draw_panel
     ; the line under the palette
     cmp dword [game_solved], 0
     je .info
@@ -2299,7 +2438,16 @@ draw_circuit:
 .info:
     mov rdx, [c_info]
     test rdx, rdx
-    jz .keys
+    jnz .infod
+    lea rax, [U_BLOCHINFO]      ; what the picture shows
+    cmp dword [view], 1
+    je .vi
+    lea rax, [U_SHOTSINFO]
+    cmp dword [view], 2
+    jne .keys
+.vi:
+    mov rdx, [rax]
+.infod:
     mov edi, 8
     mov esi, 151
     mov ecx, COLS
@@ -2310,7 +2458,7 @@ draw_circuit:
     call draw_wrapped
     add rsp, 16
 .keys:
-    lea rsi, [U_CIRCKEYS]
+    lea rsi, [U_CIRCKEYS2]
     cmp dword [game_solved], 0
     je .ks
     lea rsi, [U_SOLVEDKEYS]
@@ -2326,8 +2474,467 @@ draw_circuit:
     pop rbx
     ret
 
-; the state now: per basis state its ket, a bar for the chance, a dial for the phase
-draw_state:
+; ------------------------------------------------------------------ the pictures of a puzzle
+; The right side of a puzzle: three views of the state now, on tabs. STATE: per basis state
+; its chance (bar) and phase (dial). BLOCH: one sphere per qubit, its arrow the qubit's own
+; state (shorter when entangled). SHOTS: measurements one by one, against the exact chances.
+; After each gate the pictures move from the state before to the state after (ANIM_N frames;
+; a one-qubit gate turns its qubit's arrow about the gate's own axis).
+draw_panel:
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 40
+    call run_now
+    call step_ptr
+    mov r15d, [rax + ST_QUBITS]
+    ; the tabs
+    xor ebx, ebx
+.tab:
+    imul ebp, ebx, 37
+    add ebp, 206
+    mov edi, ebp
+    mov esi, 44
+    mov edx, 35
+    mov ecx, 11
+    mov r8d, C_NAVY
+    mov r9d, C_BLUE
+    cmp ebx, [view]
+    jne .tb
+    mov r9d, C_GOLD
+.tb:
+    call box
+    mov edi, ebp
+    mov esi, 44
+    mov edx, 35
+    mov ecx, 11
+    lea r8d, [rbx + K_VIEW]
+    call hit_add
+    lea rax, [U_TAB_STATE]
+    mov rdx, [rax + rbx*8]      ; U_TAB_STATE, U_TAB_BLOCH, U_TAB_SHOTS are next to each other
+    mov ecx, C_WHITE
+    cmp ebx, [view]
+    jne .tt
+    mov ecx, C_GOLD
+.tt:
+    lea edi, [rbp + 3]
+    mov esi, 42
+    mov r8d, SHADOW
+    mov r9d, -1
+    call gfx_text
+    inc ebx
+    cmp ebx, 3
+    jb .tab
+    ; how far the move from the state before has gone: t in [0, 1]
+    call anim_t
+    movsd [rsp], xmm0
+    mov eax, [view]
+    cmp eax, 1
+    je .bloch
+    cmp eax, 2
+    je .shots
+    lea rdi, [c_now]
+    mov esi, r15d
+    mov edx, 212
+    mov ecx, 58
+    xor r8d, r8d
+    cmp dword [anim_f], 0
+    je .amps
+    lea r8, [c_prev]
+.amps:
+    movsd xmm0, [rsp]
+    call draw_amps
+    jmp .out
+.bloch:
+    mov edi, r15d
+    movsd xmm0, [rsp]
+    call draw_blochs
+    jmp .out
+.shots:
+    mov edi, r15d
+    call draw_shots
+.out:
+    add rsp, 40
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+; xmm0 = how far the animation has gone (1: done or none)
+anim_t:
+    mov eax, ANIM_N
+    sub eax, [anim_f]
+    cvtsi2sd xmm0, eax
+    mov eax, ANIM_N
+    cvtsi2sd xmm1, eax
+    divsd xmm0, xmm1
+    ret
+
+; anim_begin(op edi, direction esi = 1 placed, -1 taken back): before the circuit changes,
+; keep the state as it is now to move the pictures from; the shots start again
+anim_begin:
+    push rbx
+    push r12
+    sub rsp, 8
+    mov ebx, edi
+    mov r12d, esi
+    call run_now
+    lea rsi, [c_now]
+    lea rdi, [c_prev]
+    mov ecx, 16
+    rep movsq
+    mov dword [anim_f], ANIM_N
+    movzx eax, bl
+    mov [anim_gate], eax
+    movzx eax, bh
+    mov [anim_q], eax
+    mov [anim_dir], r12d
+    call shots_reset
+    add rsp, 8
+    pop r12
+    pop rbx
+    ret
+
+; lerp: xmm0 = a + (b - a) t, a = xmm0, b = xmm1, t = xmm2
+lerp:
+    subsd xmm1, xmm0
+    mulsd xmm1, xmm2
+    addsd xmm0, xmm1
+    ret
+
+; draw_amps(state rdi, n esi, x edx, y ecx, before r8 (or 0), t xmm0): the STATE view
+draw_amps:
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 56                 ; [rsp]: ket text; [rsp+16] t; [rsp+24] re; [rsp+32] im; [rsp+40] x; [rsp+44] y
+    mov r12, rdi
+    mov r13d, esi
+    mov [rsp + 40], edx
+    mov [rsp + 44], ecx
+    mov r14, r8
+    movsd [rsp + 16], xmm0
+    mov ecx, r13d
+    mov r15d, 1
+    shl r15d, cl
+    xor ebx, ebx
+.row:
+    cmp ebx, r15d
+    jae .out
+    imul ebp, ebx, 9
+    add ebp, [rsp + 44]
+    ; "|010>"
+    mov byte [rsp], '|'
+    xor edx, edx
+.bit:
+    cmp edx, r13d
+    jae .bitd
+    mov ecx, r13d
+    sub ecx, edx
+    dec ecx
+    mov eax, ebx
+    shr eax, cl
+    and eax, 1
+    add al, '0'
+    mov [rsp + 1 + rdx], al
+    inc edx
+    jmp .bit
+.bitd:
+    mov byte [rsp + 1 + rdx], '>'
+    mov byte [rsp + 2 + rdx], 0
+    lea rdi, [tbuf]
+    lea rsi, [rsp]
+    call ascii_to
+    lea esi, [rbp - 3]
+    lea rdx, [tbuf]
+    mov edi, [rsp + 40]
+    mov ecx, C_WHITE
+    mov r8d, SHADOW
+    mov r9d, -1
+    call gfx_text
+    ; the amplitude, moved from the one before
+    mov eax, ebx
+    shl rax, 4
+    movsd xmm0, [r12 + rax]
+    movsd xmm1, [r12 + rax + 8]
+    test r14, r14
+    jz .amp
+    movsd xmm3, xmm0
+    movsd xmm4, xmm1
+    movsd xmm0, [r14 + rax]
+    movsd xmm1, xmm3
+    movsd xmm2, [rsp + 16]
+    call lerp
+    movsd xmm5, xmm0            ; re
+    mov eax, ebx
+    shl rax, 4
+    movsd xmm0, [r14 + rax + 8]
+    movsd xmm1, xmm4
+    movsd xmm2, [rsp + 16]
+    call lerp
+    movsd xmm1, xmm0
+    movsd xmm0, xmm5
+.amp:
+    movsd [rsp + 24], xmm0
+    movsd [rsp + 32], xmm1
+    ; the bar: the chance, |amplitude|^2 (from the moving amplitude, so it grows or shrinks)
+    mov edi, [rsp + 40]
+    add edi, 34
+    mov esi, ebp
+    mov edx, 46
+    mov ecx, 5
+    mov r8d, C_NAVY
+    call gfx_rect
+    movsd xmm0, [rsp + 24]
+    mulsd xmm0, xmm0
+    movsd xmm1, [rsp + 32]
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    mov eax, 46
+    cvtsi2sd xmm1, eax
+    mulsd xmm0, xmm1
+    cvtsd2si edx, xmm0
+    test edx, edx
+    jle .dial
+    mov edi, [rsp + 40]
+    add edi, 34
+    mov esi, ebp
+    mov ecx, 5
+    mov r8d, C_GOLD
+    call gfx_rect
+.dial:
+    ; the phase: a line from the dial's centre in the amplitude's direction
+    movsd xmm0, [rsp + 24]
+    movsd xmm1, [rsp + 32]
+    movsd xmm2, xmm0
+    mulsd xmm2, xmm2
+    movsd xmm3, xmm1
+    mulsd xmm3, xmm3
+    addsd xmm2, xmm3
+    sqrtsd xmm2, xmm2
+    mov eax, 1000
+    cvtsi2sd xmm3, eax
+    movsd xmm4, xmm2
+    mulsd xmm4, xmm3
+    mov eax, 1
+    cvtsi2sd xmm5, eax
+    comisd xmm4, xmm5
+    jb .next
+    mov eax, 3
+    cvtsi2sd xmm3, eax
+    divsd xmm0, xmm2
+    mulsd xmm0, xmm3
+    divsd xmm1, xmm2
+    mulsd xmm1, xmm3
+    cvtsd2si eax, xmm0
+    cvtsd2si ecx, xmm1
+    mov [rsp + 24], eax
+    mov [rsp + 28], ecx
+    mov edi, [rsp + 40]
+    add edi, 85
+    lea esi, [rbp - 1]
+    mov edx, 7
+    mov ecx, 7
+    mov r8d, C_NAVY
+    call gfx_rect
+    mov edi, [rsp + 40]
+    add edi, 88
+    lea esi, [rbp + 2]
+    mov edx, edi
+    add edx, [rsp + 24]
+    mov ecx, esi
+    sub ecx, [rsp + 28]
+    mov r8d, C_WHITE
+    call gfx_line
+.next:
+    inc ebx
+    jmp .row
+.out:
+    add rsp, 56
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+; draw_blochs(n edi, t xmm0): the BLOCH view, one sphere per qubit with x, y, z
+draw_blochs:
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 120                ; [rsp]: v; [rsp+24]: v before; [rsp+48] t; [rsp+56] ascii; [rsp+112] r
+    mov r12d, edi
+    movsd [rsp + 48], xmm0
+    ; blocks of 92 / n rows; radius min(24, (block - 8) / 2)
+    mov eax, 92
+    xor edx, edx
+    div r12d
+    mov r13d, eax               ; block height
+    sub eax, 8
+    shr eax, 1
+    cmp eax, 24
+    jbe .r
+    mov eax, 24
+.r:
+    mov r14d, eax               ; radius
+    xor ebx, ebx                ; qubit
+.q:
+    cmp ebx, r12d
+    jae .out
+    mov ebp, ebx
+    imul ebp, r13d
+    add ebp, 57                 ; block top
+    lea rdi, [c_now]
+    mov esi, r12d
+    mov edx, ebx
+    lea rcx, [rsp]
+    call qs_bloch
+    cmp dword [anim_f], 0
+    je .draw
+    lea rdi, [c_prev]
+    mov esi, r12d
+    mov edx, ebx
+    lea rcx, [rsp + 24]
+    call qs_bloch
+    ; a one-qubit gate on this qubit: turn about its axis; else move in a straight line
+    mov eax, [anim_gate]
+    test eax, eax
+    jz .lerp
+    cmp eax, G_TDG
+    ja .lerp
+    cmp ebx, [anim_q]
+    jne .lerp
+    lea rsi, [AXES]
+    dec eax
+    shl eax, 5
+    add rsi, rax
+    movsd xmm0, [rsi + 24]      ; the full angle
+    mulsd xmm0, [rsp + 48]
+    cvtsi2sd xmm1, dword [anim_dir]
+    mulsd xmm0, xmm1
+    lea rdi, [rsp + 24]
+    call vec_rotate
+    mov rax, [rsp + 24]
+    mov [rsp], rax
+    mov rax, [rsp + 32]
+    mov [rsp + 8], rax
+    mov rax, [rsp + 40]
+    mov [rsp + 16], rax
+    jmp .draw
+.lerp:
+    xor ecx, ecx
+.lc:
+    movsd xmm0, [rsp + 24 + rcx*8]
+    movsd xmm1, [rsp + rcx*8]
+    movsd xmm2, [rsp + 48]
+    call lerp
+    movsd [rsp + rcx*8], xmm0
+    inc ecx
+    cmp ecx, 3
+    jb .lc
+.draw:
+    ; the label, the sphere (outline purple when the arrow is short: entangled), the numbers
+    lea rsi, [A_Q0]
+    lea rdi, [tbuf]
+    call ascii_to
+    lea rax, [ASCII]
+    movzx eax, byte [rax + rbx + '0' - 32]
+    mov [tbuf + 1], al
+    mov edi, 206
+    lea esi, [rbp + r14 - 5]
+    lea rdx, [tbuf]
+    mov ecx, C_GOLD
+    mov r8d, SHADOW
+    mov r9d, -1
+    call gfx_text
+    movsd xmm0, [rsp]
+    mulsd xmm0, xmm0
+    movsd xmm1, [rsp + 8]
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    movsd xmm1, [rsp + 16]
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    sqrtsd xmm0, xmm0
+    mov r8d, C_BLUE
+    comisd xmm0, [PURE]
+    jae .o
+    mov r8d, C_PURPLE
+.o:
+    lea edi, [r14 + 221]        ; centre x
+    lea esi, [rbp + r14 + 2]    ; centre y
+    mov edx, r14d
+    lea rcx, [rsp]
+    call sphere
+    ; x, y, z
+    xor r15d, r15d
+.num:
+    lea rdi, [rsp + 56]
+    lea rax, [AXIS_NAMES]
+    mov al, [rax + r15]
+    mov [rdi], al
+    inc rdi
+    movsd xmm0, [rsp + r15*8]
+    mov esi, 2
+    mov edx, 1
+    call fmt_num
+    lea rdi, [tbuf]
+    lea rsi, [rsp + 56]
+    call ascii_to
+    lea edi, [r14*2 + 227]
+    mov eax, r14d
+    sub eax, 12
+    lea esi, [rbp + rax]
+    imul eax, r15d, 9
+    add esi, eax
+    lea rdx, [tbuf]
+    mov ecx, C_WHITE
+    mov r8d, SHADOW
+    mov r9d, -1
+    call gfx_text
+    inc r15d
+    cmp r15d, 3
+    jb .num
+    inc ebx
+    jmp .q
+.out:
+    add rsp, 120
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+shots_reset:
+    mov dword [shot_n], 0
+    lea rdi, [shot_counts]
+    xor eax, eax
+    mov ecx, 8
+    rep stosd
+    mov eax, [frame]            ; another sequence each time
+    imul eax, eax, 2654435761
+    or eax, 1
+    mov [seed], eax
+    ret
+
+; draw_shots(n edi): the SHOTS view; a few more measurements every frame
+draw_shots:
     push rbx
     push rbp
     push r12
@@ -2335,38 +2942,64 @@ draw_state:
     push r14
     push r15
     sub rsp, 24
-    call run_now
-    call step_ptr
-    mov r15d, [rax + ST_QUBITS]
-    lea rax, [U_STATE]
-    mov rdx, [rax]
-    TEXT 212, 46, rdx, C_DIM
-    mov ecx, r15d
-    mov r14d, 1
-    shl r14d, cl                ; basis states
+    mov r12d, edi
+    mov ecx, r12d
+    mov r13d, 1
+    shl r13d, cl                ; basis states
+    mov r14d, SHOTS_PER_FRAME
+.shot:
+    cmp dword [shot_n], SHOTS
+    jae .drawn
+    test r14d, r14d
+    jz .drawn
+    dec r14d
+    ; u in [0, 1): the top 24 bits of a linear congruential sequence
+    mov eax, [seed]
+    imul eax, eax, 1664525
+    add eax, 1013904223
+    mov [seed], eax
+    shr eax, 8
+    cvtsi2sd xmm6, eax
+    mov eax, 1 << 24
+    cvtsi2sd xmm1, eax
+    divsd xmm6, xmm1
+    ; the first basis state whose running sum of chances passes u
+    xorpd xmm7, xmm7
+    xor ebx, ebx
+.cum:
+    lea rdi, [c_now]
+    mov esi, ebx
+    call qs_prob
+    addsd xmm7, xmm0
+    comisd xmm7, xmm6
+    ja .hit
+    inc ebx
+    cmp ebx, r13d
+    jb .cum
+    dec ebx                     ; rounding: the last one
+.hit:
+    lea rax, [shot_counts]
+    inc dword [rax + rbx*4]
+    inc dword [shot_n]
+    jmp .shot
+.drawn:
     xor ebx, ebx
 .row:
-    cmp ebx, r14d
-    jae .out
+    cmp ebx, r13d
+    jae .total
     imul ebp, ebx, 9
-    add ebp, 57
-    ; "|010>"
-    lea rsi, [A_KET]
-    lea rdi, [rsp]
-    mov ecx, 8
-    rep movsb
-    mov ecx, r15d
+    add ebp, 58
+    ; the ket
+    mov byte [rsp], '|'
     xor edx, edx
 .bit:
-    cmp edx, r15d
+    cmp edx, r12d
     jae .bitd
-    mov eax, ebx
-    push rcx
-    mov ecx, r15d
+    mov ecx, r12d
     sub ecx, edx
     dec ecx
+    mov eax, ebx
     shr eax, cl
-    pop rcx
     and eax, 1
     add al, '0'
     mov [rsp + 1 + rdx], al
@@ -2381,61 +3014,358 @@ draw_state:
     lea esi, [rbp - 3]
     lea rdx, [tbuf]
     TEXT 212, esi, rdx, C_WHITE
-    ; the bar
     RECT 246, ebp, 46, 5, C_NAVY
+    lea rax, [shot_counts]
+    mov r15d, [rax + rbx*4]
+    imul eax, r15d, 46
+    xor edx, edx
+    mov ecx, SHOTS
+    div ecx
+    test eax, eax
+    jz .tick
+    RECT 246, ebp, eax, 5, C_GREEN
+.tick:                          ; the exact chance
     lea rdi, [c_now]
     mov esi, ebx
     call qs_prob
-    mov eax, 46                 ; width = round(p * 46)
+    mov eax, 46
     cvtsi2sd xmm1, eax
     mulsd xmm0, xmm1
-    cvtsd2si r12d, xmm0
-    test r12d, r12d
-    jle .dial
-    RECT 246, ebp, r12d, 5, C_GOLD
-.dial:
-    ; a line from the dial's centre in the amplitude's direction
+    cvtsd2si eax, xmm0
+    add eax, 246
+    lea esi, [rbp - 2]
+    RECT eax, esi, 1, 9, C_GOLD
+    lea rdi, [tbuf]
+    mov esi, r15d
+    call num_to
+    lea esi, [rbp - 3]
+    lea rdx, [tbuf]
+    TEXT 296, esi, rdx, C_DIM
+    inc ebx
+    jmp .row
+.total:
+    ; "64/100"
+    lea rdi, [tbuf]
+    mov esi, [shot_n]
+    call num_to
+    mov rdi, rax
+    lea rsi, [A_SLASH]
+    call ascii_to
+    mov rdi, rax
+    mov esi, SHOTS
+    call num_to
+    lea rdx, [tbuf]
+    TEXT 212, 134, rdx, C_GOLD
+    add rsp, 24
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+; ------------------------------------------------------------------ a demo circuit on a page
+; demo_height(step rdi) -> eax: the room a demo circuit needs (0: none)
+demo_height:
+    xor eax, eax
+    cmp qword [rdi + ST_DEMO], 0
+    je .out
+    mov ecx, [rdi + ST_DEMOQ]
+    imul eax, ecx, 20
+    add eax, 8                  ; the wires
+    mov edx, 1
+    shl edx, cl
+    imul edx, edx, 9
+    add edx, 4                  ; the state rows
+    cmp edx, eax
+    cmovg eax, edx
+    cmp ecx, 1
+    jne .out
+    mov edx, 52                 ; one qubit: and its sphere
+    cmp edx, eax
+    cmovg eax, edx
+.out:
+    ret
+
+; draw_demo(step rdi, y esi): the demo's wires and gates, the state it makes, for one qubit
+; its Bloch sphere
+draw_demo:
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 40
+    mov rbx, rdi
+    mov ebp, esi
+    mov r12d, [rbx + ST_DEMOQ]
+    lea eax, [rbp + 10]
+    mov [wire_top], eax
+    xor r13d, r13d
+.w:
+    cmp r13d, r12d
+    jae .ops
+    mov edi, r13d
+    call wire_y
+    mov r14d, eax
+    RECT 22, r14d, 110, 1, C_DIM
+    lea rsi, [A_Q0]
+    lea rdi, [tbuf]
+    call ascii_to
+    lea rax, [ASCII]
+    movzx eax, byte [rax + r13 + '0' - 32]
+    mov [tbuf + 1], al
+    lea esi, [r14 - 7]
+    lea rdx, [tbuf]
+    TEXT 7, esi, rdx, C_WHITE
+    inc r13d
+    jmp .w
+.ops:
+    mov rdi, [rbx + ST_DEMO]
+    mov esi, [rbx + ST_NDEMO]
+    mov edx, 30
+    xor ecx, ecx
+    call draw_ops
+    lea rdi, [c_demo]
+    mov esi, r12d
+    call qs_zero
+    lea rdi, [c_demo]
+    mov esi, r12d
+    mov rdx, [rbx + ST_DEMO]
+    mov ecx, [rbx + ST_NDEMO]
+    xor r8d, r8d
+    call qs_run
+    lea rdi, [c_demo]
+    mov esi, r12d
+    mov edx, 146
+    lea ecx, [rbp + 4]
+    xor r8d, r8d
+    movsd xmm0, [ONE_D]
+    call draw_amps
+    cmp r12d, 1
+    jne .out
+    lea rdi, [c_demo]
+    mov esi, 1
+    xor edx, edx
+    lea rcx, [rsp]
+    call qs_bloch
+    mov edi, 272
+    lea esi, [rbp + 26]
+    mov edx, 22
+    lea rcx, [rsp]
+    mov r8d, C_BLUE
+    call sphere
+.out:
+    mov dword [wire_top], 66
+    add rsp, 40
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret
+
+; ------------------------------------------------------------------ the exact numbers
+; The EXACT window: every amplitude as a complex number with its chance and phase angle,
+; then every qubit's Bloch vector and its length.
+draw_exact:
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 88                 ; [rsp]: ascii line; [rsp+64]: a vector
+    call run_now
+    call step_ptr
+    mov r12d, [rax + ST_QUBITS]
+    lea rax, [U_EXACT]
+    mov rdx, [rax]
+    TEXT 20, 17, rdx, C_GOLD
+    lea rax, [U_EXACTHEAD]
+    mov rdx, [rax]
+    TEXT 20, 29, rdx, C_DIM
+    mov ecx, r12d
+    mov r13d, 1
+    shl r13d, cl
+    xor ebx, ebx
+.row:
+    cmp ebx, r13d
+    jae .bl
+    imul ebp, ebx, 10
+    add ebp, 40
+    ; "|010>  +0.707 -0.000"
+    lea rdi, [rsp]
+    mov byte [rdi], '|'
+    inc rdi
+    xor edx, edx
+.bit:
+    cmp edx, r12d
+    jae .bitd
+    mov ecx, r12d
+    sub ecx, edx
+    dec ecx
+    mov eax, ebx
+    shr eax, cl
+    and eax, 1
+    add al, '0'
+    mov [rdi], al
+    inc rdi
+    inc edx
+    jmp .bit
+.bitd:
+    mov byte [rdi], '>'
+    mov rax, '        '
+    mov [rdi + 1], rax
+    add rdi, 5
+    mov eax, 3
+    sub eax, r12d               ; line the columns up for 1, 2 or 3 qubits
+    add rdi, rax
+    mov eax, ebx
+    shl rax, 4
+    lea rcx, [c_now]
+    movsd xmm0, [rcx + rax]
+    mov esi, 3
+    mov edx, 1
+    call fmt_num
+    mov rdi, rax
+    mov byte [rdi], ' '
+    inc rdi
+    mov eax, ebx
+    shl rax, 4
+    lea rcx, [c_now]
+    movsd xmm0, [rcx + rax + 8]
+    mov esi, 3
+    mov edx, 1
+    call fmt_num
+    mov r14, rax                ; the i comes in as a glyph
+    lea rdi, [tbuf]
+    lea rsi, [rsp]
+    call ascii_to
+    mov r15, rax
+    mov al, [G_I]
+    mov [r15], al
+    inc r15
+    ; "  50.0%  +90"
+    lea rdi, [rsp]
+    mov word [rdi], '  '
+    add rdi, 2
+    push rdi
+    lea rdi, [c_now]
+    mov esi, ebx
+    call qs_prob
+    pop rdi
+    movsd [rsp + 64], xmm0
+    mov eax, 100
+    cvtsi2sd xmm1, eax
+    mulsd xmm0, xmm1
+    mov esi, 1
+    xor edx, edx
+    call fmt_num
+    mov word [rax], '% '
+    mov byte [rax + 2], ' '
+    lea rdi, [rax + 3]
+    movsd xmm0, [rsp + 64]
+    mov eax, 1000000
+    cvtsi2sd xmm1, eax
+    mulsd xmm0, xmm1
+    mov eax, 1
+    cvtsi2sd xmm1, eax
+    comisd xmm0, xmm1           ; no chance: no phase
+    jb .nophase
     mov eax, ebx
     shl rax, 4
     lea rcx, [c_now]
     movsd xmm0, [rcx + rax]
     movsd xmm1, [rcx + rax + 8]
-    movsd xmm2, xmm0
-    mulsd xmm2, xmm2
-    movsd xmm3, xmm1
-    mulsd xmm3, xmm3
-    addsd xmm2, xmm3
-    sqrtsd xmm2, xmm2           ; |z|
-    mov eax, 1000
-    cvtsi2sd xmm3, eax
-    movsd xmm4, xmm2
-    mulsd xmm4, xmm3
-    mov eax, 1
-    cvtsi2sd xmm5, eax
-    comisd xmm4, xmm5           ; |z| < 0.001: no phase to show
-    jb .next
-    mov eax, 3
-    cvtsi2sd xmm3, eax
-    divsd xmm0, xmm2
-    mulsd xmm0, xmm3
-    divsd xmm1, xmm2
-    mulsd xmm1, xmm3
-    cvtsd2si r12d, xmm0         ; rounds to nearest
-    cvtsd2si r13d, xmm1
-    lea edi, [rbp - 1]
-    RECT 297, edi, 7, 7, C_NAVY
-    mov edi, 300
-    lea esi, [rbp + 2]
-    lea edx, [r12 + 300]
-    lea ecx, [rbp + 2]
-    sub ecx, r13d
-    mov r8d, C_WHITE
-    call gfx_line
-.next:
+    call fmt_deg
+    mov rdi, r15
+    lea rsi, [rsp]
+    call ascii_to
+    mov cl, [G_DEG]
+    mov [rax], cl
+    mov byte [rax + 1], STR_END
+    jmp .put
+.nophase:
+    mov word [rdi], '-'
+    mov rdi, r15
+    lea rsi, [rsp]
+    call ascii_to
+.put:
+    lea rdx, [tbuf]
+    TEXT 20, ebp, rdx, C_WHITE
     inc ebx
     jmp .row
+.bl:
+    ; the Bloch vectors
+    imul ebp, r13d, 10
+    add ebp, 44
+    lea rax, [U_EXACTBLOCH]
+    mov rdx, [rax]
+    TEXT 20, ebp, rdx, C_DIM
+    add ebp, 11
+    xor ebx, ebx
+.q:
+    cmp ebx, r12d
+    jae .out
+    lea rdi, [c_now]
+    mov esi, r12d
+    mov edx, ebx
+    lea rcx, [rsp + 64]
+    call qs_bloch
+    ; "Q0  X+0.707 Y+0.000 Z+0.707  R 1.000"
+    lea rdi, [rsp]
+    mov byte [rdi], 'Q'
+    lea eax, [rbx + '0']
+    mov [rdi + 1], al
+    mov word [rdi + 2], '  '
+    add rdi, 4
+    xor r14d, r14d
+.c:
+    lea rax, [AXIS_NAMES]
+    mov al, [rax + r14]
+    mov [rdi], al
+    inc rdi
+    movsd xmm0, [rsp + 64 + r14*8]
+    mov esi, 3
+    mov edx, 1
+    call fmt_num
+    mov byte [rax], ' '
+    lea rdi, [rax + 1]
+    inc r14d
+    cmp r14d, 3
+    jb .c
+    mov word [rdi], ' R'
+    mov byte [rdi + 2], ' '
+    add rdi, 3
+    movsd xmm0, [rsp + 64]
+    mulsd xmm0, xmm0
+    movsd xmm1, [rsp + 72]
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    movsd xmm1, [rsp + 80]
+    mulsd xmm1, xmm1
+    addsd xmm0, xmm1
+    sqrtsd xmm0, xmm0
+    mov esi, 3
+    xor edx, edx
+    call fmt_num
+    lea rdi, [tbuf]
+    lea rsi, [rsp]
+    call ascii_to
+    lea rdx, [tbuf]
+    TEXT 20, ebp, rdx, C_WHITE
+    add ebp, 10
+    inc ebx
+    jmp .q
 .out:
-    add rsp, 24
+    lea rax, [U_OVLAST]
+    mov rdx, [rax]
+    TEXT 20, FB_H - 26, rdx, C_DIM
+    add rsp, 88
     pop r15
     pop r14
     pop r13
@@ -2464,6 +3394,12 @@ draw_overlay:
     mov ecx, FB_H
     mov r8d, K_ITEM
     call hit_add
+    cmp dword [game_overlay], OV_EXACT
+    jne .words
+    mov dword [ov_pages], 1
+    call draw_exact
+    jmp .out
+.words:
     lea rax, [U_ELI5TITLE]
     mov rbp, [rbx + ST_ELI5]
     cmp dword [game_overlay], OV_HINT

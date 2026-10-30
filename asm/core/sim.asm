@@ -588,3 +588,66 @@ FN qs_matches
     pop rbp
     pop rbx
     ret
+
+; qs_bloch(state rdi, n esi, q edx, out rcx): the Bloch vector (x, y, z: 3 doubles) of qubit q
+; alone, from its reduced state: x = 2 Re rho01, y = 2 Im rho10, z = rho00 - rho11, where
+; rho01 sums a_i conj(a_j) over pairs i (q = 0), j = i with q = 1. Length 1: q is pure;
+; shorter: q is entangled with the others (0: fully mixed).
+FN qs_bloch
+    push rbx
+    mov r8, rcx
+    mov ecx, esi
+    dec ecx
+    sub ecx, edx
+    mov r9d, 1
+    shl r9d, cl                 ; mask of q
+    mov ecx, esi
+    mov r10d, 1
+    shl r10d, cl                ; dimension
+    xorpd xmm0, xmm0            ; x / 2
+    xorpd xmm1, xmm1            ; y / 2
+    xorpd xmm2, xmm2            ; z
+    xor ebx, ebx
+.l:
+    test ebx, r9d
+    jnz .n
+    mov eax, ebx
+    shl rax, 4
+    mov edx, ebx
+    or edx, r9d
+    shl rdx, 4
+    movsd xmm3, [rdi + rax]     ; ar
+    movsd xmm4, [rdi + rax + 8] ; ai
+    movsd xmm5, [rdi + rdx]     ; br
+    movsd xmm6, [rdi + rdx + 8] ; bi
+    movsd xmm7, xmm3
+    mulsd xmm7, xmm5
+    addsd xmm0, xmm7            ; + ar br
+    movsd xmm7, xmm4
+    mulsd xmm7, xmm6
+    addsd xmm0, xmm7            ; + ai bi
+    movsd xmm7, xmm3
+    mulsd xmm7, xmm6
+    addsd xmm1, xmm7            ; + ar bi
+    movsd xmm7, xmm4
+    mulsd xmm7, xmm5
+    subsd xmm1, xmm7            ; - ai br
+    mulsd xmm3, xmm3
+    mulsd xmm4, xmm4
+    addsd xmm2, xmm3
+    addsd xmm2, xmm4            ; + |a|^2
+    mulsd xmm5, xmm5
+    mulsd xmm6, xmm6
+    subsd xmm2, xmm5
+    subsd xmm2, xmm6            ; - |b|^2
+.n:
+    inc ebx
+    cmp ebx, r10d
+    jb .l
+    addsd xmm0, xmm0
+    addsd xmm1, xmm1
+    movsd [r8], xmm0
+    movsd [r8 + 8], xmm1
+    movsd [r8 + 16], xmm2
+    pop rbx
+    ret

@@ -13,3 +13,4 @@ K_ITEM      equ 0x200       ; + menu item, quiz option
 K_LEVEL     equ 0x300       ; + level
 K_GATE      equ 0x400       ; + palette tile
 K_WIRE      equ 0x500       ; + wire
+K_VIEW      equ 0x600       ; + picture tab

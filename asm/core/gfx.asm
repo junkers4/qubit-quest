@@ -566,3 +566,66 @@ FN draw_wrapped
     pop rbp
     pop rbx
     ret
+
+; gfx_circle(cx edi, cy esi, r edx, color ecx): the midpoint circle, as the web game draws it
+FN gfx_circle
+    push rbx
+    push rbp
+    push r12
+    push r13
+    push r14
+    push r15
+    sub rsp, 8
+    mov r12d, edi
+    mov r13d, esi
+    mov r14d, ecx
+    mov ebx, edx                ; x = r
+    xor ebp, ebp                ; y = 0
+    mov r15d, 1
+    sub r15d, edx               ; e = 1 - r
+.l:
+    cmp ebx, ebp
+    jl .e
+    ; the eight points (+-x, +-y) and (+-y, +-x)
+%macro CPT 2
+    mov edi, r12d
+    add edi, %1
+    mov esi, r13d
+    add esi, %2
+    mov edx, r14d
+    call gfx_pixel
+%endmacro
+    mov eax, ebx
+    neg eax
+    mov [rsp], eax              ; -x
+    mov eax, ebp
+    neg eax
+    mov [rsp + 4], eax          ; -y
+    CPT ebx, ebp
+    CPT ebp, ebx
+    CPT [rsp + 4], ebx
+    CPT [rsp], ebp
+    CPT [rsp], [rsp + 4]
+    CPT [rsp + 4], [rsp]
+    CPT ebp, [rsp]
+    CPT ebx, [rsp + 4]
+    inc ebp
+    test r15d, r15d
+    jns .x
+    lea r15d, [r15 + rbp*2 + 1]
+    jmp .l
+.x:
+    dec ebx
+    mov eax, ebp
+    sub eax, ebx
+    lea r15d, [r15 + rax*2 + 1]
+    jmp .l
+.e:
+    add rsp, 8
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbp
+    pop rbx
+    ret

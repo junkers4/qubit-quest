@@ -1,6 +1,7 @@
 // Writes tests/asm_cases.json: for every puzzle, its ops with the black boxes left as boxes,
 // and the goal check the game makes (QQ.matches) on a few states: the goal itself, the start,
-// the solution one gate short, and the solution plus a stray X. tests/test_asm.py runs these
+// the solution one gate short, and the solution plus a stray X; and each qubit's Bloch vector
+// in the goal state (QQ.bloch). tests/test_asm.py runs these
 // through the assembler core and wants the same verdicts. Run: node tools/export-asm-cases.js
 const fs = require('fs');
 const path = require('path');
@@ -21,8 +22,9 @@ function build() {
                 const st = run(mid);
                 return {ops: mid, state: round(st), ok: QQ.matches(st, goal, n, S.goalQubits, 1e-6, !!S.probsOnly)};
             });
+            const bloch = [...Array(n).keys()].map(q => QQ.bloch(goal, n, q).map(v => +v.toFixed(12)));
             cases.push({name: `${L.id} step ${i + 1}`, n, setup, after, boxes: S.boxes || {},
-                goal: round(goal), keep: S.goalQubits || [], probsOnly: !!S.probsOnly, tries});
+                goal: round(goal), keep: S.goalQubits || [], probsOnly: !!S.probsOnly, tries, bloch});
         });
     return JSON.stringify(cases, null, 0).replace(/\},\{"name"/g, '},\n{"name"') + '\n';
 }

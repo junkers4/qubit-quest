@@ -12,7 +12,7 @@ import shutil
 
 import pytest
 
-from asm_game import (Game, LIB, K_ITEM, K_LEVEL, K_GATE, K_WIRE,
+from asm_game import (Game, LIB, ROOT as ROOT_DIR, K_ITEM, K_LEVEL, K_GATE, K_WIRE,
                       levels, play_level, step_keys)
 
 SHOTS = pathlib.Path(os.environ.get("QQ_SHOTS", "/tmp/qq-asm"))
@@ -213,3 +213,130 @@ def test_screens_look_right(fresh, data):
         for k in keys[:-1]:
             game.key(k)
         game.png(SHOTS / f"{name}.png")
+
+
+def test_vec_rotate_turns_like_the_gates(fresh):
+    """REQ-076: the animation turns a qubit's arrow about the gate's axis."""
+    import math
+    lib = fresh().lib
+    lib.vec_rotate.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_double]
+    r = 2 ** -0.5
+    cases = [((0, 0, 1), (r, 0, r), math.pi, (1, 0, 0)),          # H: |0> to |+>
+             ((0, 0, 1), (r, 0, r), math.pi / 2, (0.5, -r, 0.5)),  # half way
+             ((1, 0, 0), (0, 0, 1), math.pi / 2, (0, 1, 0)),       # S: |+> to |+i>
+             ((0, 1, 0), (1, 0, 0), math.pi, (0, -1, 0))]          # X
+    for v, k, angle, want in cases:
+        vec = (ctypes.c_double * 3)(*v)
+        lib.vec_rotate(vec, (ctypes.c_double * 3)(*k), angle)
+        assert all(abs(a - b) < 1e-12 for a, b in zip(vec, want)), (v, k, list(vec))
+
+
+def to_puzzle(game, data, name):
+    i = next(k for k, L in enumerate(data["levels"]) if L["id"] == name)
+    if game.screen == "title":
+        open_map(game)
+    elif game.screen != "map":
+        game.key("esc")
+    game.key(K_LEVEL + i)
+    steps = data["levels"][i]["steps"]
+    first = next(s for s, st in enumerate(steps) if st["type"] == "circuit")
+    for s in range(first):
+        for k in step_keys(steps[s], data["keys"]):
+            game.key(k)
+        while game.var("game_step") == s:
+            game.key("enter")
+    return steps[first]
+
+
+def test_views_and_measurements(fresh, data):
+    """REQ-076: O switches the pictures (state, Bloch spheres, shots); M measures 100
+    times, only ever finding basis states the state has; A opens the exact numbers."""
+    game = fresh(unlock=True)
+    step = to_puzzle(game, data, "bell")
+    for k in step_keys(step, data["keys"]):
+        game.key(k)
+    assert game.var("game_solved") == 1
+    views = []
+    for _ in range(3):
+        game.key("o")
+        views.append(game.var("view"))
+    assert views == [1, 2, 0]
+    game.key("o")
+    for _ in range(12):  # let the animation finish
+        game.draw()
+    game.png(SHOTS / "bell-bloch.png")
+    game.key("m")
+    assert game.var("view") == 2
+    for _ in range(60):
+        game.draw()
+    counts = list((ctypes.c_int32 * 8).in_dll(game.lib, "shot_counts"))[:4]
+    assert game.var("shot_n") == 100 and sum(counts) == 100
+    assert counts[1] == counts[2] == 0 and counts[0] > 20 and counts[3] > 20  # |00> or |11> only
+    game.png(SHOTS / "bell-shots.png")
+    game.key("a")
+    assert game.var("game_overlay") == 3
+    game.png(SHOTS / "bell-exact.png")
+    game.key("esc")
+    assert game.var("game_overlay") == 0
+
+
+def test_every_puzzle_shows_every_view(fresh, data):
+    """REQ-076: the three pictures and the exact window draw on every puzzle, also
+    halfway through a gate's animation."""
+    game = fresh(unlock=True)
+    for level in data["levels"]:
+        for s, step in enumerate(level["steps"]):
+            if step["type"] != "circuit":
+                continue
+            to_puzzle_step(game, data, level["id"], s)
+            keys = step_keys(step, data["keys"])
+            for k in keys:
+                game.key(k)
+            for v in range(3):
+                game.key("o")
+                for _ in range(5):
+                    game.draw()
+            game.key("a")
+            game.key("esc")
+
+
+def to_puzzle_step(game, data, name, target):
+    i = next(k for k, L in enumerate(data["levels"]) if L["id"] == name)
+    if game.screen != "map":
+        game.key("esc")
+    if game.screen == "title":
+        open_map(game)
+    game.key(K_LEVEL + i)
+    steps = data["levels"][i]["steps"]
+    for s in range(target):
+        for k in step_keys(steps[s], data["keys"]):
+            game.key(k)
+        while game.var("game_step") == s:
+            game.key("enter")
+
+
+def test_hardware_drawings_match_the_web_game(fresh):
+    """REQ-076: every drawing of src/pics.js, decoded by the core, has exactly the
+    pixels of each colour that the web game draws."""
+    import json
+    import subprocess
+    out = subprocess.run(
+        ["node", "-e", "const b = require('./tools/asm-data.js'); b();"
+         "process.stdout.write(JSON.stringify({stats: b.picStats, colors: b.picColors}))"],
+        cwd=ROOT_DIR, capture_output=True, text=True, check=True)
+    ref = json.loads(out.stdout)
+    game = fresh()
+    lib = game.lib
+    fb = (ctypes.c_uint32 * (320 * 200)).in_dll(lib, "fb")
+    for n, pic in enumerate(ref["stats"]):
+        lib.gfx_fill(0xff00ff)  # a colour no drawing uses
+        lib.draw_pic(n, 45, 0)
+        h = min(pic["h"], 200)
+        got = {}
+        for y in range(h):
+            for x in range(45, 45 + pic["w"]):
+                p = fb[y * 320 + x]
+                if p != 0xff00ff:
+                    got[p] = got.get(p, 0) + 1
+        want = {int(ref["colors"][int(k) - 1][1:], 16): v for k, v in pic["counts"].items()}
+        assert got == want, pic["name"]

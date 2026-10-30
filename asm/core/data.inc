@@ -40,7 +40,18 @@ ST_FLAGS    equ 160         ; 1: only the chances count
 ST_LIMITS   equ 168         ; per palette gate: most uses (255: no limit), bytes
 ST_ALLOW    equ 176         ; per palette gate: pointer to wire rules, or 0
 ST_BOXNAMES equ 184         ; per box: name string
-ST_SIZE     equ 192
+ST_PIC      equ 192         ; text: hardware drawing number + 1, or 0
+ST_DEMO     equ 200         ; text: a demo circuit's ops, or 0
+ST_NDEMO    equ 208
+ST_DEMOQ    equ 216         ;   its qubits
+ST_SIZE     equ 224
+
+; a hardware drawing (PICS): RLE runs within rows, 2 bytes each: length, colour (0: none);
+; a run of length 0 ends the drawing
+PIC_DATA    equ 0
+PIC_W       equ 8
+PIC_H       equ 12
+PIC_SIZE    equ 16
 
 T_TEXT      equ 0
 T_QUIZ      equ 1

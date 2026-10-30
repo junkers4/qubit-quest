@@ -74,7 +74,12 @@ That builds `build/qubit-quest` (needs nasm, gcc, libx11-dev) and `build/qubit-q
 the reference (and so Qiskit) and plays all 60 levels headless; `make -C asm test-window`
 plays a level in both real programs (Xvfb, wine). Keys: Enter, arrows, 1-4 to answer, gate
 letters and 0-2 for wires, Backspace to undo, E for ELI5, ? for a hint, Esc for the map; the
-mouse works too. The assembler game has the lessons, quizzes, puzzles, ELI5 and hints; the
+mouse works too. In puzzles O switches the picture of the state: chances with phase dials, a
+Bloch sphere per qubit (seen in perspective; the arrow shortens and the sphere turns purple
+when the qubit is entangled), or SHOTS (M): 100 measurements one by one against the exact
+chances. Each gate animates as the turn it is (H about the axis between x and z, S a quarter
+turn about z). A opens the exact numbers: amplitudes, chances, phase angles, Bloch vectors.
+Lessons show the hardware drawings and demo circuits of the web game. The assembler game has the lessons, quizzes, puzzles, ELI5 and hints; the
 web game also has the CODE, MORE and SOURCES windows, the gate book, the glossary and the
 hardware drawings.
 

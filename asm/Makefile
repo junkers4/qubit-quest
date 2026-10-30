@@ -7,7 +7,7 @@
 #   make -C asm data        regenerate gen/data.asm from the web game's levels and font
 B        = ../build
 NASM     = nasm -I .
-CORE     = core/sim core/gfx core/game gen/data
+CORE     = core/sim core/gfx core/viz core/game gen/data
 INC      = $(wildcard core/*.inc)
 PY      ?= python3
 MINGW   ?= x86_64-w64-mingw32-
