@@ -1,0 +1,6 @@
+# Python packages for the CODE examples (examples/*.py) and the Python tests (tests/).
+# Install: python -m pip install -r requirements.txt   (Python 3.10 or newer)
+qiskit==2.6.1
+numpy==2.5.4
+scipy==1.18.1
+pytest==9.2.0
