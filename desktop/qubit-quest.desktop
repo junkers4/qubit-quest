@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Qubit Quest
+GenericName=Quantum computing course
+Comment=Learn quantum computing from zero, in pixel art
+Exec=qubit-quest
+Icon=qubit-quest
+Terminal=false
+Categories=Education;Science;Physics;Game;
+Keywords=quantum;qubit;qiskit;physics;

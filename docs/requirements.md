@@ -8,6 +8,8 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | **N** node unit tests | `test/*.test.js`: simulator, curriculum, sources, generated files, this table | `make test` |
 | **B** browser | `test/shots.js`: every level played in headless Chromium at four screen sizes (1280x720, 960x600 = the smallest landscape 320x200, phone 412x915 @2.625, narrow 320x640 @1.6 = 256 px wide); screenshots in `/tmp/qq` | `make shots` |
 | **P** Python | `tests/*.py` (pytest): every Qiskit example runs; the game's simulator against Qiskit | `make test-python` |
+| **G** Go | `desktop/*_test.go`, `tools/icon/*_test.go`: the app's server, window lifetime, the Windows icon resources read back from a linked .exe | `make test-desktop` |
+| **D** desktop | `test/desktop.js`: the built app run with `-serve`, the game played from it in headless Chromium | `make test-desktop` |
 | **O** online | `tools/check-refs.js`: every DOI, arXiv id and URL resolves | `make check-refs` |
 
 ## Curriculum
@@ -56,3 +58,12 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ-045 | Progress (stars) is kept in the browser and survives a reload. | B |
 | REQ-010 | The pixel font has a glyph for every character the game shows (upper case for text, lower case for code and sources). | N content |
 | REQ-011 | Text fits the narrowest screen (no word or formula wider than a line) and nothing runs into the footer at any of the four sizes; hints that do not fit open in a window. | N content; B |
+
+## The desktop app
+
+| REQ | requirement | test |
+|---|---|---|
+| REQ-060 | One program (`desktop/`, Go, no other dependency) carries the whole game and serves it to itself on 127.0.0.1 only; it works with no network. | G desktop; D |
+| REQ-061 | It opens the game in a window of its own (Edge, Chrome or Chromium in app mode; else the default browser) and quits once the last window has closed or its browser ended; a second start opens one more window on the running one. | G desktop |
+| REQ-062 | In the app the game runs under a strict content security policy with the WebAssembly core, makes no request outside the app, and keeps its progress across reloads and runs (fixed port, own browser profile). | D |
+| REQ-063 | `make desktop` builds it for Linux (tar.gz, .deb), Windows (.exe with the game's icon) and macOS; the icon is drawn from the game's own pixel icon. | G icon; build in CI |

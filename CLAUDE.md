@@ -20,3 +20,10 @@
 - Requirements: `docs/requirements.md`; every REQ needs a test that names it.
 - Checks: `make test-all` (node, pytest with `requirements.txt`, headless Chromium). The browser run
   leaves screenshots in `/tmp/qq` (desktop-*.png, phone-*.png). Always look at them after a visual change.
+- Desktop app: `desktop/` (Go, standard library only) embeds the game (`game.go`), serves it on
+  127.0.0.1:47823 (fixed, so localStorage keeps progress) and opens a Chromium-family `--app`
+  window with its own profile; it quits after the last page says goodbye (heartbeat script added
+  to index.html by the server only). `make desktop` builds every system into `dist/`; the .exe
+  icon comes from `tools/icon` (writes `desktop/rsrc_windows_*.syso`, not committed).
+  `make test-desktop` (Go tests + `test/desktop.js`). To see the real window here:
+  `xvfb-run` with `QQ_BROWSER` pointing at a Chromium (as root it needs `--no-sandbox`).

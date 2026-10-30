@@ -8,6 +8,7 @@ a gold and white 5x7 pixel font, Doom-blue menus, no smoothing.
 ![teleportation puzzle](docs/puzzle.png)
 ![the dilution refrigerator](docs/fridge.png)
 ![a Qiskit example in the game](docs/code.png)
+![the desktop app on Linux](docs/desktop.png)
 
 60 levels in 8 worlds, all in English, from bits to real hardware:
 
@@ -38,7 +39,25 @@ dial per amplitude; tap it for the exact complex numbers.
 
 ## Play
 
-One static page, no build, no dependencies: open `index.html` in a browser (desktop or
+**As an app (Linux, Windows, macOS).** Download it from the
+[releases](../../releases) page, or build it yourself (`make desktop`, needs Go):
+
+| system | file | how |
+|---|---|---|
+| Windows | `qubit-quest-VERSION-windows-amd64.zip` | unzip, double-click `qubit-quest.exe` |
+| Ubuntu / Debian | `qubit-quest_VERSION_amd64.deb` | `sudo apt install ./qubit-quest_VERSION_amd64.deb`, then Qubit Quest in the app menu |
+| other Linux | `qubit-quest-VERSION-linux-amd64.tar.gz` | unpack, run `./qubit-quest` |
+| macOS | `qubit-quest-VERSION-macos-arm64.zip` | unzip, run `qubit-quest` (not signed: right-click, Open) |
+
+(arm64 builds too.) It is one small program with the whole game inside. It opens the game in a
+window of its own, with no address bar, using the Edge, Chrome or Chromium already on the
+computer (Edge comes with Windows), or the default browser if there is none of those. It needs
+no network and no install, and it saves progress. `qubit-quest -all` unlocks every level.
+How it works: the program serves the game to itself on 127.0.0.1 only, under a strict content
+security policy, and quits a few seconds after its last window closes. The simulator inside is
+still the hand-written WebAssembly core.
+
+**As a web page.** No build and no dependencies: open `index.html` in a browser (desktop or
 phone), or `make serve` and go to http://localhost:8000. Progress is kept in the browser.
 `index.html?all` unlocks every level.
 
@@ -67,7 +86,12 @@ make test-all
 - `make test-python`: every example runs and checks itself; the game's simulator gives exactly
   Qiskit's amplitudes for every puzzle solution and for random circuits.
 - `make shots`: every level played in headless Chromium at four screen sizes; screenshots in `/tmp/qq`.
+- `make test-desktop`: the app's Go tests (server, window lifetime, the Windows icon read back
+  from a linked .exe), then the game played from the built app in headless Chromium.
 - `make check-refs`: every DOI, arXiv id and URL resolved online.
+
+CI (`.github/workflows/ci.yml`) runs `make test-all` on every push; a tag `v1.2.3` also builds
+the app for every system and attaches it to a GitHub release.
 
 ## Files
 
@@ -78,3 +102,11 @@ make test-all
 - `src/refs.js` the sources; `src/book.js` gate book and glossary; `src/pics.js` hardware drawings
 - `src/examples.js` generated from `examples/*.py`; `src/game.js` screens, layout, input
 - `tools/` generators and the online source check; `test/` node and browser tests; `tests/` pytest
+- `desktop/` the desktop app (Go): `main.go` start, `server.go` serves the game, `window.go`
+  opens the app window; `game.go` embeds the game; `tools/icon` draws the icons and the
+  Windows icon resource; `tools/package.sh` builds every system into `dist/`
+
+## License
+
+MIT, see [LICENSE](LICENSE). The sources cited in the game belong to their authors; the game
+cites them, it does not copy them.

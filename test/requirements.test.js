@@ -14,7 +14,8 @@ const untested = new Set(rows.filter(l => /\*\*(manual|online)\*\*/.test(l)).map
 const testFiles = [
     ...fs.readdirSync(path.join(root, 'test')).map(f => path.join(root, 'test', f)),
     ...fs.readdirSync(path.join(root, 'tests')).filter(f => f.endsWith('.py')).map(f => path.join(root, 'tests', f)),
-].filter(f => f !== __filename && /\.(js|py)$/.test(f));
+    ...['desktop', 'tools/icon'].flatMap(d => fs.readdirSync(path.join(root, d)).map(f => path.join(root, d, f))),
+].filter(f => f !== __filename && /\.(js|py)$|_test\.go$/.test(f));
 const named = new Set(testFiles.flatMap(f => fs.readFileSync(f, 'utf8').match(/REQ-\d{3}/g) || []));
 
 test('every requirement is unique and has a test', () => {
