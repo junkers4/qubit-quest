@@ -7,6 +7,9 @@
   menu blue #5C5CFC on #04042C, gold #FCC030, white #F4F0E0, green #30C030; 5x7 font with Slovak
   accents, no smoothing, no rounded corners. Everything is drawn on a small canvas (320 x 200 up to
   about 470 x 260 in landscape, 256+ wide on an upright phone) scaled by a whole number.
+- The simulator core used in the browser is hand-written WebAssembly: `src/qcore.wat`, assembled by
+  `make wasm` (wabt, a dev dependency in package.json) into `src/qcore-bin.js`. `src/sim.js` is the
+  JS reference (used by the tests and the puzzle search); `test/core.test.js` keeps the two equal.
 - Lesson text is upper-cased by the font; code and sources keep their case. A missing glyph shows as
   '?': add it to `font.js` (`make test` lists any missing one).
 - Every source in `src/refs.js` must be checked against a real bibliographic record before it is

@@ -17,6 +17,8 @@ var QQ = globalThis.QQ || (globalThis.QQ = {});
         TDG: [[1, 0], [0, 0], [0, 0], [R, -R]],
     };
 
+    QQ.MATRICES = ONE; // for the WebAssembly core (src/qcore.js)
+
     // Every gate the game knows. arity: wires it acts on; sym: the wire order does not matter.
     // label: what the circuit and the palette show; key: its keyboard key.
     QQ.GATES = {

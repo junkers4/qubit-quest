@@ -1,0 +1,8 @@
+{
+  "name": "qubit-quest",
+  "private": true,
+  "description": "Developer tools only: the game itself needs no install. wabt assembles src/qcore.wat.",
+  "devDependencies": {
+    "wabt": "1.0.39"
+  }
+}

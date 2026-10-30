@@ -144,6 +144,11 @@ async function playAll(page, name, shots) {
             return route.abort();
         });
         await page.goto(url);
+        // REQ-021: the WebAssembly core loads and takes over the state computations
+        await page.waitForFunction(() => QQ.engine, null, {timeout: 10000});
+        const engine = await page.evaluate(() => QQ.engine + (QQ.run === QQ.runCore ? '' : ' (not in use)'));
+        if (engine !== 'webassembly')
+            problem(`${name}: simulator core is ${engine}`);
         const shot = async tag => shots && page.screenshot({path: `${out}/${name}-${tag}.png`});
         await shot('title');
 

@@ -72,7 +72,8 @@ make test-all
 ## Files
 
 - `src/font.js` pixel font (upper and lower case, Greek, Slovak accents), palette, icon
-- `src/sim.js` state-vector simulator (up to 3 qubits here), shortest-solution search
+- `src/qcore.wat` the WebAssembly simulator core; `src/qcore.js` runs circuits on it
+- `src/sim.js` the JS reference simulator, shortest-solution search
 - `src/levels/*.js` the worlds and levels ([template](docs/LEVEL_TEMPLATE.md))
 - `src/refs.js` the sources; `src/book.js` gate book and glossary; `src/pics.js` hardware drawings
 - `src/examples.js` generated from `examples/*.py`; `src/game.js` screens, layout, input

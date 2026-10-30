@@ -41,6 +41,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ-031 | Examples fit the in-game code window: ASCII, at most 64 characters per line, a docstring naming the level. | P examples |
 | REQ-032 | The game's simulator gives exactly Qiskit's amplitudes for every puzzle solution and for random circuits over every gate. | P cross-check |
 | REQ-020 | The simulator gets the physics right: gate identities, Bell states, Toffoli, QFT, black boxes, global phase, reduced states, Bloch vectors. | N sim |
+| REQ-021 | In the browser the game computes states with a simulator core hand-written in WebAssembly (`src/qcore.wat`), which gives the same amplitudes as the JS reference (and so as Qiskit); the embedded binary is assembled from the current source. | N core; B |
 | REQ-022 | Generated files (`src/examples.js`, `tests/sim_cases.json`) match their sources. | N generated |
 
 ## The game

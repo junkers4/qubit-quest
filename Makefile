@@ -3,6 +3,7 @@
 # make shots        every level in headless Chromium at four sizes; screenshots in /tmp/qq
 # make test-all     all three
 # make generate     rebuild src/examples.js, tests/sim_cases.json, docs/REFERENCES.md
+# make wasm         assemble src/qcore.wat into src/qcore-bin.js (installs the wabt dev tool)
 # make check-refs   resolve every DOI, arXiv id and URL online (needs network)
 # make serve        play at http://localhost:8000
 PY ?= python3
@@ -23,10 +24,14 @@ generate:
 	node tools/export-cases.js
 	node tools/gen-references.js
 
+wasm:
+	npm install --no-audit --no-fund
+	node tools/build-wasm.js
+
 check-refs:
 	node tools/check-refs.js
 
 serve:
 	python3 -m http.server 8000
 
-.PHONY: test test-python shots test-all generate check-refs serve
+.PHONY: test test-python shots test-all generate wasm check-refs serve

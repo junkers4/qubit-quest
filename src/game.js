@@ -685,6 +685,8 @@
         const wide = 128, bx = Math.floor((W - wide) / 2);
         items.forEach(([label, fn], i) => button(bx, y + i * 17, wide, 14, label, fn));
         centre('A BLACKBREAK SPIN-OFF', Math.min(H - 16, y + items.length * 17 + 4), P.dim, 1, null);
+        if (QQ.engine === 'webassembly')
+            text('CORE: WEBASSEMBLY', W - 10 - tw('CORE: WEBASSEMBLY'), H - 14, '#3a3850', 1, null);
         frame();
     }
 
