@@ -63,8 +63,8 @@ c_ops:      resb 4 * MAXOPS
 save_buf:   resb SAVE_BYTES
 stars:      resb 64
 tbuf:       resb 256            ; strings built for one draw
-hits:       resb 20 * MAXHITS   ; x, y, w, h, code
-nhits:      resd 1
+FN_DATA hits, 20 * MAXHITS     ; x, y, w, h, code (the tests click them)
+FN_DATA nhits, 4
 FN_DATA game_quit, 4
 FN_DATA game_screen, 4
 FN_DATA game_level, 4
@@ -2423,7 +2423,7 @@ draw_state:
     cvtsd2si r12d, xmm0         ; rounds to nearest
     cvtsd2si r13d, xmm1
     lea edi, [rbp - 1]
-    RECT 297, edi, 7, 7, C_DARKRED
+    RECT 297, edi, 7, 7, C_NAVY
     mov edi, 300
     lea esi, [rbp + 2]
     lea edx, [r12 + 300]

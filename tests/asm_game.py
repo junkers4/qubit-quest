@@ -62,3 +62,59 @@ class Game:
                 + chunk(b"IDAT", zlib.compress(bytes(raw), 6))
                 + chunk(b"IEND", b""))
         pathlib.Path(path).write_bytes(data)
+
+
+def levels():
+    """The levels as the web game has them (node loads them)."""
+    import json
+    import subprocess
+    out = subprocess.run(
+        ["node", "-e", "const QQ = require('./test/load.js');"
+         "const keys = {}; for (const g in QQ.GATES) keys[g] = QQ.GATES[g].key;"
+         "process.stdout.write(JSON.stringify({keys, levels: QQ.LEVELS.map(L => ({id: L.id, title: L.title,"
+         "steps: L.steps.map(S => ({type: S.type, answer: S.answer, options: S.options,"
+         "solution: S.solution, par: S.par, qubits: S.qubits, boxes: Object.keys(S.boxes || {})}))}))}))"],
+        cwd=ROOT, capture_output=True, text=True, check=True)
+    return json.loads(out.stdout)
+
+
+def step_keys(step, gate_keys):
+    """The keys a player presses to do one quiz or puzzle (not the Enter after it)."""
+    if step["type"] == "quiz":
+        return [str(step["answer"] + 1)]
+    if step["type"] != "circuit":
+        return []
+    keys = []
+    for name, *wires in step["solution"]:
+        if name in step["boxes"]:
+            keys.append(name.lower())
+            continue
+        keys += [str(wires[0]), gate_keys[name]]
+        if step["qubits"] == 3 and len(wires) > 1:
+            keys.append(str(wires[1]))
+    return keys
+
+
+def play_level(game, i, data, record=None):
+    """Plays level i from its first step to the done screen, as a player would:
+    Enter through lesson pages, the right answer, the puzzle's solution.
+    Returns the keys pressed."""
+    pressed = record if record is not None else []
+    def press(k):
+        pressed.append(k)
+        game.key(k)
+    level = data["levels"][i]
+    for s, step in enumerate(level["steps"]):
+        assert game.screen == "level" and game.var("game_step") == s, (level["id"], s)
+        for k in step_keys(step, data["keys"]):
+            press(k)
+        if step["type"] != "text":
+            assert game.var("game_solved") == 1, (level["id"], s, "not solved")
+        for _ in range(40):  # Enter through the pages
+            press("enter")
+            if game.screen != "level" or game.var("game_step") != s:
+                break
+        else:
+            raise AssertionError(f"{level['id']} step {s + 1}: Enter does not go on")
+    assert game.screen == "done", level["id"]
+    return pressed

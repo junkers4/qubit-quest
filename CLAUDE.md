@@ -27,3 +27,11 @@
   icon comes from `tools/icon` (writes `desktop/rsrc_windows_*.syso`, not committed).
   `make test-desktop` (Go tests + `test/desktop.js`). To see the real window here:
   `xvfb-run` with `QQ_BROWSER` pointing at a Chromium (as root it needs `--no-sandbox`).
+- Assembler game: `asm/` (NASM, x86-64). Core (`asm/core/*.asm`) is system-free: internal calls
+  pass rdi, rsi, rdx, rcx, r8, r9 and keep rbx, rbp, r12-r15 on both systems; the Win32 layer
+  calls the core only from its main loop. Indexed addressing of a label (`[label + reg]`) is not
+  position independent: load the address with `lea` first. NASM reads `o16`, `a64` as keywords.
+  `asm/gen/data.asm` is generated (`node tools/asm-data.js`): after changing levels, texts or the
+  font run `make generate`. `make -C asm test` (headless, 140 tests) and `make -C asm test-window`
+  (both real programs under xvfb-run; the .exe in wine). Screenshots in `/tmp/qq-asm`: look at them
+  after a visual change. Tools here: `apt-get install nasm gcc-mingw-w64-x86-64 wine64 xdotool`.

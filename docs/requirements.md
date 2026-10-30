@@ -10,6 +10,8 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | **P** Python | `tests/*.py` (pytest): every Qiskit example runs; the game's simulator against Qiskit | `make test-python` |
 | **G** Go | `desktop/*_test.go`, `tools/icon/*_test.go`: the app's server, window lifetime, the Windows icon resources read back from a linked .exe | `make test-desktop` |
 | **D** desktop | `test/desktop.js`: the built app run with `-serve`, the game played from it in headless Chromium | `make test-desktop` |
+| **A** assembler | `tests/test_asm.py`, `tests/test_asm_game.py`: the assembler core as a shared library, headless | `make -C asm test` |
+| **W** windows | `tests/asm_window.py`: the Linux and Windows programs in real windows (Xvfb, wine), driven by X events | `make -C asm test-window` |
 | **O** online | `tools/check-refs.js`: every DOI, arXiv id and URL resolves | `make check-refs` |
 
 ## Curriculum
@@ -67,3 +69,13 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ-061 | It opens the game in a window of its own (Edge, Chrome or Chromium in app mode; else the default browser) and quits once the last window has closed or its browser ended; a second start opens one more window on the running one. | G desktop |
 | REQ-062 | In the app the game runs under a strict content security policy with the WebAssembly core, makes no request outside the app, and keeps its progress across reloads and runs (fixed port, own browser profile). | D |
 | REQ-063 | `make desktop` builds it for Linux (tar.gz, .deb), Windows (.exe with the game's icon) and macOS; the icon is drawn from the game's own pixel icon. | G icon; build in CI |
+
+## The assembler game
+
+| REQ | requirement | test |
+|---|---|---|
+| REQ-070 | The assembler core (`asm/core/sim.asm`, x86-64, NASM) gives the reference simulator's amplitudes (and so Qiskit's) for every puzzle solution and random circuit, and checks every puzzle goal (whole state up to global phase, chosen qubits, chances only) the way the web game does. | A |
+| REQ-071 | Every one of the 60 levels can be played to the end in the assembler game, by keys and by clicks; ELI5 opens on every step and the hint on every puzzle. | A |
+| REQ-072 | The assembler game keeps the web game's rules: a level opens after the one before has a star, a wrong first answer or a puzzle over par costs a star, stars are saved and come back. | A |
+| REQ-073 | `make -C asm` builds a Linux program (X11) and a Windows program (Win32, `qubit-quest.exe`, with the game's icon) from the same core; both play a level in a real window, save progress and quit from the menu. | W |
+| REQ-074 | The assembler game's data (`asm/gen/data.asm`: font, levels, texts) is generated from the web game and up to date. | N generated |

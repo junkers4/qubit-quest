@@ -358,7 +358,20 @@ FN wrap_next
     jz .end
     cmp dword [rdi + WR_FRESH], 0
     je .cont
-    ; a paragraph starts here: its indent
+    ; a paragraph starts here: a key point ('>'), or its indent (a formula: 2 or more)
+    mov dword [rdi + WR_KIND], 0
+    lea rax, [ASCII]
+    movzx eax, byte [rax + '>' - 32]
+    cmp [rbx], al
+    jne .ind0
+    mov dword [rdi + WR_KIND], WK_KEY
+    inc rbx
+.sp0:
+    cmp byte [rbx], STR_SPACE
+    jne .ind0
+    inc rbx
+    jmp .sp0
+.ind0:
     xor ecx, ecx
 .ind:
     cmp byte [rbx + rcx], STR_SPACE
@@ -367,6 +380,10 @@ FN wrap_next
     jmp .ind
 .ind_done:
     mov [rdi + WR_INDENT], ecx
+    cmp ecx, 2
+    jb .plain
+    mov dword [rdi + WR_KIND], WK_FORMULA
+.plain:
     add rbx, rcx
     mov dword [rdi + WR_FRESH], 0
     jmp .take
@@ -446,6 +463,7 @@ FN wrap_start
     mov [rdi + WR_COLS], edx
     mov dword [rdi + WR_FRESH], 1
     mov dword [rdi + WR_INDENT], 0
+    mov dword [rdi + WR_KIND], 0
     ret
 
 ; wrap_count(string rdi, cols esi) -> eax: how many lines the string wraps to
@@ -502,13 +520,34 @@ FN draw_wrapped
     dec r15d
     jmp .l
 .draw:
+    mov ebx, r14d               ; key points in gold, formulas on a blue band
+    cmp dword [rsp + WR_KIND], WK_KEY
+    jne .band
+    mov ebx, C_GOLD
+.band:
+    cmp dword [rsp + WR_KIND], WK_FORMULA
+    jne .text
+    mov edi, r12d
+    lea esi, [r13 + 1]
+    mov edx, [rsp + WR_COLS]
+    imul edx, edx, CELL
+    mov ecx, 10
+    mov r8d, C_NAVY
+    call gfx_rect
+    mov edi, r12d
+    lea esi, [r13 + 1]
+    mov edx, 1
+    mov ecx, 10
+    mov r8d, C_BLUE
+    call gfx_rect
+.text:
     mov eax, [rsp + WR_LINDENT]
     imul eax, eax, CELL
     imul eax, [text_px]
     lea edi, [r12 + rax]
     mov esi, r13d
     mov rdx, [rsp + WR_LINE]
-    mov ecx, r14d
+    mov ecx, ebx
     mov r8d, SHADOW
     mov r9d, [rsp + WR_LEN]
     call gfx_text

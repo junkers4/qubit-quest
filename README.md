@@ -57,6 +57,27 @@ How it works: the program serves the game to itself on 127.0.0.1 only, under a s
 security policy, and quits a few seconds after its last window closes. The simulator inside is
 still the hand-written WebAssembly core.
 
+**In assembler (Linux, Windows).** The same game written again in x86-64 assembler (NASM):
+no JavaScript, no browser, no runtime. One core in `asm/core/` simulates the qubits (SSE2
+complex doubles), draws every screen into a 320 x 200 frame buffer with the pixel font, and
+holds all the rules; two thin layers give it a window: `asm/linux/` through X11 and system
+calls, `asm/win/` through the Win32 API (`qubit-quest.exe`, about 160 KB, needs only
+kernel32, user32 and gdi32). The levels, texts and font are generated from the web game's
+data (`node tools/asm-data.js` writes `asm/gen/data.asm`), so both teach the same 60 levels.
+
+```bash
+make -C asm
+```
+
+That builds `build/qubit-quest` (needs nasm, gcc, libx11-dev) and `build/qubit-quest.exe`
+(needs nasm and mingw-w64 binutils). `make -C asm test` checks the core's simulator against
+the reference (and so Qiskit) and plays all 60 levels headless; `make -C asm test-window`
+plays a level in both real programs (Xvfb, wine). Keys: Enter, arrows, 1-4 to answer, gate
+letters and 0-2 for wires, Backspace to undo, E for ELI5, ? for a hint, Esc for the map; the
+mouse works too. The assembler game has the lessons, quizzes, puzzles, ELI5 and hints; the
+web game also has the CODE, MORE and SOURCES windows, the gate book, the glossary and the
+hardware drawings.
+
 **As a web page.** No build and no dependencies: open `index.html` in a browser (desktop or
 phone), or `make serve` and go to http://localhost:8000. Progress is kept in the browser.
 `index.html?all` unlocks every level.
@@ -103,6 +124,9 @@ system and attaches it to the GitHub release.
 - `src/refs.js` the sources; `src/book.js` gate book and glossary; `src/pics.js` hardware drawings
 - `src/examples.js` generated from `examples/*.py`; `src/game.js` screens, layout, input
 - `tools/` generators and the online source check; `test/` node and browser tests; `tests/` pytest
+- `asm/` the assembler game: `core/sim.asm` qubits, `core/gfx.asm` drawing and word wrap,
+  `core/game.asm` screens and rules, `gen/data.asm` the generated levels and font,
+  `linux/main.asm` X11, `win/main.asm` Win32; `tools/asm-data.js` writes the data
 - `desktop/` the desktop app (Go): `main.go` start, `server.go` serves the game, `window.go`
   opens the app window; `game.go` embeds the game; `tools/icon` draws the icons and the
   Windows icon resource; `tools/package.sh` builds every system into `dist/`

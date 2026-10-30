@@ -16,6 +16,11 @@ test('REQ-022 tests/sim_cases.json matches the simulator and the puzzles', () =>
     same('tests/sim_cases.json', require('../tools/export-cases.js'), 'node tools/export-cases.js');
 });
 
+test('REQ-022 REQ-074 asm/gen/data.asm and tests/asm_cases.json match the web game', () => {
+    same('asm/gen/data.asm', require('../tools/asm-data.js'), 'node tools/asm-data.js');
+    same('tests/asm_cases.json', require('../tools/export-asm-cases.js'), 'node tools/export-asm-cases.js');
+});
+
 test('REQ-050 docs/REFERENCES.md matches src/refs.js', () => {
     same('docs/REFERENCES.md', require('../tools/gen-references.js'), 'node tools/gen-references.js');
 });

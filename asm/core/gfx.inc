@@ -27,7 +27,11 @@ WR_LINDENT  equ 20          ;   indent (cells)
 WR_COLS     equ 24
 WR_INDENT   equ 28          ; indent of the current paragraph
 WR_FRESH    equ 32          ; 1: a paragraph starts at WR_PTR
+WR_KIND     equ 36          ; the paragraph: 0 plain, WK_KEY ('>' first), WK_FORMULA (indented)
 WR_SIZE     equ 40
+
+WK_KEY      equ 1
+WK_FORMULA  equ 2
 
 ; exported storage: FN_DATA name, bytes
 %macro FN_DATA 2

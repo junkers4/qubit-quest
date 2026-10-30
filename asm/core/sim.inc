@@ -1,5 +1,6 @@
-; Shared by the core and the generated data: gate numbers, the black-box base, and FN, which
-; starts an exported function (ELF wants its symbol type, PE does not).
+; Shared by every assembler file: gate numbers, the black-box base, FN, which starts an
+; exported function (ELF wants its symbol type, PE does not), and on Linux the note that the
+; stack is not executable.
 
 G_X     equ 1
 G_Y     equ 2
@@ -25,3 +26,7 @@ G_BOX   equ 32          ; black box k is gate G_BOX + k
 %endif
 %1:
 %endmacro
+
+%ifidn __OUTPUT_FORMAT__, elf64
+section .note.GNU-stack noalloc noexec nowrite progbits
+%endif
