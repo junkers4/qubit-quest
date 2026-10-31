@@ -53,10 +53,15 @@
             hit(x, y, w, h, fn, o.keep);
     }
     const bw = label => tw(label) + 10;
+    // An upright phone gets a touch layout: taller buttons, a two-row footer that keeps clear of
+    // the system's gesture bar, bigger map tiles. TOUCH is set by resize().
+    let TOUCH = false;
+    const BH = () => TOUCH ? 22 : 14;          // button height
+    const FOOT = () => TOUCH ? 66 : 24;        // room the footer takes at the bottom
     // content must end above the footer; the screenshot test reads G.overflow
     const fits = (y, what) => {
-        if (y > H - 24 && !G.overflow)
-            G.overflow = `${QQ.LEVELS[G.level].id} step ${G.step + 1}: ${what} ends at ${y} of ${H - 24}`;
+        if (y > H - FOOT() && !G.overflow)
+            G.overflow = `${QQ.LEVELS[G.level].id} step ${G.step + 1}: ${what} ends at ${y} of ${H - FOOT()}`;
     };
 
     function frame() {
@@ -149,7 +154,7 @@
     // ------------------------------------------------------------ the quantum widgets
     const PHASE = {'+': P.green, '-': RED, 'i': P.blue, '-i': P.gold, other: P.purple, none: P.dim};
     const COL = 14; // circuit column width
-    const WIRE = 20; // distance between wires
+    let WIRE = 20; // distance between wires (26 in the touch layout, set by resize)
 
     function gateBox(cx, wy, label, fixed) {
         const ink = fixed ? '#8a8478' : P.white;
@@ -522,7 +527,7 @@
 
     function overlayBox() {
         const x = 8, y = 8, w = W - 16, h = H - 16;
-        return {x, y, w, h, cols: Math.floor((w - 16 + 1) / 6), rows: Math.floor((h - 44) / 10)};
+        return {x, y, w, h, cols: Math.floor((w - 16 + 1) / 6), rows: Math.floor((h - 44 - (TOUCH ? 10 : 0)) / 10)};
     }
 
     function renderOverlay() {
@@ -558,21 +563,21 @@
             }
             y += 10;
         }
-        const by = B.y + B.h - 19;
+        const bh = BH(), by = B.y + B.h - bh - 5, pw = TOUCH ? 36 : 24;
         if (pages > 1) {
-            button(B.x + 6, by, 24, 14, '<', () => { O.page = Math.max(0, O.page - 1); }, {disabled: O.page === 0});
+            button(B.x + 6, by, pw, bh, '<', () => { O.page = Math.max(0, O.page - 1); }, {disabled: O.page === 0});
             const pg = `${O.page + 1}/${pages}`;
-            text(pg, B.x + 36, by + 2, P.dim, 1, null);
-            button(B.x + 42 + tw(pg), by, 24, 14, '>', () => { O.page = Math.min(pages - 1, O.page + 1); },
+            text(pg, B.x + pw + 12, by + Math.floor(bh / 2) - 5, P.dim, 1, null);
+            button(B.x + pw + 18 + tw(pg), by, pw, bh, '>', () => { O.page = Math.min(pages - 1, O.page + 1); },
                 {disabled: O.page >= pages - 1});
         }
         if (O.copy && navigator.clipboard) {
             const cw = bw('COPY');
-            button(B.x + B.w - 6 - bw('CLOSE') - 4 - cw, by, cw, 14, O.copied ? 'COPIED' : 'COPY', () => {
+            button(B.x + B.w - 6 - bw('CLOSE') - 4 - cw, by, cw, bh, O.copied ? 'COPIED' : 'COPY', () => {
                 navigator.clipboard.writeText(O.copy).then(() => { O.copied = true; draw(); }, () => {});
             });
         }
-        button(B.x + B.w - 6 - bw('CLOSE'), by, bw('CLOSE'), 14, 'CLOSE', () => { G.overlay = null; });
+        button(B.x + B.w - 6 - bw('CLOSE'), by, bw('CLOSE'), bh, 'CLOSE', () => { G.overlay = null; });
     }
 
     // ------------------------------------------------------------ what the buttons open
@@ -682,9 +687,9 @@
             ['GLOSSARY', openGlossary],
             ['ALL SOURCES', openLibrary],
         ];
-        const wide = 128, bx = Math.floor((W - wide) / 2);
-        items.forEach(([label, fn], i) => button(bx, y + i * 17, wide, 14, label, fn));
-        centre('A BLACKBREAK SPIN-OFF', Math.min(H - 16, y + items.length * 17 + 4), P.dim, 1, null);
+        const wide = TOUCH ? 168 : 128, bx = Math.floor((W - wide) / 2), step = BH() + 4;
+        items.forEach(([label, fn], i) => button(bx, y + i * step, wide, BH(), label, fn));
+        centre('A BLACKBREAK SPIN-OFF', Math.min(H - 16, y + items.length * step + 4), P.dim, 1, null);
         if (QQ.engine === 'webassembly')
             text('CORE: WEBASSEMBLY', W - 10 - tw('CORE: WEBASSEMBLY'), H - 14, '#3a3850', 1, null);
         frame();
@@ -692,8 +697,8 @@
 
     // The level map, one or more worlds per page.
     function mapPages() {
-        const tile = 24, gap = 4, perRow = Math.max(1, Math.floor((W - 20 + gap) / (tile + gap)));
-        const room = H - 24 - 42;
+        const tile = TOUCH ? 30 : 24, gap = 4, perRow = Math.max(1, Math.floor((W - 20 + gap) / (tile + gap)));
+        const room = H - (TOUCH ? 40 : 24) - 42;
         const pages = [[]];
         let used = 0;
         for (const world of QQ.WORLDS) {
@@ -739,17 +744,18 @@
         }
         const show = hover >= 0 ? hover : G.mapSel;
         const l = QQ.LEVELS[show];
-        text(unlocked(show) ? `${pad(show + 1)} ${l.title}` : `${pad(show + 1)} LOCKED`, 10, H - 36, P.white);
-        button(10, H - 22, 50, 14, 'BACK', () => { G.screen = 'title'; });
+        const bh = BH(), fy = H - bh - (TOUCH ? 14 : 8), pw = TOUCH ? 32 : 24;
+        text(unlocked(show) ? `${pad(show + 1)} ${l.title}` : `${pad(show + 1)} LOCKED`, 10, fy - 14, P.white);
+        button(10, fy, 50, bh, 'BACK', () => { G.screen = 'title'; });
         if (pages.length > 1) {
-            const mx = Math.floor(W / 2) - 40;
-            button(mx, H - 22, 24, 14, '<', () => { G.mapPage = Math.max(0, G.mapPage - 1); }, {disabled: G.mapPage === 0});
             const pg = `${G.mapPage + 1}/${pages.length}`;
-            text(pg, mx + 30, H - 20, P.dim, 1, null);
-            button(mx + 36 + tw(pg), H - 22, 24, 14, '>', () => { G.mapPage = Math.min(pages.length - 1, G.mapPage + 1); },
+            const mx = Math.floor((W - 2 * pw - 12 - tw(pg)) / 2);
+            button(mx, fy, pw, bh, '<', () => { G.mapPage = Math.max(0, G.mapPage - 1); }, {disabled: G.mapPage === 0});
+            text(pg, mx + pw + 6, fy + Math.floor(bh / 2) - 5, P.dim, 1, null);
+            button(mx + pw + 12 + tw(pg), fy, pw, bh, '>', () => { G.mapPage = Math.min(pages.length - 1, G.mapPage + 1); },
                 {disabled: G.mapPage >= pages.length - 1});
         }
-        button(W - 70, H - 22, 60, 14, G.armReset ? 'SURE?' : 'RESET', () => {
+        button(W - 70, fy, 60, bh, G.armReset ? 'SURE?' : 'RESET', () => {
             if (G.armReset) {
                 progress = {};
                 save();
@@ -809,9 +815,12 @@
         const L = level(), S = step();
         text(`LEVEL ${pad(G.level + 1)}`, 10, 9, P.dim, 1, null);
         text(L.title, 10 + tw('LEVEL 00 '), 9, P.gold);
-        button(W - 24, 7, 14, 13, 'X', () => { G.screen = 'map'; });
-        segBar(10, 21, W - 38, L.steps.length, G.step, 2, G.step);
-        const top = 30, bottom = H - 24, x = 12, w = W - 24;
+        if (TOUCH)
+            button(W - 32, 5, 24, 18, 'X', () => { G.screen = 'map'; });
+        else
+            button(W - 24, 7, 14, 13, 'X', () => { G.screen = 'map'; });
+        segBar(10, 21, W - (TOUCH ? 46 : 38), L.steps.length, G.step, 2, G.step);
+        const top = 30, bottom = H - FOOT(), x = 12, w = W - 24;
         if (S.type === 'text')
             renderText(S, x, top, w, bottom - top);
         else if (S.type === 'quiz')
@@ -827,6 +836,11 @@
             items.push(['MORE', openDeep, {}]);
         items.push(['SOURCES', openRefs, {}]);
         items.push([last ? 'FINISH' : 'NEXT >', next, {disabled: !canNext()}]);
+        if (TOUCH) {
+            touchFooter(items);
+            frame();
+            return;
+        }
         // short labels when the screen is too narrow for the long ones
         const SHORT = {'< BACK': '<', 'SOURCES': 'REFS', 'NEXT >': '>', 'FINISH': 'END'};
         if (items.reduce((s, [l]) => s + bw(l) + 2, -2) > W - 20)
@@ -840,6 +854,20 @@
             fx += bw(label) + gap;
         });
         frame();
+    }
+
+    // The footer on an upright phone: the helpers in a row of equal buttons, then BACK and NEXT,
+    // each half the width, above a margin for the gesture bar.
+    function touchFooter(items) {
+        const back = items[0], next = items[items.length - 1], helpers = items.slice(1, -1);
+        const gap = 4, hw = Math.floor((W - 20 - gap * (helpers.length - 1)) / helpers.length);
+        helpers.forEach(([label, fn, o], i) => {
+            const fit = label === 'SOURCES' && bw(label) > hw ? 'REFS' : label;
+            button(10 + i * (hw + gap), H - 62, hw, 20, fit, fn, o);
+        });
+        const half = Math.floor((W - 20 - gap) / 2);
+        button(10, H - 37, half, 24, back[0], back[1], back[2]);
+        button(W - 10 - half, H - 37, half, 24, next[0], next[1], next[2]);
     }
 
     // A small circuit with its state (and Bloch sphere for one qubit) under a lesson page.
@@ -891,7 +919,7 @@
         }
         fits(yy, 'text page');
         if (G.pages > 1)
-            text(`${G.page + 1}/${G.pages}`, x + w - tw('0/0'), H - 36, P.dim, 1, null);
+            text(`${G.page + 1}/${G.pages}`, x + w - tw('0/0'), H - FOOT() - 12, P.dim, 1, null);
     }
 
     function renderQuiz(S, x, y, w) {
@@ -908,15 +936,15 @@
             const wrong = (st.wrong || []).includes(i);
             const label = `${i + 1}. ${opt}`;
             const lines = QQ.wrap(label, Math.floor((width - 8) / 6));
-            const bh = 5 + lines.length * 10;
+            const bh = (TOUCH ? 12 : 5) + lines.length * 10;
             button(x, y, width, bh, lines.length > 1 ? '' : label, () => answer(i), {
                 edge: right ? P.green : wrong ? RED : P.blue,
                 color: right ? P.green : wrong ? RED : undefined,
                 disabled: st.correct && !right,
             });
             if (lines.length > 1)
-                lines.forEach((l, k) => text(l, x + 4, y + 2 + k * 10, right ? P.green : wrong ? RED : st.correct ? '#3a3a60' : P.white, 1, null));
-            y += bh + 3;
+                lines.forEach((l, k) => text(l, x + 4, y + (TOUCH ? 5 : 2) + k * 10, right ? P.green : wrong ? RED : st.correct ? '#3a3a60' : P.white, 1, null));
+            y += bh + (TOUCH ? 5 : 3);
         });
         y += 4;
         if (st.correct) {
@@ -1080,7 +1108,7 @@
             y += panel(S, w).h + 6;
             if (st.solved)
                 text('SOLVED!', x, y, P.green, 2);
-            button(x + w - bw('CIRCUIT'), y, bw('CIRCUIT'), 14, 'CIRCUIT', toggle);
+            button(x + w - bw('CIRCUIT'), y, bw('CIRCUIT'), BH(), 'CIRCUIT', toggle);
             fits(y + 14, 'state view');
             return;
         }
@@ -1098,12 +1126,12 @@
         for (const g of S.gates) {
             const left = S.limits && S.limits[g] !== undefined ? S.limits[g] - used(st, g) : null;
             const label = QQ.isBox(g, S.boxes) ? g : QQ.GATES[g].label;
-            const b = bw(label);
+            const b = Math.max(bw(label), TOUCH ? 30 : 0);
             if (bx + b > x + leftW) {
                 bx = x;
-                y += 17;
+                y += BH() + 3;
             }
-            button(bx, y, b, 14, label, () => place(g), {
+            button(bx, y, b, BH(), label, () => place(g), {
                 disabled: st.solved || left === 0 || (st.pick && st.pick.g !== g),
                 color: QQ.isBox(g, S.boxes) ? P.gold : undefined, active: st.pick && st.pick.g === g,
             });
@@ -1111,19 +1139,19 @@
                 text(String(left), bx + b - 5, y - 3, P.gold, 1, null);
             bx += b + 3;
         }
-        y += 17;
-        button(x, y, 40, 14, 'UNDO', undo, {disabled: st.solved || (!st.ops.length && !st.pick)});
-        button(x + 43, y, 46, 14, 'CLEAR', () => { st.ops = []; st.pick = null; }, {disabled: st.solved || !st.ops.length});
-        button(x + 92, y, 40, 14, 'HINT', () => hint(S), {disabled: st.solved});
+        y += BH() + 3;
+        button(x, y, 40, BH(), 'UNDO', undo, {disabled: st.solved || (!st.ops.length && !st.pick)});
+        button(x + 43, y, 46, BH(), 'CLEAR', () => { st.ops = []; st.pick = null; }, {disabled: st.solved || !st.ops.length});
+        button(x + 92, y, 40, BH(), 'HINT', () => hint(S), {disabled: st.solved});
         const count = `GATES ${st.ops.length} · PAR ${S.par}`;
         if (own) { // not enough room: the state gets a view of its own
             st.ownView = true;
-            button(x + 135, y, bw('STATE'), 14, 'STATE', toggle, {color: P.gold});
+            button(x + 135, y, bw('STATE'), BH(), 'STATE', toggle, {color: P.gold});
         }
         const countBelow = leftW - (own ? 180 : 140) < tw(count);
         if (!countBelow)
-            text(count, x + leftW - tw(count), y + 2, P.dim, 1, null);
-        y += 19;
+            text(count, x + leftW - tw(count), y + Math.floor(BH() / 2) - 5, P.dim, 1, null);
+        y += BH() + 5;
         if (st.solved) {
             const good = st.ops.length <= S.par;
             text('SOLVED!', x, y, P.green, 2);
@@ -1178,10 +1206,10 @@
             centre('PLAY AGAIN FOR 3 STARS', y, P.dim, 1, null);
             y += 14;
         }
-        const wide = 128, bx = Math.floor((W - wide) / 2);
+        const wide = TOUCH ? 168 : 128, bx = Math.floor((W - wide) / 2), bh = BH() + 1;
         if (!lastOne)
-            button(bx, y, wide, 15, 'NEXT LEVEL', () => startLevel(G.level + 1));
-        button(bx, y + (lastOne ? 0 : 19), wide, 15, 'SELECT LEVEL', () => {
+            button(bx, y, wide, bh, 'NEXT LEVEL', () => startLevel(G.level + 1));
+        button(bx, y + (lastOne ? 0 : bh + 4), wide, bh, 'SELECT LEVEL', () => {
             G.mapSel = Math.min(G.level + 1, QQ.LEVELS.length - 1);
             G.mapPage = pageOfLevel(mapPages().pages, G.mapSel);
             G.screen = 'map';
@@ -1211,7 +1239,9 @@
         const dpr = window.devicePixelRatio || 1;
         const pw = Math.round(window.innerWidth * dpr), ph = Math.round(window.innerHeight * dpr);
         // a phone held upright gets bigger pixels: 256 wide is still enough for every screen
-        const scale = ph > pw * 1.3 ? Math.max(1, Math.floor(pw / 256))
+        TOUCH = ph > pw * 1.3;
+        WIRE = TOUCH ? 26 : 20;
+        const scale = TOUCH ? Math.max(1, Math.floor(pw / 256))
             : Math.max(1, Math.min(Math.floor(pw / 320), Math.floor(ph / 200)));
         W = Math.floor(pw / scale);
         H = Math.floor(ph / scale);
