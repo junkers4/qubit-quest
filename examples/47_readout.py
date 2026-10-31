@@ -35,6 +35,6 @@ x = np.exp(-t**2 / 0.5)            # the main (X) envelope
 # the derivative goes on the other (Y) quadrature
 y = -np.gradient(x, t) * 0.1
 print("pulse area", round(np.trapezoid(x, t), 3),
-      " DRAG area", round(np.trapezoid(y, t), 6))
+      " DRAG area", abs(round(np.trapezoid(y, t), 6)))
 # it adds no net rotation
 assert abs(np.trapezoid(y, t)) < 1e-6

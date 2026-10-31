@@ -1,6 +1,7 @@
 """REQ-030, REQ-031, REQ-033: every CODE example runs as it is, checks its own
 result, and prints exactly the output the game shows for it (RUN)."""
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -24,8 +25,20 @@ def test_example_runs(path):
     # REQ-033: the game's RUN button shows exactly what it prints
     rec = ROOT / "examples" / "output" / (path.stem + ".txt")
     assert rec.exists(), "no recorded output: python tools/record-outputs.py"
-    assert rec.read_text() == done.stdout, \
+    assert same_output(rec.read_text(), done.stdout), \
         "recorded output is stale: python tools/record-outputs.py"
+
+
+NUMBER = re.compile(r"[-+]?\d+\.\d*(?:e[-+]?\d+)?|[-+]?\d+e[-+]?\d+")
+
+
+def same_output(a, b):
+    """The same text, numbers equal to 1e-9: another CPU or BLAS can
+    change the last digit of a float (-2e-17 for 0.0, -0.0 for 0.0)."""
+    if NUMBER.sub("#", a) != NUMBER.sub("#", b):
+        return False
+    return all(abs(float(x) - float(y)) <= 1e-9 * max(1, abs(float(x)))
+               for x, y in zip(NUMBER.findall(a), NUMBER.findall(b)))
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.name)
