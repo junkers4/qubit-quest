@@ -8,6 +8,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector, partial_trace
 
+# five random states to teleport (fixed seed)
 rng = np.random.default_rng(42)
 for trial in range(5):
     theta = rng.uniform(0, np.pi)
@@ -25,6 +26,8 @@ for trial in range(5):
     qc.cx(1, 2)                         # Bob's X fix
     qc.cz(0, 2)                         # Bob's Z fix
 
+    # Bob's qubit alone, compared with the state sent:
+    # fidelity <psi| rho |psi> = 1 means a perfect copy
     bob = partial_trace(Statevector(qc), [0, 1])  # keep q2
     want = Statevector(psi)
     fidelity = np.real(want.data.conj() @ bob.data @ want.data)

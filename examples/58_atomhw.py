@@ -7,6 +7,8 @@ Run: python examples/58_atomhw.py
 import numpy as np
 from scipy.linalg import expm
 
+# two atoms, each ground g or Rydberg r, driven at
+# Rabi rate W; V is the energy cost of both in r
 W, V = 1.0, 100.0          # V >> W: the blockade regime
 g, r = np.array([1, 0]), np.array([0, 1])
 drive = np.array([[0, 1], [1, 0]]) * W / 2
@@ -14,6 +16,7 @@ I = np.eye(2)
 rr = np.kron(np.outer(r, r), np.outer(r, r))
 H = np.kron(drive, I) + np.kron(I, drive) + V * rr
 
+# evolve with expm(-i H t) and watch the populations
 start = np.kron(g, g)
 ts = np.linspace(0, 2 * np.pi / np.sqrt(2), 9)
 for t in ts:

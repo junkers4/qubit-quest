@@ -10,6 +10,8 @@ p = 0.1   # a dephasing channel: Z happens with chance p
 dephase = Kraus([np.sqrt(1 - p) * np.eye(2),
                  np.sqrt(p) * np.diag([1, -1])])
 
+# a density matrix can hold mixed states; <X> is the
+# Bloch arrow's x, purity 1 for a pure state
 rho = DensityMatrix.from_label("+")
 for step in range(6):
     x = rho.expectation_value(SparsePauliOp("X")).real

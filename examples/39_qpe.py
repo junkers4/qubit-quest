@@ -8,6 +8,8 @@ from qiskit import QuantumCircuit
 from qiskit.circuit.library import QFTGate
 from qiskit.quantum_info import Statevector
 
+# phase estimation of U = a phase turn by 2 pi / 8:
+# the counting register should read phi = 1/8
 t = 3                       # counting qubits 0 .. t-1
 qc = QuantumCircuit(t + 1)
 qc.x(t)                     # the eigenvector |1>
@@ -16,6 +18,7 @@ for k in range(t):          # qubit k controls U^(2^k)
     qc.cp(2 * np.pi / 8 * 2**k, k, t)
 qc.append(QFTGate(t).inverse(), range(t))
 
+# the inverse QFT turned the phase into a number
 probs = Statevector(qc).probabilities_dict(list(range(t)))
 best = max(probs, key=probs.get)
 phi = int(best, 2) / 2**t   # the key is read as a binary number

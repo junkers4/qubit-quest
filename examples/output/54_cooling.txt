@@ -1,0 +1,5 @@
+Doppler limit: 146 uK
+one photon kick: 5.88 mm/s
+recoil temperature: 362 nK
+sodium linewidth: 10.0 MHz
+photons to stop a 300 m/s atom: 50981

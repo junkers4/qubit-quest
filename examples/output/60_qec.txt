@@ -1,0 +1,4 @@
+error on None: q0 restored = True
+error on 0: q0 restored = True
+error on 1: q0 restored = True
+error on 2: q0 restored = True

@@ -6,6 +6,8 @@ Run: python examples/47_readout.py
 """
 import numpy as np
 
+# readout as two noisy clouds of points (I/Q), one
+# for |0>, one for |1>; fixed seed
 rng = np.random.default_rng(47)
 shots = 20000
 

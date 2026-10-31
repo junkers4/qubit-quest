@@ -577,6 +577,12 @@
                 navigator.clipboard.writeText(O.copy).then(() => { O.copied = true; draw(); }, () => {});
             });
         }
+        // CODE has RUN (its recorded output), the output has CODE to go back
+        const extra = O.run ? ['RUN', O.run] : O.back ? ['CODE', O.back] : null;
+        if (extra) {
+            const ew = bw(extra[0]), ex = B.x + B.w - 6 - bw('CLOSE') - 4 - (O.copy && navigator.clipboard ? bw('COPY') + 4 : 0) - ew;
+            button(ex, by, ew, bh, extra[0], extra[1], {color: P.green});
+        }
         button(B.x + B.w - 6 - bw('CLOSE'), by, bw('CLOSE'), bh, 'CLOSE', () => { G.overlay = null; });
     }
 
@@ -595,11 +601,36 @@
 
     function openCode() {
         const ex = QQ.EXAMPLES[level().code];
-        G.overlay = {title: 'QISKIT / PYTHON', page: 0, copy: ex.code, lines: cols => [
-            {t: ex.file, c: P.gold, keep: true},
-            {t: 'run: python ' + ex.file, c: P.dim, keep: true},
+        G.overlay = {title: 'QISKIT / PYTHON', page: 0, copy: ex.code, run: ex.output !== null && openOutput,
+            lines: cols => [
+                {t: ex.file, c: P.gold, keep: true},
+                {t: 'run: python ' + ex.file, c: P.dim, keep: true},
+                {t: ''},
+                ...codeLines(ex.code, cols),
+            ]};
+    }
+
+    // printed output as it is (no colouring); lines longer than the window go on, marked »
+    function outputLines(text, cols) {
+        const out = [];
+        for (const src of text.replace(/\s+$/, '').split('\n'))
+            for (let i = 0; i === 0 || i < src.length; i += cols - (i ? 2 : 0))
+                out.push(i ? {segs: [[src.slice(i, i + cols - 2), P.green]], cont: true}
+                    : {segs: [[src.slice(0, cols), P.green]]});
+        return out;
+    }
+
+    // RUN: what the example prints. The game cannot run Python, so this is the output recorded
+    // by running exactly this code with the pinned Qiskit (tools/record-outputs.py); the tests
+    // check the recording against a fresh run.
+    function openOutput() {
+        const ex = QQ.EXAMPLES[level().code];
+        G.overlay = {title: 'OUTPUT', page: 0, copy: ex.output, back: openCode, lines: cols => [
+            {t: '$ python ' + ex.file, c: P.gold, keep: true},
+            ...outputLines(ex.output, cols),
             {t: ''},
-            ...codeLines(ex.code, cols),
+            ...QQ.wrap('RECORDED BY RUNNING THIS CODE WITH QISKIT ' + QQ.QISKIT_VERSION + '. EVERY ASSERT IN IT PASSED.', cols)
+                .map(t => ({t, c: P.dim})),
         ]};
     }
 
@@ -1388,6 +1419,6 @@
         link.href = ic.toDataURL();
 
     // for the screenshot test
-    QQ.game = {G, draw, startLevel, next, place, wire, answer, hint: () => hint(step()), openEli5, openCode, openDeep, openRefs, openBook,
+    QQ.game = {G, draw, startLevel, next, place, wire, answer, hint: () => hint(step()), openEli5, openCode, openOutput, openDeep, openRefs, openBook,
         openGlossary, openLibrary, progress: () => progress};
 })();

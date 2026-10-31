@@ -1,0 +1,3 @@
+best classical win rate: 0.75
+CHSH value S = 2.8284  2*sqrt(2) = 2.8284
+quantum win rate: 0.8536

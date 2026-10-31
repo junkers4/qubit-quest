@@ -1,0 +1,4 @@
+loaded: 43 of 100
+.ooo.o..o.o.o....ooo.o.ooo.o..o...o.....oo...o.oo.
+ooooooooooooooooooooooooooooooooooooooooooo.......
+H CZ H = CNOT

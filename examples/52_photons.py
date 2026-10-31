@@ -8,6 +8,8 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator
 
+# a 50/50 beam splitter acting on the two paths
+# (upper, lower): reflection picks up a factor i
 B = np.array([[1, 1j], [1j, 1]]) / np.sqrt(2)
 
 
@@ -18,6 +20,8 @@ def phase(phi):  # a phase shifter in the lower arm
 # equal arms: the photon always leaves by the other port
 assert np.allclose(B @ B, 1j * np.array([[0, 1], [1, 0]]))
 
+# the Mach-Zehnder: splitter, phase, splitter; the
+# phase decides which detector clicks
 for phi in np.linspace(0, np.pi, 5):
     out = B @ phase(phi) @ B @ np.array([1, 0])
     p_d0, p_d1 = abs(out) ** 2

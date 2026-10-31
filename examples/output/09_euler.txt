@@ -1,0 +1,5 @@
+theta=0.000  e^(i theta)=1.000+0.000j |z|=1.000
+theta=0.785  e^(i theta)=0.707+0.707j |z|=1.000
+theta=1.571  e^(i theta)=0.000+1.000j |z|=1.000
+theta=3.142  e^(i theta)=-1.000+0.000j |z|=1.000
+phases keep probabilities

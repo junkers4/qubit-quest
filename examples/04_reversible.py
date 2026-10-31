@@ -9,6 +9,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator
 
 
+# the Toffoli gate: flip c when a and b are both 1
+# (^ is XOR: c ^ 1 flips c, c ^ 0 keeps it)
 def toffoli(a, b, c):
     return a, b, c ^ (a & b)
 
@@ -28,8 +30,11 @@ print("AND inputs giving 0:",
        if ab[0] & ab[1] == 0])
 
 # the same gate in Qiskit is a permutation matrix
+# ccx(0, 1, 2): controls 0 and 1, target 2
 qc = QuantumCircuit(3)
 qc.ccx(0, 1, 2)
+# Operator turns a circuit into its 8 x 8 matrix;
+# each column has a single 1: inputs are only reordered
 U = Operator(qc)
 print(U.data.real.astype(int))
 assert U.is_unitary()

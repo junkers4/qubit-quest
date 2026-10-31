@@ -1,0 +1,2 @@
+no spy:   kept 0.44, error rate 0.000
+with Eve: kept 0.50, error rate 0.196

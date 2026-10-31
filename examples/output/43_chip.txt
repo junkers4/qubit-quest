@@ -1,0 +1,3 @@
+EC/h = 0.242 GHz  EJ/h = 12.11 GHz
+critical current Ic = 24.4 nA
+f01 = 4.586 GHz (formula 4.600)

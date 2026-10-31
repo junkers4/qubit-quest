@@ -6,9 +6,11 @@ L = c / linewidth. The CODE uses scipy's physical constants.
 Run: python examples/50_laser.py
 """
 import numpy as np
+# c: speed of light, h: Planck, k: Boltzmann (SI)
 from scipy.constants import c, h, k
 
 # thermal light at 633 nm (a red laser line), room temperature
+# Boltzmann: the share of atoms up is exp(-h nu / kT)
 nu = c / 633e-9
 ratio = np.exp(-h * nu / (k * 300))
 print(f"N2/N1 at 300 K, 633 nm: {ratio:.1e}")

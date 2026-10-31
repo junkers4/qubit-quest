@@ -10,10 +10,13 @@ import math
 h, k, f = 6.62607015e-34, 1.380649e-23, 5e9
 
 
+# thermal photons at the qubit frequency: Bose-Einstein
 def n_thermal(T):
     return 1 / (math.expm1(h * f / (k * T)))
 
 
+# an attenuator passes 1/A of the noise in and adds
+# its own thermal noise at its temperature T
 def through(n_in, dB, T):
     A = 10 ** (dB / 10)
     return n_in / A + (1 - 1 / A) * n_thermal(T)

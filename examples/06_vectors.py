@@ -4,10 +4,13 @@ Run: python examples/06_vectors.py
 """
 import numpy as np
 
+# a vector as a numpy array; norm is its length,
+# sqrt(3^2 + 4^2) = 5 (Pythagoras)
 v = np.array([3.0, 4.0])
 print("length of (3, 4):", np.linalg.norm(v))
 assert np.isclose(np.linalg.norm(v), 5)
 
+# adding and scaling work number by number
 print("(1,2) + (3,0) =", np.array([1, 2]) + np.array([3, 0]))
 print("2 x (1,2) =", 2 * np.array([1, 2]))
 

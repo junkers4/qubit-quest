@@ -6,6 +6,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
+# photon energy E = h c / wavelength = h f
 h, c, eV = 6.62607015e-34, 299792458, 1.602176634e-19
 
 # the 369.5 nm detection light against the 12.6 GHz qubit
@@ -18,6 +19,7 @@ assert abs(optical / eV - 3.36) < 0.01
 
 # the Molmer-Sorensen gate is exp(-i pi/4 X X): from |00>
 # it makes the Bell state (|00> - i|11>)/sqrt2
+# rxx(pi/2) is exp(-i pi/4 X X)
 qc = QuantumCircuit(2)
 qc.rxx(np.pi / 2, 0, 1)
 s = 1 / np.sqrt(2)

@@ -15,6 +15,8 @@ def energy1(theta):
         SparsePauliOp("Z")).real
 
 
+# a classical optimizer turns the angle to lower the
+# measured energy: the variational idea
 res = minimize(energy1, x0=[0.3], method="COBYLA")
 print("H = Z: theta =", round(res.x[0], 3),
       "E =", round(res.fun, 4))
@@ -35,6 +37,7 @@ def energy2(p):
     return Statevector(qc).expectation_value(H).real
 
 
+# five random starts; keep the best result
 rng = np.random.default_rng(0)
 best = min((minimize(energy2, rng.uniform(0, 2 * np.pi, 4),
                      method="COBYLA") for _ in range(5)),

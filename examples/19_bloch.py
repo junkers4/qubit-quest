@@ -7,12 +7,15 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import SparsePauliOp, Statevector
 
 
+# the Bloch vector is the expectation values of the
+# Pauli X, Y and Z measurements: (<X>, <Y>, <Z>)
 def bloch(state):
     return np.array([
         state.expectation_value(SparsePauliOp(p)).real
         for p in ("X", "Y", "Z")])
 
 
+# the gates that make each state from |0>
 cases = {"|0>": [], "|1>": ["x"], "|+>": ["h"],
          "|->": ["h", "z"], "|+i>": ["h", "s"]}
 for name, gates in cases.items():

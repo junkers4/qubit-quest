@@ -1,0 +1,8 @@
+405 nm pump, 810 nm signal -> idler 810.0 nm
+405 nm pump, 780 nm signal -> idler 842.4 nm
+efficiency 0.2: all  2 click 4.00e-02
+efficiency 0.2: all 10 click 1.02e-07
+efficiency 0.2: all 50 click 1.13e-35
+efficiency 0.93: all  2 click 8.65e-01
+efficiency 0.93: all 10 click 4.84e-01
+efficiency 0.93: all 50 click 2.66e-02

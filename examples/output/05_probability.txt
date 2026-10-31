@@ -1,0 +1,6 @@
+P(both heads) = 1/4
+P(not a 6) = 5/6
+    10 shots: share 0.200
+   100 shots: share 0.260
+  1000 shots: share 0.257
+100000 shots: share 0.250

@@ -1,0 +1,7 @@
+N2/N1 at 300 K, 633 nm: 1.2e-33
+N2/N1 at 3000 K: 5.1e-04
+photon energy: 1.96 eV
+1 kHz laser : L = 3e+05 m
+1 MHz laser : L = 300 m
+white light : L = 9.99e-07 m
+ruby photon: 1.79 eV

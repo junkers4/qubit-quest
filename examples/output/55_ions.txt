@@ -1,0 +1,12 @@
+pulse area  0.00: P(1) = 0.000
+pulse area  0.79: P(1) = 0.146
+pulse area  1.57: P(1) = 0.500
+pulse area  2.36: P(1) = 0.854
+pulse area  3.14: P(1) = 1.000
+pulse area  3.93: P(1) = 0.854
+pulse area  4.71: P(1) = 0.500
+pulse area  5.50: P(1) = 0.146
+pulse area  6.28: P(1) = 0.000
+Ramsey phase 0.00: P(1) = 1.000
+Ramsey phase 1.57: P(1) = 0.500
+Ramsey phase 3.14: P(1) = 0.000

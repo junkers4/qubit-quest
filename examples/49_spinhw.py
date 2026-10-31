@@ -6,12 +6,16 @@ Run: python examples/49_spinhw.py
 """
 import numpy as np
 
+# spin-to-charge readout, simulated: spin up tunnels
+# out of the dot (a click), spin down stays
 rng = np.random.default_rng(55)
 shots = 50000
 tunnel_time = 1.0      # mean time for spin up to tunnel out
 window = 4.0           # how long we watch (same units)
 false_click = 0.01     # sensor noise that looks like a jump
 
+# tunnelling takes a random (exponential) time; it
+# counts only if it happens within the window
 up_out = rng.exponential(tunnel_time, shots) < window
 up_read = up_out | (rng.random(shots) < false_click)
 down_read = rng.random(shots) < false_click

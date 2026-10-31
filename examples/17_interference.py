@@ -6,6 +6,8 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
+# the Hadamard matrix; H[k, m] is the amplitude to
+# go from |m> to |k>
 H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
 
 # add up every path |0> -> |m> -> |k>: amplitude H[k,m]*H[m,0]
@@ -16,6 +18,7 @@ for k in (0, 1):
 # |1> gets +1/2 and -1/2: they cancel
 assert np.isclose(sum(H[1, m] * H[m, 0] for m in (0, 1)), 0)
 
+# the same with Qiskit: H twice brings |0> back
 qc = QuantumCircuit(1)
 qc.h(0)
 qc.h(0)

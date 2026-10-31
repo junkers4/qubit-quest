@@ -13,7 +13,10 @@ print("P(0), P(1) =", psi.probabilities())
 # |+> measured 1024 times: roughly half and half
 qc = QuantumCircuit(1)
 qc.h(0)
+# measure_all adds a measurement of every qubit
 qc.measure_all()
+# the sampler simulates many runs (shots); the seed
+# makes its "random" results the same every time
 sampler = StatevectorSampler(seed=1234)
 result = sampler.run([qc], shots=1024).result()
 counts = result[0].data.meas.get_counts()
@@ -22,6 +25,7 @@ assert set(counts) == {"0", "1"}
 assert abs(counts["0"] - 512) < 80
 
 # a measured qubit stays put: measure twice, same answer
+# 1 qubit and 2 classical bits for two readings
 qc2 = QuantumCircuit(1, 2)
 qc2.h(0)
 qc2.measure(0, 0)

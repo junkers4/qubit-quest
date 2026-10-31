@@ -1,0 +1,6 @@
+|0> x |1> = [0 1 0 0]
+|1> x |0> = [0 0 1 0]
+10 qubits: 1024 amplitudes
+|+>|+> is a product: True
+Bell state is a product: False
+(X x I)|00> = [0. 0. 1. 0.]

@@ -1,0 +1,4 @@
+B = 0.1 T: spin qubit at 2.8 GHz
+B = 0.5 T: spin qubit at 14.0 GHz
+B = 1.0 T: spin qubit at 28.0 GHz
+exchange for J t = pi is a SWAP; half of it squared too

@@ -1,0 +1,5 @@
+|0>   Bloch vector [0. 0. 1.]
+|1>   Bloch vector [ 0.  0. -1.]
+|+>   Bloch vector [1. 0. 0.]
+|->   Bloch vector [-1.  0.  0.]
+|+i>  Bloch vector [0. 1. 0.]

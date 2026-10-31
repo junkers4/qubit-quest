@@ -1,0 +1,11 @@
+t=0.00: one excited 0.000 both 0.0000
+t=0.56: one excited 0.146 both 0.0000
+t=1.11: one excited 0.500 both 0.0000
+t=1.67: one excited 0.853 both 0.0000
+t=2.22: one excited 1.000 both 0.0000
+t=2.78: one excited 0.854 both 0.0000
+t=3.33: one excited 0.500 both 0.0000
+t=3.89: one excited 0.146 both 0.0000
+t=4.44: one excited 0.000 both 0.0000
+one shared excitation after t = pi / (sqrt2 W)
+defect-free 50 atoms at 0.988 each: 0.547

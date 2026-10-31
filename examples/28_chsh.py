@@ -9,6 +9,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import SparsePauliOp, Statevector
 
 # classical: try every fixed plan a(x), b(y)
+# the CHSH game: Alice and Bob get bits x, y and win
+# when their answers a XOR b equal x AND y
 best = 0
 for a0, a1, b0, b1 in product((0, 1), repeat=4):
     wins = sum(((a1 if x else a0) ^ (b1 if y else b0))
@@ -28,10 +30,13 @@ B = [SparsePauliOp(["Z", "X"], [r, r]),
      SparsePauliOp(["Z", "X"], [r, -r])]
 
 
+# the correlation <A B>: +1 always equal, -1 always
+# different; b ^ a is the tensor product of the two
 def corr(a, b):  # Qiskit order: Bob is qubit 1 (left)
     return state.expectation_value(b ^ a).real
 
 
+# classically S is at most 2; quantum reaches 2 sqrt 2
 S = corr(A[0], B[0]) + corr(A[0], B[1]) \
     + corr(A[1], B[0]) - corr(A[1], B[1])
 print("CHSH value S =", round(S, 4), " 2*sqrt(2) =",

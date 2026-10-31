@@ -8,6 +8,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
 
+# set the inputs a, b with X gates, apply a gate,
+# and read the one basis state that comes out
 def run(a, b, gate):
     qc = QuantumCircuit(3)
     if a:
@@ -31,6 +33,7 @@ def OR(qc):  # A OR B = NOT(NOT A AND NOT B)
     qc.x([0, 1])
 
 
+# the truth tables of AND and OR, from Toffolis
 for a, b in product((0, 1), repeat=2):
     k_and, k_or = run(a, b, AND), run(a, b, OR)
     print(a, b, "AND ->", k_and, " OR ->", k_or)

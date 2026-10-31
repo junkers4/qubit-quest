@@ -1,0 +1,3 @@
+spin up read as up:     0.9809
+spin down read as down: 0.9894
+readout fidelity:       0.9852

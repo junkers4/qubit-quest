@@ -12,10 +12,13 @@ gamma = 2 * np.pi * 6.07e6        # natural linewidth (1/s)
 lam = 780.24e-9                   # wavelength (m)
 m = 86.909 * atomic_mass          # mass (kg)
 
+# the Doppler limit: T = hbar gamma / (2 kB)
 T_doppler = hbar * gamma / (2 * kB)
 print(f"Doppler limit: {T_doppler * 1e6:.0f} uK")
 assert 140e-6 < T_doppler < 150e-6       # about 146 uK
 
+# one photon's momentum hbar k, with k = 2 pi / lam,
+# gives the atom a speed hbar k / m
 v_recoil = hbar * 2 * np.pi / lam / m
 print(f"one photon kick: {v_recoil * 1e3:.2f} mm/s")
 assert 5.5e-3 < v_recoil < 6.2e-3        # about 6 mm/s

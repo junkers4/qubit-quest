@@ -1,0 +1,5 @@
+at 300 K: 1250 noise photons (~kT/hf)
+after 20 dB at  4.00 K: 2.85e+01 photons
+after 20 dB at  0.10 K: 3.84e-01 photons
+after 20 dB at  0.01 K: 3.84e-03 photons
+total attenuation: 60 dB

@@ -1,0 +1,8 @@
+trial 0: fidelity 1.000000
+trial 1: fidelity 1.000000
+trial 2: fidelity 1.000000
+trial 3: fidelity 1.000000
+trial 4: fidelity 1.000000
+Bob before the fixes:
+ [[0.5 0. ]
+ [0.  0.5]]

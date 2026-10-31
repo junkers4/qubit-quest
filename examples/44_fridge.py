@@ -12,10 +12,14 @@ k = 1.380649e-23     # Boltzmann constant, J/K (exact)
 sigma = 5.670374419e-8   # Stefan-Boltzmann, W m^-2 K^-4
 f = 5e9              # a 5 GHz qubit
 
+# the temperature at which heat matches a qubit's
+# energy: far colder is needed
 print(f"h f / k = {h * f / k:.3f} K")
 stages = [("room", 300), ("first plate", 50),
           ("second plate", 4), ("still", 1),
           ("cold plate", 0.1), ("mixing", 0.01)]
+    # p1: the chance heat alone flips the qubit (thermal
+    # population); rad: heat radiated per area, sigma T^4
 for name, T in stages:
     p1 = 1 / (1 + math.exp(h * f / (k * T)))
     rad = sigma * T**4

@@ -2,6 +2,8 @@
 
 Run: python examples/03_gates.py
 """
+# bits are 0 and 1; a & b is 1 only if both are 1,
+# so NAND (NOT AND) is 0 only when both inputs are 1
 def NAND(a, b):
     return 1 - (a & b)
 
@@ -19,6 +21,8 @@ def XOR(a, b):
     c = NAND(a, b)
     return NAND(NAND(a, c), NAND(b, c))
 
+# check every input pair against Python's own bit
+# operators: & AND, | OR, ^ XOR
 print("A B | AND OR XOR")
 for a in (0, 1):
     for b in (0, 1):

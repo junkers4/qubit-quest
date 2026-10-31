@@ -7,10 +7,13 @@ from qiskit.circuit.library import HGate, SGate, XGate
 from qiskit.quantum_info import Operator
 
 
+# the dagger: transpose and complex-conjugate
 def dagger(U):
     return U.conj().T
 
 
+# unitary: U-dagger U is the identity, so U keeps
+# every length (and every total probability) at 1
 def is_unitary(U):
     return np.allclose(dagger(U) @ U, np.eye(len(U)))
 

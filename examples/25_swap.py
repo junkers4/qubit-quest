@@ -5,12 +5,14 @@ Run: python examples/25_swap.py
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
+# three CNOTs, the middle one turned round
 three = QuantumCircuit(2)
 three.cx(0, 1)
 three.cx(1, 0)
 three.cx(0, 1)
 print(three.draw())
 
+# compare with Qiskit's own SWAP gate
 swap = QuantumCircuit(2)
 swap.swap(0, 1)
 assert Operator(three).equiv(Operator(swap))
@@ -21,6 +23,7 @@ prep = QuantumCircuit(2)
 prep.h(0)
 prep.t(0)
 prep.x(1)
+# evolve runs a circuit on a given state
 before = Statevector(prep)
 after = before.evolve(three)
 # swapping = reading the qubits in the other order

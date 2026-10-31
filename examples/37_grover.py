@@ -10,6 +10,7 @@ n = 3
 marked = "101"   # in Qiskit order (qubit 2 first)
 
 
+# the oracle flips the sign of the marked state only
 def oracle():
     qc = QuantumCircuit(n)
     zeros = [q for q in range(n) if marked[::-1][q] == "0"]
@@ -21,6 +22,8 @@ def oracle():
     return qc
 
 
+# the diffuser reflects every amplitude about their
+# mean: the marked one grows, the others shrink
 def diffuser():
     qc = QuantumCircuit(n)
     qc.h(range(n))
@@ -33,6 +36,7 @@ def diffuser():
     return qc
 
 
+# about (pi/4) sqrt(N) rounds: 2 for N = 8
 rounds = int(np.floor(np.pi / 4 * np.sqrt(2**n)))
 qc = QuantumCircuit(n)
 qc.h(range(n))

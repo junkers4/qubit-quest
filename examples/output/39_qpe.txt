@@ -1,0 +1,2 @@
+counting register: 001  phi = 0.125
+S: counting register 01

@@ -3,6 +3,8 @@
 Down-conversion keeps energy: 1/lp = 1/l1 + 1/l2.
 Run: python examples/53_photonhw.py
 """
+# down-conversion keeps energy: 1/pump = 1/signal +
+# 1/idler (photon energy goes as 1/wavelength)
 def partner(pump_nm, signal_nm):
     return 1 / (1 / pump_nm - 1 / signal_nm)
 

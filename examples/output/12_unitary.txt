@@ -1,0 +1,4 @@
+H unitary: True  S unitary: True
+x True
+h True
+s True

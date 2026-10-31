@@ -7,6 +7,7 @@ from itertools import combinations, product
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
+# 3 input qubits plus one output qubit
 n = 3
 
 
@@ -26,6 +27,8 @@ def oracle(table):
     return qc
 
 
+# Deutsch-Jozsa: |0...0> comes back with certainty
+# exactly when f is constant
 def dj(table):
     qc = QuantumCircuit(n + 1)
     qc.x(n)
@@ -36,6 +39,7 @@ def dj(table):
     return "constant" if p[0] > 0.999 else "balanced"
 
 
+# the two constant functions and six balanced ones
 tests = [[0] * 8, [1] * 8]                      # constant
 for ones in list(combinations(range(8), 4))[:6]:  # balanced
     tests.append([int(x in ones) for x in range(8)])

@@ -3,10 +3,14 @@
 Python writes i as 1j.
 Run: python examples/08_complex.py
 """
+# Python writes the imaginary unit i as j: 3 + 4j
+# abs(z) is the length sqrt(3^2 + 4^2); conjugate flips
+# the sign of the imaginary part
 z = 3 + 4j
 print("z =", z, " |z| =", abs(z), " z* =", z.conjugate())
 assert abs(z) == 5
 
+# i squared is -1, so i to the 4th is 1
 assert 1j * 1j == -1
 assert (1j) ** 4 == 1
 print("(1+2i) + (3-i) =", (1 + 2j) + (3 - 1j))

@@ -5,6 +5,8 @@ Run: python examples/11_tensor.py
 """
 import numpy as np
 
+# np.kron is the tensor product: two qubits' vectors
+# make one vector of 4 amplitudes (00, 01, 10, 11)
 ket0, ket1 = np.array([1, 0]), np.array([0, 1])
 print("|0> x |1> =", np.kron(ket0, ket1))  # |01>
 print("|1> x |0> =", np.kron(ket1, ket0))  # |10>
@@ -24,6 +26,7 @@ def is_product(psi):
     return np.linalg.matrix_rank(psi.reshape(2, 2)) == 1
 
 
+# a product of |+> and |+> versus the Bell state
 s = 1 / np.sqrt(2)
 plus = np.array([s, s])
 bell = np.array([s, 0, 0, s])

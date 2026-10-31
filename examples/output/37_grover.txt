@@ -1,0 +1,2 @@
+after round 1: P(101) = 0.781
+after round 2: P(101) = 0.945

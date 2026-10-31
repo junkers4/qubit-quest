@@ -1,0 +1,6 @@
+T = 100.0 mK: cooling power  840.00 uW
+T =  50.0 mK: cooling power  210.00 uW
+T =  20.0 mK: cooling power   33.60 uW
+T =  10.0 mK: cooling power    8.40 uW
+flow for 10 uW at 10 mK: 1.19 mmol/s
+Kapitza resistance 10 mK / 100 mK: 1000.0

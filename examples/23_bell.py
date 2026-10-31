@@ -7,6 +7,8 @@ from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
 from qiskit.quantum_info import Statevector, partial_trace
 
+# H makes q0 a coin, the CNOT copies it onto q1:
+# the Bell state (|00> + |11>)/sqrt 2
 bell = QuantumCircuit(2)
 bell.h(0)
 bell.cx(0, 1)
@@ -24,6 +26,8 @@ print("counts:", counts)
 assert set(counts) == {"00", "11"}
 
 # each qubit alone is a perfectly random bit
+# partial_trace forgets qubit 1; what is left is
+# qubit 0's own state, here half |0>, half |1>
 one = partial_trace(state, [1])
 print("qubit 0 alone:\n", np.round(one.data.real, 3))
 assert np.allclose(one.data, np.eye(2) / 2)

@@ -1,0 +1,7 @@
+step 0: <X> = 1.000 purity 1.000
+step 1: <X> = 0.800 purity 0.820
+step 2: <X> = 0.640 purity 0.705
+step 3: <X> = 0.512 purity 0.631
+step 4: <X> = 0.410 purity 0.584
+step 5: <X> = 0.328 purity 0.554
+100 gates at 99% each: 0.366

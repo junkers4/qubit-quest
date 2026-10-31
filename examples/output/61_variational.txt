@@ -1,0 +1,2 @@
+H = Z: theta = 3.142 E = -1.0
+VQE energy -1.11803  exact -1.11803

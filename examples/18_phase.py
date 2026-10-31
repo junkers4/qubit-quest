@@ -6,6 +6,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
 
+# op("h", "z") is the matrix of the circuit H then Z;
+# getattr(qc, "h")(0) calls qc.h(0)
 def op(*gates):
     qc = QuantumCircuit(1)
     for g in gates:
@@ -13,6 +15,7 @@ def op(*gates):
     return Operator(qc)
 
 
+# equiv: the same gate up to a global phase
 assert op("h", "z", "h").equiv(op("x"))   # puzzle: no X gate
 assert op("s", "s").equiv(op("z"))
 assert op("t", "t").equiv(op("s"))

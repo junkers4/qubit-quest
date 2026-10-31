@@ -1,0 +1,2 @@
+measured y: ['000', '001', '110', '111']
+candidates for s: ['110']

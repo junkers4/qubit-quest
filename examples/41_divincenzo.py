@@ -23,6 +23,7 @@ print("gates that fit:", coherence_us * 1000 // gate_ns)
 U = random_unitary(4, seed=7)
 qc = QuantumCircuit(2)
 qc.unitary(U, [0, 1])
+# transpile rewrites the circuit in a hardware's gates
 hw = transpile(qc, basis_gates=["rz", "sx", "cx"],
                optimization_level=1)
 print("as rz/sx/cx:", dict(hw.count_ops()))

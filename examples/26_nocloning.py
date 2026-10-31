@@ -6,6 +6,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector, state_fidelity
 
+# a CNOT "copies" |0> and |1> onto a blank qubit...
 for label in ("0", "1"):
     qc = QuantumCircuit(2)
     if label == "1":
@@ -24,5 +25,6 @@ s = 1 / np.sqrt(2)
 print("got:", np.round(got.data.real, 3))
 print("a true copy:", np.round(copy.data.real, 3))
 assert got.equiv(Statevector([s, 0, 0, s]))  # a Bell state
+# fidelity 1 means the same state; here only 1/2
 print("fidelity with |++>:", state_fidelity(got, copy))
 assert state_fidelity(got, copy) < 0.51

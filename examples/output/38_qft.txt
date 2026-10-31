@@ -1,0 +1,2 @@
+our circuit = QFTGate = the DFT matrix
+[ 0.5+0.j   0. +0.5j -0.5+0.j  -0. -0.5j]

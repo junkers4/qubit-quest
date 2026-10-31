@@ -5,11 +5,13 @@ Run: python examples/16_hadamard.py
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
+# H on |0> makes |+> = (|0> + |1>)/sqrt 2
 plus = QuantumCircuit(1)
 plus.h(0)
 print("H|0> =", Statevector(plus))
 assert Statevector(plus).equiv(Statevector.from_label("+"))
 
+# H on |1> (X first) makes |-> = (|0> - |1>)/sqrt 2
 minus = QuantumCircuit(1)
 minus.x(0)
 minus.h(0)

@@ -13,6 +13,8 @@ psi.t(0)
 psi.h(0)
 want = DensityMatrix(psi)
 
+# no error, then a bit flip on each qubit in turn:
+# the code must restore q0 every time
 for error in (None, 0, 1, 2):
     qc = QuantumCircuit(3)
     qc.compose(psi, [0], inplace=True)
@@ -23,6 +25,7 @@ for error in (None, 0, 1, 2):
     qc.cx(0, 1)               # decode: q1, q2 = syndrome
     qc.cx(0, 2)
     qc.ccx(1, 2, 0)           # both 1: q0 was hit, flip it
+    # q0 alone, compared with the state we protected
     got = partial_trace(Statevector(qc), [1, 2])
     ok = np.allclose(got.data, want.data)
     print(f"error on {error}: q0 restored = {ok}")

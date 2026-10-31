@@ -17,8 +17,9 @@
 - Every source in `src/refs.js` must be checked against a real bibliographic record before it is
   added (`checked:` names it). Never add a DOI or page number that was not confirmed.
 - Levels are data (template: `docs/LEVEL_TEMPLATE.md`); each has ELI5 texts, sources and an example
-  `examples/NN_name.py` (<= 64 columns, asserts its result). After editing examples or levels run
-  `make generate`.
+  `examples/NN_name.py` (<= 64 columns, asserts its result, comments that explain it). After editing
+  examples or levels run `make generate`; after changing what an example prints run `make outputs`
+  (records `examples/output/NN_name.txt`, shown by RUN in the CODE window; pytest checks it).
 - Requirements: `docs/requirements.md`; every REQ needs a test that names it.
 - Checks: `make test-all` (node, pytest with `requirements.txt`, headless Chromium). The browser run
   leaves screenshots in `/tmp/qq` (desktop-*.png, phone-*.png). Always look at them after a visual change.

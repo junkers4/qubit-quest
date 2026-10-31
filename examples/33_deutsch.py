@@ -16,6 +16,8 @@ def oracle(f0, f1):
     return qc
 
 
+# Deutsch's algorithm: H on both, one query, H on
+# q0; q0 reads 0 for constant f, 1 for balanced
 def deutsch(f0, f1):
     qc = QuantumCircuit(2)
     qc.x(1)
@@ -26,6 +28,7 @@ def deutsch(f0, f1):
     return round(p1)
 
 
+# all four functions from one bit to one bit
 for f0 in (0, 1):
     for f1 in (0, 1):
         kind = "constant" if f0 == f1 else "balanced"

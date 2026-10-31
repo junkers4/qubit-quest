@@ -1,0 +1,6 @@
+1 bits: 2 patterns: ['0', '1']
+2 bits: 4 patterns: ['00', '01', '10', '11']
+3 bits: 8 patterns: ['000', '001', '010', '011', '100', '101', '110', '111']
+4 bits: 16 patterns: ['0000', '0001', '0010', '0011', '0100', '0101', '0110', '0111']
+the register now holds only 101
+a byte has 256 patterns

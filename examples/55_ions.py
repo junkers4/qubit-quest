@@ -9,10 +9,12 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
 
+# the chance of reading 1 after the circuit
 def p1(qc):
     return Statevector(qc).probabilities()[1]
 
 
+# a laser pulse of area theta is the gate RX(theta)
 # Rabi oscillation: longer pulses rotate further
 for theta in np.linspace(0, 2 * np.pi, 9):
     qc = QuantumCircuit(1)

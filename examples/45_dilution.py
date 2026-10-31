@@ -5,6 +5,8 @@ about Q = 84 n T^2 watts for n mol/s of helium-3 (Pobell).
 The Kapitza boundary resistance grows like 1 / T^3.
 Run: python examples/45_dilution.py
 """
+# a dilution fridge's cooling power, about 84 n T^2
+# watts for a helium-3 flow n (mol/s) at T (kelvin)
 def cooling_power(n, T):
     return 84 * n * T**2
 

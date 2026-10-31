@@ -1,0 +1,8 @@
+HWP 45 = X, HWP 22.5 = H, HWP 0 = Z, QWP = S
+Jones: [0.707+0.j    0.   +0.707j]
+Qiskit: [0.707+0.j    0.   +0.707j]
+polarizer  0 deg: passes 1.000
+polarizer 30 deg: passes 0.750
+polarizer 45 deg: passes 0.500
+polarizer 60 deg: passes 0.250
+polarizer 90 deg: passes 0.000

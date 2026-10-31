@@ -1,0 +1,6 @@
+phase 0.00: D0 0.000  D1 1.000
+phase 0.79: D0 0.146  D1 0.854
+phase 1.57: D0 0.500  D1 0.500
+phase 2.36: D0 0.854  D1 0.146
+phase 3.14: D0 1.000  D1 0.000
+P(one photon at each detector) = 0.0

@@ -1,0 +1,7 @@
+h f / k = 0.240 K
+room           300.00 K  heat flip 5.0e-01  radiates 4.6e+02 W/m^2
+first plate     50.00 K  heat flip 5.0e-01  radiates 3.5e-01 W/m^2
+second plate     4.00 K  heat flip 4.9e-01  radiates 1.5e-05 W/m^2
+still            1.00 K  heat flip 4.4e-01  radiates 5.7e-08 W/m^2
+cold plate       0.10 K  heat flip 8.3e-02  radiates 5.7e-12 W/m^2
+mixing           0.01 K  heat flip 3.8e-11  radiates 5.7e-16 W/m^2

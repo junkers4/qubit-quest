@@ -1,0 +1,5 @@
+separation 1 sigma: fidelity 0.6933
+separation 2 sigma: fidelity 0.8408
+separation 4 sigma: fidelity 0.9764
+separation 6 sigma: fidelity 0.9988
+pulse area 1.253  DRAG area -0.0

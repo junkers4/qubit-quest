@@ -5,6 +5,8 @@ Run: python examples/22_cnot.py
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
+# try all four inputs: X gates prepare |c t>, then the
+# CNOT flips t exactly when c is 1
 print("control q0, target q1 (written q0 q1, game order)")
 for c in (0, 1):
     for t in (0, 1):

@@ -5,13 +5,16 @@ Run: python examples/15_xgate.py
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
+# a circuit of one qubit with one X gate on it
 qc = QuantumCircuit(1)
 qc.x(0)
 print(qc.draw())
+# Statevector(qc) runs the circuit on |0>
 state = Statevector(qc)
 print("X|0> =", state)
 assert state.equiv(Statevector.from_label("1"))
 
+# the circuit as a matrix
 print("X =\n", Operator(qc).data.real)
 
 # X swaps the amplitudes of any state

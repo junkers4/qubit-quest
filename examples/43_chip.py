@@ -11,6 +11,7 @@ e = 1.602176634e-19      # elementary charge, C (exact)
 h = 6.62607015e-34       # Planck constant, J s (exact)
 hbar = h / (2 * np.pi)
 
+# from the pads' capacitance to the qubit frequency
 C = 80e-15               # 80 fF of pads (an example value)
 EC = e**2 / (2 * C) / h  # in Hz
 EJ = 50 * EC             # a typical transmon ratio

@@ -12,6 +12,8 @@ from qiskit import QuantumCircuit
 from qiskit.circuit.library import QFTGate, UnitaryGate
 from qiskit.quantum_info import Statevector
 
+# Shor for N = 15 with a = 7: find the period r of
+# 7^x mod 15, then factors come from gcd(7^(r/2) +- 1)
 N, a = 15, 7
 t, m = 8, 4          # 8 counting qubits, 4 work qubits
 
@@ -38,6 +40,8 @@ probs = Statevector(qc).probabilities_dict(list(range(t)))
 peaks = sorted(k for k, p in probs.items() if p > 0.01)
 print("peaks:", [int(k, 2) for k in peaks])
 
+# each peak k / 2^t is close to some s / r; continued
+# fractions (limit_denominator) recover r
 found = set()
 for key in peaks:
     phase = Fraction(int(key, 2), 2**t)

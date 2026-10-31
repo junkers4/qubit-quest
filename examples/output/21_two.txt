@@ -1,0 +1,4 @@
+X on both: {np.str_('11'): np.float64(1.0)}
+X on qubit 0, Qiskit order: {np.str_('01'): np.float64(1.0)}
+same state in the game's order: {np.str_('10'): np.float64(1.0)}
+{np.str_('00'): np.float64(0.2499999999999999), np.str_('01'): np.float64(0.2499999999999999), np.str_('10'): np.float64(0.2499999999999999), np.str_('11'): np.float64(0.2499999999999999)}

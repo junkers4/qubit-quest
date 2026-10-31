@@ -8,6 +8,7 @@
 # make desktop      the app for Linux, Windows and macOS in dist/ (needs Go; VERSION=0.1.0)
 # make run          build the app for this computer and start it
 # make android      the Android app: dist/qubit-quest-VERSION.apk (needs ANDROID_HOME, a JDK, Go)
+# make outputs      run every example and record what it prints (examples/output/, for RUN)
 # make generate     rebuild src/examples.js, tests/sim_cases.json, docs/REFERENCES.md
 # make wasm         assemble src/qcore.wat into src/qcore-bin.js (installs the wabt dev tool)
 # make check-refs   resolve every DOI, arXiv id and URL online (needs network)
@@ -45,6 +46,10 @@ run:
 android:
 	bash android/build.sh
 
+outputs:
+	$(PY) tools/record-outputs.py
+	node tools/embed-examples.js
+
 generate:
 	node tools/embed-examples.js
 	node tools/export-cases.js
@@ -62,4 +67,4 @@ check-refs:
 serve:
 	python3 -m http.server 8000
 
-.PHONY: test test-python shots test-desktop test-asm asm test-all desktop run android generate wasm check-refs serve
+.PHONY: outputs test test-python shots test-desktop test-asm asm test-all desktop run android generate wasm check-refs serve

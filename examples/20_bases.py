@@ -27,12 +27,15 @@ x.x(0)
 assert Operator(rx).equiv(Operator(x))
 
 # any one-qubit gate is RZ RY RZ (times a global phase)
+# a random rotation, from a fixed seed
 rng = np.random.default_rng(3)
 a, b, c = rng.uniform(0, 2 * np.pi, 3)
 gate = QuantumCircuit(1)
 gate.rx(a, 0)
 gate.ry(b, 0)
 gate.rz(c, 0)
+# rewrite it as RZ RY RZ: three angles describe any
+# one-qubit gate
 zyz = OneQubitEulerDecomposer("ZYZ")(Operator(gate))
 print(zyz.draw())
 assert Operator(zyz).equiv(Operator(gate))

@@ -1,0 +1,6 @@
+369.5 nm photon: 3.36 eV
+12.6 GHz qubit:  52.1 micro-eV
+ratio: 64393
+Statevector([0.70710678+0.j        , 0.        +0.j        ,
+             0.        +0.j        , 0.        -0.70710678j],
+            dims=(2, 2))

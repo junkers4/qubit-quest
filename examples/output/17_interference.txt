@@ -1,0 +1,4 @@
+into |0>: paths [0.5 0.5] sum 1.0
+into |1>: paths [ 0.5 -0.5] sum 0.0
+H H |0> = Statevector([1.+0.j, 0.+0.j],
+            dims=(2,))

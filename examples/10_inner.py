@@ -5,6 +5,8 @@ Run: python examples/10_inner.py
 """
 import numpy as np
 
+# the states as plain vectors of amplitudes;
+# s = 1/sqrt(2) keeps each of length 1
 s = 1 / np.sqrt(2)
 ket0 = np.array([1, 0])
 ket1 = np.array([0, 1])
@@ -12,6 +14,9 @@ plus = np.array([s, s])
 minus = np.array([s, -s])
 plus_i = np.array([s, 1j * s])
 
+# np.vdot(a, b) is the inner product <a|b>: it
+# conjugates a first. 0 means the states are
+# perfectly distinguishable (orthogonal)
 print("<0|1> =", np.vdot(ket0, ket1))
 print("<+|-> =", np.vdot(plus, minus))
 print("<+|+> =", np.vdot(plus, plus))

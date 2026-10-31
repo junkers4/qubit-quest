@@ -13,6 +13,9 @@ EC = 0.25          # GHz (energies as frequencies, E/h)
 EJ = 50 * EC       # a typical transmon ratio EJ/EC = 50
 
 
+# the transmon's energy levels: its Hamiltonian in
+# the basis of n Cooper pairs on the island, from
+# -20 to 20; eigvalsh gives its energies, lowest first
 def levels(ng, n_max=20):
     n = np.arange(-n_max, n_max + 1)
     H = np.diag(4 * EC * (n - ng) ** 2)
@@ -20,6 +23,8 @@ def levels(ng, n_max=20):
     return np.linalg.eigvalsh(H)
 
 
+# the qubit is the lowest pair of levels; the next
+# step is smaller (anharmonic), so it can be avoided
 E = levels(ng=0.0)
 f01, f12 = E[1] - E[0], E[2] - E[1]
 print(f"f01 = {f01:.3f} GHz, f12 = {f12:.3f} GHz")

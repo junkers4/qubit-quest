@@ -5,11 +5,14 @@ Run: python examples/09_euler.py
 import cmath
 import math
 
+# cmath.exp(1j * theta) is e^(i theta): a point on the
+# unit circle at angle theta (always length 1)
 for theta in (0, math.pi / 4, math.pi / 2, math.pi):
     z = cmath.exp(1j * theta)
     print(f"theta={theta:.3f}  e^(i theta)={z:.3f}",
           f"|z|={abs(z):.3f}")
     assert math.isclose(abs(z), 1)
+    # Euler's formula: the same point as cos + i sin
     euler = math.cos(theta) + 1j * math.sin(theta)
     assert cmath.isclose(z, euler)
 

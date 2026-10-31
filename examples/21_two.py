@@ -7,6 +7,7 @@ Run: python examples/21_two.py
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
+# two qubits, an X on each: |11>
 qc = QuantumCircuit(2)
 qc.x(0)
 qc.x(1)
@@ -18,6 +19,8 @@ one = QuantumCircuit(2)
 one.x(0)
 print("X on qubit 0, Qiskit order:",
       Statevector(one).probabilities_dict())
+# reverse_qargs puts qubit 0 on the left, as the game
+# writes kets
 flipped = Statevector(one).reverse_qargs()
 print("same state in the game's order:",
       flipped.probabilities_dict())

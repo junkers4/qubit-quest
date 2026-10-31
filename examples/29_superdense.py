@@ -6,6 +6,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
 
+# two classical bits travel in one qubit, thanks to
+# a Bell pair shared beforehand
 def send(bits):
     qc = QuantumCircuit(2)
     qc.h(0)          # the shared Bell pair:
@@ -22,6 +24,7 @@ def send(bits):
     return key
 
 
+# every message arrives intact
 for bits in ("00", "01", "10", "11"):
     got = send(bits)
     print(f"Alice sends {bits}, Bob reads {got}")

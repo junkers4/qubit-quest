@@ -6,6 +6,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator
 
+# loading tweezers is random (fixed seed here)
 rng = np.random.default_rng(16)
 
 # each of 100 tweezers catches an atom about half the time
@@ -14,6 +15,7 @@ print("loaded:", traps.sum(), "of 100")
 print("".join("o" if t else "." for t in traps[:50]))
 
 # move the atoms we have into the first places, no gaps
+# o marks a filled trap, . an empty one
 atoms = int(traps.sum())
 sorted_traps = np.arange(100) < atoms
 print("".join("o" if t else "." for t in sorted_traps[:50]))

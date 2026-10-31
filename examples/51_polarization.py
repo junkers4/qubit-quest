@@ -10,11 +10,14 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator, Statevector
 
 
+# the Jones matrix of a half-wave plate with its fast
+# axis at angle t (radians), up to a global phase
 def hwp(t):
     c, s = np.cos(2 * t), np.sin(2 * t)
     return np.array([[c, s], [s, -c]])
 
 
+# a quarter-wave plate: V lags a quarter wave (i)
 QWP = np.diag([1, 1j])
 
 
@@ -23,6 +26,7 @@ def same_gate(a, b):
     return Operator(a).equiv(Operator(b))
 
 
+# the matching qubit gates, from Qiskit
 gates = {}
 for name in ("x", "h", "s", "z"):
     qc = QuantumCircuit(1)

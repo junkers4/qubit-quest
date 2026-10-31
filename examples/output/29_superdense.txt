@@ -1,0 +1,4 @@
+Alice sends 00, Bob reads 00
+Alice sends 01, Bob reads 01
+Alice sends 10, Bob reads 10
+Alice sends 11, Bob reads 11

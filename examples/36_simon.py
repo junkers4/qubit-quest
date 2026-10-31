@@ -26,6 +26,8 @@ def oracle():
     return qc
 
 
+# Simon: H, one oracle call, H, measure; every run
+# gives a y with y.s = 0 (mod 2)
 qc = QuantumCircuit(2 * n, n)
 qc.h(range(n))
 qc.compose(oracle(), inplace=True)
@@ -37,6 +39,7 @@ ys = [k[::-1] for k in res[0].data.c.get_counts()]
 print("measured y:", sorted(ys))
 
 
+# the dot product of two bit strings, mod 2
 def dot(a, b):
     return sum(int(x) * int(y) for x, y in zip(a, b)) % 2
 

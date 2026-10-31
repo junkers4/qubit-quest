@@ -24,6 +24,7 @@ print(ghz.draw())
 print(Statevector(ghz).probabilities_dict())
 
 # rewrite it for a machine with only rz, sx, x and cx
+# transpile: the same circuit in the machine's gates
 hw = transpile(ghz, basis_gates=["rz", "sx", "x", "cx"],
                optimization_level=1)
 print(hw.draw())

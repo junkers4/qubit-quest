@@ -44,6 +44,7 @@ is not named by a test (rows marked **manual** or **online** excepted). Suites:
 | REQ-007 | Every level has a Python / Qiskit example, named after the level; every example belongs to one level. | N content |
 | REQ-030 | Every example runs with the pinned `requirements.txt` and checks its own results. | P examples |
 | REQ-031 | Examples fit the in-game code window: ASCII, at most 64 characters per line, a docstring naming the level. | P examples |
+| REQ-033 | Every example's output is shown in the game (RUN in the CODE window): recorded by running exactly that code with the pinned Qiskit, and checked against a fresh run. Every example explains itself with comments. | P examples; B |
 | REQ-032 | The game's simulator gives exactly Qiskit's amplitudes for every puzzle solution and for random circuits over every gate. | P cross-check |
 | REQ-020 | The simulator gets the physics right: gate identities, Bell states, Toffoli, QFT, black boxes, global phase, reduced states, Bloch vectors. | N sim |
 | REQ-021 | In the browser the game computes states with a simulator core hand-written in WebAssembly (`src/qcore.wat`), which gives the same amplitudes as the JS reference (and so as Qiskit); the embedded binary is assembled from the current source. | N core; B |

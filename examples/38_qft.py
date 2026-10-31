@@ -22,6 +22,8 @@ def qft(n):
     return qc
 
 
+# compare with the DFT matrix: entry (k, j) is
+# w^(jk)/sqrt(N) with w = e^(2 pi i / N)
 n = 3
 N = 2**n
 w = np.exp(2j * np.pi / N)

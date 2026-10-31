@@ -6,6 +6,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
 
+# 400 qubits; random bits and bases from fixed seeds
 N = 400
 rng = np.random.default_rng(2024)
 sampler = StatevectorSampler(seed=99)
@@ -35,6 +36,9 @@ def measure(qcs, bases):
             for r in res]
 
 
+# one round of the protocol: Alice sends, maybe Eve
+# listens, Bob measures; returns the share of bits
+# kept and their error rate
 def run(eve):
     bits = rng.integers(0, 2, N)
     a_bases = rng.integers(0, 2, N)
@@ -51,6 +55,8 @@ def run(eve):
     return keep.mean(), errors
 
 
+# without a spy the kept bits agree; Eve, guessing
+# bases, causes about 25% errors and is noticed
 kept, err = run(eve=False)
 print(f"no spy:   kept {kept:.2f}, error rate {err:.3f}")
 assert err == 0 and abs(kept - 0.5) < 0.1

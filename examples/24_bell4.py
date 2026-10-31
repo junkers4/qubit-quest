@@ -20,6 +20,7 @@ def bell(z, x):
     return Statevector(qc).reverse_qargs()
 
 
+# the four Bell states and their amplitudes
 s = 1 / np.sqrt(2)
 names = {"Phi+": (0, 0), "Phi-": (1, 0),
          "Psi+": (0, 1), "Psi-": (1, 1)}
@@ -31,6 +32,7 @@ for name, (z, x) in names.items():
     print(name, np.round(states[name].data.real, 3))
     assert states[name].equiv(Statevector(want[name]))
 
+# inner gives <a|b>; its size is 1 for the same state
 # all four are orthogonal: one measurement tells them apart
 for a in states:
     for b in states:
